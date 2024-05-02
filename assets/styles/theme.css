@@ -1,0 +1,51 @@
+/* dark themes same electricity. we assume that by default. */
+:root {
+  /*
+  --color-base-00: #000000;
+  --color-base-05: #101010;
+  --color-base-10: #202120;
+  --color-base-20: #000000;
+  --color-base-25: #313232;
+  --color-base-30: #313232;
+  --color-base-35: #313232;
+  --color-base-40: #313232;
+  --color-base-50: #757676;
+  --color-base-60: #8f9190;
+  --color-base-70: #8f9190;
+  --color-base-100: #c8cccb;
+  --color-red: #e63b47;
+  --color-orange: #e67344;
+  --color-yellow: #f5c56f;
+  --color-green: #53c386;
+  --color-cyan: #98d4f2;
+  --color-blue: #4474d9;
+  --color-purple: #7e64da;
+  --color-pink: #ec92c5;
+  */
+
+  --color-background: #0e0e0c;
+  --color-background-light: #75716d;
+  --color-foreground: #f6f5f5;
+  --color-interactive: #fc3c00;
+
+  --unit-baseline: 8px;
+  --unit-smallest: calc(var(--unit-baseline) * 0.25);
+  --unit-smaller: calc(var(--unit-baseline) * 0.5);
+  --unit-small: var(--unit-baseline);
+  --unit-big: calc(var(--unit-baseline) * 2);
+  --unit-bigger: calc(var(--unit-baseline) * 3);
+  --unit-bigger: calc(var(--unit-baseline) * 4);
+  --unit-huge: calc(var(--unit-baseline) * 6);
+  --unit-huger: calc(var(--unit-baseline) * 12);
+  --unit-hugest: calc(var(--unit-baseline) * 24);
+}
+
+/* Override variables for dark theme */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-background: #f6f5f5;
+    --color-background-light: #8b8681;
+    --color-foreground: #0e0e0c;
+    --color-interactive: #fc3c00;
+  }
+}
