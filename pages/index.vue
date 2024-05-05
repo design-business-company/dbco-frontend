@@ -8,7 +8,7 @@
 import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 
-// Run common mount/unmount scripts. Seup SEO, etc.
+// Run common mount/unmount scripts. Setup SEO, etc.
 PageSetup({
   seoMeta: { title: "Index" },
 });
