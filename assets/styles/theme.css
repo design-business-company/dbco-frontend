@@ -98,6 +98,18 @@
   --gray-900: #302F2E;
   --gray-950: #0F0E0E;
 
+  --background-primary: var(--white);
+  --background-secondary: var(--gray-50);
+  --background-tertiary: var(--gray-150);
+  --foreground-primary: var(--gray-950);
+  --foreground-secondary: var(--gray-500);
+  --foreground-border: var(--gray-150);
+  --accent-primary: var(--gray-950);
+  --accent-primary-text: var(--indigo-50);
+  --accent-secondary: var(--gray-900);
+  --accent-error: var(--red-500);
+  --accent-valid: var(--green-500);
+
 }
 
 /* Override variables for dark theme */
