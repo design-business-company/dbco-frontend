@@ -1,4 +1,4 @@
-# Construct - Nuxt.js Edition
+# Design Business Company
 
 This is a [Nuxt](https://nuxt.com/docs/getting-started/introduction) project which includes a handful of very help packages and plugins that I often use. Specifically:
 
