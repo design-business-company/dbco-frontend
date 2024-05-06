@@ -39,6 +39,8 @@
   --unit-huger: calc(var(--unit-baseline) * 12);
   --unit-hugest: calc(var(--unit-baseline) * 24);
 
+  --white: #ffffff;
+  --black: #000000;
   --red-50: #FCF1F1;
   --red-150: #F3BABA;
   --red-300: #FC7474; 
@@ -95,7 +97,6 @@
   --gray-700: #535151;
   --gray-900: #302F2E;
   --gray-950: #0F0E0E;
-
 
 }
 
