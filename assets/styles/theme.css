@@ -1,6 +1,10 @@
 /* dark themes same electricity. we assume that by default. */
 :root {
-  /*
+  --color-background: #0e0e0c;
+  --color-background-light: #75716d;
+  --color-foreground: #f6f5f5;
+  --color-interactive: #fc3c00; 
+  
   --color-base-00: #000000;
   --color-base-05: #101010;
   --color-base-10: #202120;
@@ -21,9 +25,7 @@
   --color-blue: #4474d9;
   --color-purple: #7e64da;
   --color-pink: #ec92c5;
-  */
-
-  /* 
+  
   --unit-baseline: 8px;
   --unit-smallest: calc(var(--unit-baseline) * 0.25);
   --unit-smaller: calc(var(--unit-baseline) * 0.5);
@@ -34,8 +36,8 @@
   --unit-huge: calc(var(--unit-baseline) * 6);
   --unit-huger: calc(var(--unit-baseline) * 12);
   --unit-hugest: calc(var(--unit-baseline) * 24); 
-  */
-
+ 
+  /* Units */
   --unit-tiniest: 4px;
   --unit-tinier: 8px;
   --unit-tiny: 12px;
@@ -49,11 +51,7 @@
   --unit-huger: 160px;
   --unit-hugest: 200px;
 
-  --color-background: #0e0e0c;
-  --color-background-light: #75716d;
-  --color-foreground: #f6f5f5;
-  --color-interactive: #fc3c00;
-
+  /* Colors */
   --white: #ffffff;
   --black: #000000;
   --red-50: #FCF1F1;
@@ -125,6 +123,19 @@
   --accent-error: var(--red-500);
   --accent-valid: var(--green-500);
 
+  /* Grid */
+  --mobile-columns: 6;
+  --mobile-margin: var(--unit-smallest);
+  --mobile-gutter: var(--unit-tinier);
+  --tablet-columns: 8;
+  --tablet-margin: var(--unit-small);
+  --tablet-gutter: var(--unit-tinier);
+  --laptop-columns: 12;
+  --laptop-margin: var(--unit-big);
+  --laptop-gutter: var(--unit-tinier);
+  --desktop-columns: 12;
+  --desktop-margin: var(--unit-bigger);
+  --desktop-gutter: var(--unit-tinier);
 }
 
 /* Override variables for dark theme */
