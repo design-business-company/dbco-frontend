@@ -1,4 +1,10 @@
-# Design Business Company
+# dbco.online [![Netlify Status](https://api.netlify.com/api/v1/badges/1450d4ef-abd1-4e42-8389-38b77d766d08/deploy-status)](https://app.netlify.com/sites/dbco-frontend/deploys)
+
+> Design Business Company's little corner of the internet.
+
+## Introduction
+
+> > > > > > > 01b56da (chore: readme)
 
 This is a [Nuxt](https://nuxt.com/docs/getting-started/introduction) project which includes a handful of very help packages and plugins that I often use. Specifically:
 
