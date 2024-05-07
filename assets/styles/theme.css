@@ -51,27 +51,32 @@
   --unit-huger: 160px;
   --unit-hugest: 200px;
 
-  /* Grid */
+  /* Grid and Breakpoints */
   --grid-mobile-size: 360px;
   --grid-mobile-columns: 6;
   --grid-mobile-margin: var(--unit-smallest);
   --grid-mobile-gutter: var(--unit-tinier);
+
   --grid-phablet-size: 430px;
   --grid-phablet-columns: 6;
   --grid-phablet-margins: var(--unit-smallest);
   --grid-phablet-gutter: var(--unit-tinier);
+
   --grid-tablet-size: 600px;
   --grid-tablet-columns: 8;
   --grid-tablet-margin: var(--unit-small);
   --grid-tablet-gutter: var(--unit-tinier);
+
   --grid-laptop-size: 1024px;
   --grid-laptop-columns: 12;
   --grid-laptop-margin: var(--unit-big);
   --grid-laptop-gutter: var(--unit-tinier);
+
   --grid-desktop-size: 1512px;
   --grid-desktop-columns: 12;
   --grid-desktop-margin: var(--unit-bigger);
   --grid-desktop-gutter: var(--unit-tinier);
+  
   --grid-ultrawide-size: 1920px;
   --grid-ultrawide-columns: 12;
   --grid-ultrawide-margin: var(--unit-bigger);
@@ -136,6 +141,7 @@
   --gray-700: #535151;
   --gray-900: #302F2E;
   --gray-950: #0F0E0E;
+
   --background-primary: var(--white);
   --background-secondary: var(--gray-50);
   --background-tertiary: var(--gray-150);
