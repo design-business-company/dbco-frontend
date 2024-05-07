@@ -1,42 +1,5 @@
 /* dark themes same electricity. we assume that by default. */
 :root {
-  --color-background: #0e0e0c;
-  --color-background-light: #75716d;
-  --color-foreground: #f6f5f5;
-  --color-interactive: #fc3c00; 
-  
-  --color-base-00: #000000;
-  --color-base-05: #101010;
-  --color-base-10: #202120;
-  --color-base-20: #000000;
-  --color-base-25: #313232;
-  --color-base-30: #313232;
-  --color-base-35: #313232;
-  --color-base-40: #313232;
-  --color-base-50: #757676;
-  --color-base-60: #8f9190;
-  --color-base-70: #8f9190;
-  --color-base-100: #c8cccb;
-  --color-red: #e63b47;
-  --color-orange: #e67344;
-  --color-yellow: #f5c56f;
-  --color-green: #53c386;
-  --color-cyan: #98d4f2;
-  --color-blue: #4474d9;
-  --color-purple: #7e64da;
-  --color-pink: #ec92c5;
-  
-  --unit-baseline: 8px;
-  --unit-smallest: calc(var(--unit-baseline) * 0.25);
-  --unit-smaller: calc(var(--unit-baseline) * 0.5);
-  --unit-small: var(--unit-baseline);
-  --unit-big: calc(var(--unit-baseline) * 2);
-  --unit-bigger: calc(var(--unit-baseline) * 3);
-  --unit-bigger: calc(var(--unit-baseline) * 4);
-  --unit-huge: calc(var(--unit-baseline) * 6);
-  --unit-huger: calc(var(--unit-baseline) * 12);
-  --unit-hugest: calc(var(--unit-baseline) * 24); 
- 
   /* Units */
   --unit-tiniest: 4px;
   --unit-tinier: 8px;
@@ -51,33 +14,35 @@
   --unit-huger: 160px;
   --unit-hugest: 200px;
 
-  /* Grid and Breakpoints */
-  --grid-mobile-size: 360px;
+  /* Breakpoints */
+  --mobile: 360px;
+  --phablet: 430px;
+  --tablet: 600px;
+  --laptop: 1024px;
+  --desktop: 1512px;
+  --ultrawide: 1920px;
+
+  /* Grid */
   --grid-mobile-columns: 6;
   --grid-mobile-margin: var(--unit-smallest);
   --grid-mobile-gutter: var(--unit-tinier);
 
-  --grid-phablet-size: 430px;
   --grid-phablet-columns: 6;
   --grid-phablet-margins: var(--unit-smallest);
   --grid-phablet-gutter: var(--unit-tinier);
 
-  --grid-tablet-size: 600px;
   --grid-tablet-columns: 8;
   --grid-tablet-margin: var(--unit-small);
   --grid-tablet-gutter: var(--unit-tinier);
 
-  --grid-laptop-size: 1024px;
   --grid-laptop-columns: 12;
   --grid-laptop-margin: var(--unit-big);
   --grid-laptop-gutter: var(--unit-tinier);
 
-  --grid-desktop-size: 1512px;
   --grid-desktop-columns: 12;
   --grid-desktop-margin: var(--unit-bigger);
   --grid-desktop-gutter: var(--unit-tinier);
   
-  --grid-ultrawide-size: 1920px;
   --grid-ultrawide-columns: 12;
   --grid-ultrawide-margin: var(--unit-bigger);
   --grid-ultrawide-gutter: var(--unit-tinier);
@@ -85,6 +50,7 @@
   /* Colors */
   --white: #ffffff;
   --black: #000000;
+
   --red-50: #FCF1F1;
   --red-150: #F3BABA;
   --red-300: #FC7474; 
@@ -92,6 +58,7 @@
   --red-700: #A6090D;
   --red-900: #5D1312;
   --red-950: #230303;
+
   --orange-50: #FCF1EF;
   --orange-150: #F1BCB0;
   --orange-300: #FF762F; 
@@ -99,6 +66,7 @@
   --orange-700: #7E412A;
   --orange-900: #4B2415;
   --orange-950: #1B0904;
+
   --yellow-50: #F9F3EA;
   --yellow-150: #F8C03F;
   --yellow-300: #B69B6F; 
@@ -106,6 +74,7 @@
   --yellow-700: #5E4F37;
   --yellow-900: #5E4F37;
   --yellow-950: #120D07;
+
   --green-50: #E8F8E9;
   --green-150: #A9D3AA;
   --green-300: #45B44D; 
@@ -113,6 +82,7 @@
   --green-700: #245D28;
   --green-900: #1B351B;
   --green-950: #041106;
+
   --blue-50: #E1F8FE;
   --blue-150: #30DBF5;
   --blue-300: #26ADC3; 
@@ -120,6 +90,7 @@
   --blue-700: #0F5A66;
   --blue-900: #06343C;
   --blue-950: #011114;
+
   --indigo-50: #F3F3FD;
   --indigo-150: #C3C4F4;
   --indigo-300: #9597EC; 
@@ -127,6 +98,7 @@
   --indigo-700: #0027FA;
   --indigo-900: #00149A;
   --indigo-950: #060832;
+
   --violet-50: #F4F2FA;
   --violet-150: #D2C1EA;
   --violet-300: #B78BE7; 
@@ -134,6 +106,7 @@
   --violet-700: #7031A2;
   --violet-900: #3E2257;
   --violet-950: #150821;
+  
   --gray-50: #F4F3F3;
   --gray-150: #CAC8C8;
   --gray-300: #A29E9D; 
@@ -153,14 +126,4 @@
   --accent-secondary: var(--gray-900);
   --accent-error: var(--red-500);
   --accent-valid: var(--green-500);
-}
-
-/* Override variables for dark theme */
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-background: #f6f5f5;
-    --color-background-light: #8b8681;
-    --color-foreground: #0e0e0c;
-    --color-interactive: #fc3c00;
-  }
 }
