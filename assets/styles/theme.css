@@ -51,6 +51,32 @@
   --unit-huger: 160px;
   --unit-hugest: 200px;
 
+  /* Grid */
+  --grid-mobile-size: 360px;
+  --grid-mobile-columns: 6;
+  --grid-mobile-margin: var(--unit-smallest);
+  --grid-mobile-gutter: var(--unit-tinier);
+  --grid-phablet-size: 430px;
+  --grid-phablet-columns: 6;
+  --grid-phablet-margins: var(--unit-smallest);
+  --grid-phablet-gutter: var(--unit-tinier);
+  --grid-tablet-size: 600px;
+  --grid-tablet-columns: 8;
+  --grid-tablet-margin: var(--unit-small);
+  --grid-tablet-gutter: var(--unit-tinier);
+  --grid-laptop-size: 1024px;
+  --grid-laptop-columns: 12;
+  --grid-laptop-margin: var(--unit-big);
+  --grid-laptop-gutter: var(--unit-tinier);
+  --grid-desktop-size: 1512px;
+  --grid-desktop-columns: 12;
+  --grid-desktop-margin: var(--unit-bigger);
+  --grid-desktop-gutter: var(--unit-tinier);
+  --grid-ultrawide-size: 1920px;
+  --grid-ultrawide-columns: 12;
+  --grid-ultrawide-margin: var(--unit-bigger);
+  --grid-ultrawide-gutter: var(--unit-tinier);
+
   /* Colors */
   --white: #ffffff;
   --black: #000000;
@@ -110,7 +136,6 @@
   --gray-700: #535151;
   --gray-900: #302F2E;
   --gray-950: #0F0E0E;
-
   --background-primary: var(--white);
   --background-secondary: var(--gray-50);
   --background-tertiary: var(--gray-150);
@@ -122,20 +147,6 @@
   --accent-secondary: var(--gray-900);
   --accent-error: var(--red-500);
   --accent-valid: var(--green-500);
-
-  /* Grid */
-  --mobile-columns: 6;
-  --mobile-margin: var(--unit-smallest);
-  --mobile-gutter: var(--unit-tinier);
-  --tablet-columns: 8;
-  --tablet-margin: var(--unit-small);
-  --tablet-gutter: var(--unit-tinier);
-  --laptop-columns: 12;
-  --laptop-margin: var(--unit-big);
-  --laptop-gutter: var(--unit-tinier);
-  --desktop-columns: 12;
-  --desktop-margin: var(--unit-bigger);
-  --desktop-gutter: var(--unit-tinier);
 }
 
 /* Override variables for dark theme */
