@@ -23,6 +23,7 @@
   --color-pink: #ec92c5;
   */
 
+  /* 
   --unit-baseline: 8px;
   --unit-smallest: calc(var(--unit-baseline) * 0.25);
   --unit-smaller: calc(var(--unit-baseline) * 0.5);
@@ -32,7 +33,8 @@
   --unit-bigger: calc(var(--unit-baseline) * 4);
   --unit-huge: calc(var(--unit-baseline) * 6);
   --unit-huger: calc(var(--unit-baseline) * 12);
-  --unit-hugest: calc(var(--unit-baseline) * 24);
+  --unit-hugest: calc(var(--unit-baseline) * 24); 
+  */
 
   --unit-tiniest: 4px;
   --unit-tinier: 8px;
