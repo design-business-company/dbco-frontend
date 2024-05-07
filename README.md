@@ -4,8 +4,6 @@
 
 ## Introduction
 
-> > > > > > > 01b56da (chore: readme)
-
 This is a [Nuxt](https://nuxt.com/docs/getting-started/introduction) project which includes a handful of very help packages and plugins that I often use. Specifically:
 
 - [GSAP](https://gsap.com/docs/v3/) for animations.
