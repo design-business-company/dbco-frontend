@@ -110,6 +110,22 @@
   --accent-error: var(--red-500);
   --accent-valid: var(--green-500);
 
+  /* Typography */
+  --type-micro-size: 10px;
+  --type-micro-leading: 12px;
+  --type-micro-tracking: 6%;
+  --type-caption2-size: 13px;
+  --type-caption2-leading: 16px;
+  --type-caption2-tracking: 2%;
+  --type-caption1-size: 16px;
+  --type-caption1-leading: 20px;
+  --type-caption1-tracking: 1.5%;
+  --type-body2-size: 20px;
+  --type-body2-leading: 24px;
+  --type-body2-tracking: 0.5%;
+  --type-body1-size: 26px;
+  --type-body1-leading: 32px;
+  --type-body1-tracking: 0.25%;
 }
 
 /* Override variables for dark theme */
