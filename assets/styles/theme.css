@@ -23,11 +23,6 @@
   --color-pink: #ec92c5;
   */
 
-  --color-background: #0e0e0c;
-  --color-background-light: #75716d;
-  --color-foreground: #f6f5f5;
-  --color-interactive: #fc3c00;
-
   --unit-baseline: 8px;
   --unit-smallest: calc(var(--unit-baseline) * 0.25);
   --unit-smaller: calc(var(--unit-baseline) * 0.5);
@@ -38,6 +33,24 @@
   --unit-huge: calc(var(--unit-baseline) * 6);
   --unit-huger: calc(var(--unit-baseline) * 12);
   --unit-hugest: calc(var(--unit-baseline) * 24);
+
+  --unit-tiniest: 4px;
+  --unit-tinier: 8px;
+  --unit-tiny: 12px;
+  --unit-smallest: 16px;
+  --unit-smaller: 24px;
+  --unit-small: 32px;
+  --unit-big: 48px;
+  --unit-bigger: 64px;
+  --unit-biggest: 96px;
+  --unit-huge: 128px;
+  --unit-huger: 160px;
+  --unit-hugest: 200px;
+
+  --color-background: #0e0e0c;
+  --color-background-light: #75716d;
+  --color-foreground: #f6f5f5;
+  --color-interactive: #fc3c00;
 
   --white: #ffffff;
   --black: #000000;
