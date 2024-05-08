@@ -30,9 +30,9 @@ watch(
 
 <style lang="css">
 .site-content {
-  padding-left: var(--unit-big);
-  padding-right: var(--unit-big);
-  padding-top: calc(var(--unit-big) * 6);
+  padding-left: var(--big);
+  padding-right: var(--big);
+  padding-top: calc(var(--big) * 6);
 }
 
 :root {

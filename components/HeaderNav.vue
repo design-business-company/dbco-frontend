@@ -19,8 +19,7 @@ nav {
 
 ul {
   display: flex;
-  padding-top: calc(var(--unit-small) + var(--unit-smaller));
-  padding-left: var(--unit-big);
+  padding: var(--small) var(--big);
 
   li {
     display: block;
@@ -33,13 +32,13 @@ ul {
     text-underline-offset: 0.15em;
 
     &.router-link-exact-active {
-      color: var(--color-foreground);
+      color: var(--foreground-primary);
       text-decoration: underline;
-      text-decoration-color: var(--color-interactive);
+      text-decoration-color: var(--accent-primary);
     }
 
     &:hover {
-      color: var(--color-foreground);
+      color: var(--foreground-primary);
       text-decoration: underline;
     }
   }

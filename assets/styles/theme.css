@@ -1,17 +1,25 @@
 :root {
   /* Units */
-  --unit-tiniest: 4px;
-  --unit-tinier: 8px;
-  --unit-tiny: 12px;
-  --unit-smallest: 16px;
-  --unit-smaller: 24px;
-  --unit-small: 32px;
-  --unit-big: 48px;
-  --unit-bigger: 64px;
-  --unit-biggest: 96px;
-  --unit-huge: 128px;
-  --unit-huger: 160px;
-  --unit-hugest: 200px;
+  --tiniest: 4px;
+  --tinier: 8px;
+  --tiny: 12px;
+  --smallest: 16px;
+  --smaller: 24px;
+  --small: 32px;
+  --big: 48px;
+  --bigger: 64px;
+  --biggest: 96px;
+  --huge: 128px;
+  --huger: 160px;
+  --hugest: 200px;
+
+  /* Breakpoints */
+  --mobile: 360px;
+  --phablet: 430px;
+  --tablet: 600px;
+  --laptop: 1024px;
+  --desktop: 1512px;
+  --ultrawide: 1920px;
 
   /* Typography */
   --type-micro-size: 10px;
@@ -46,38 +54,30 @@
   --type-headline1-leading: 80px;
   --type-headline1-tracking: 0;
 
-  /* Breakpoints */
-  --bp-mobile: 360px;
-  --bp-phablet: 430px;
-  --bp-tablet: 600px;
-  --bp-laptop: 1024px;
-  --bp-desktop: 1512px;
-  --bp-ultrawide: 1920px;
-
   /* Grid */
   --grid-mobile-columns: 6;
-  --grid-mobile-margin: var(--unit-smallest);
-  --grid-mobile-gutter: var(--unit-tinier);
+  --grid-mobile-margin: var(--smallest);
+  --grid-mobile-gutter: var(--tinier);
 
   --grid-phablet-columns: 6;
-  --grid-phablet-margins: var(--unit-smallest);
-  --grid-phablet-gutter: var(--unit-tinier);
+  --grid-phablet-margins: var(--smallest);
+  --grid-phablet-gutter: var(--tinier);
 
   --grid-tablet-columns: 8;
-  --grid-tablet-margin: var(--unit-small);
-  --grid-tablet-gutter: var(--unit-tinier);
+  --grid-tablet-margin: var(--small);
+  --grid-tablet-gutter: var(--tinier);
 
   --grid-laptop-columns: 12;
-  --grid-laptop-margin: var(--unit-big);
-  --grid-laptop-gutter: var(--unit-tinier);
+  --grid-laptop-margin: var(--big);
+  --grid-laptop-gutter: var(--tinier);
 
   --grid-desktop-columns: 12;
-  --grid-desktop-margin: var(--unit-bigger);
-  --grid-desktop-gutter: var(--unit-tinier);
+  --grid-desktop-margin: var(--bigger);
+  --grid-desktop-gutter: var(--tinier);
 
   --grid-ultrawide-columns: 12;
-  --grid-ultrawide-margin: var(--unit-bigger);
-  --grid-ultrawide-gutter: var(--unit-tinier);
+  --grid-ultrawide-margin: var(--bigger);
+  --grid-ultrawide-gutter: var(--tinier);
 
   /* Colors */
   --white: #ffffff;

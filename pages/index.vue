@@ -1,6 +1,7 @@
 <template>
   <div>
-    <p class="placeholder-hero">Index</p>
+    <Text size="headline-1" element="h1">Hello World</Text>
+    <!-- <Text size="headline-3" element="h1">Hello World</Text> -->
   </div>
 </template>
 
