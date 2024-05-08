@@ -42,7 +42,7 @@ function onLeave(el, done) {
 
 <style lang="scss" scoped>
 .scrim {
-  background-color: var(--color-background);
+  background-color: var(--background-primary);
   position: fixed;
   top: 0;
   left: 0;

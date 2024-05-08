@@ -47,31 +47,30 @@ button {
   appearance: none;
   background-color: transparent;
   display: block;
-  padding: 0.25em 0.5em;
-  color: var(--color-foreground);
+  color: var(--foreground-primary);
   text-decoration: none;
   border-radius: 100vw;
   cursor: pointer;
   border: 0;
 
   position: fixed;
-  top: calc(var(--unit-small) + var(--unit-smaller));
-  right: var(--unit-big);
+  top: var(--small);
+  right: var(--big);
   z-index: 999;
 }
 
 table {
   font-size: 0.8rem;
   font-family: monospace;
-  border: 2px solid var(--background-color);
+  border: 2px solid var(--background-primary);
   position: fixed;
   z-index: 999;
-  top: var(--unit-huge);
-  right: var(--unit-big);
+  top: var(--bigger);
+  right: 0;
 }
 
 tr {
-  border-bottom: 2px solid var(--background-color);
+  border-bottom: 2px solid var(--background-primary);
 }
 
 td {
@@ -79,7 +78,7 @@ td {
 }
 
 td:first-child {
-  background: var(--color-background-light);
+  background: var(--background-secondary);
 }
 
 td:last-child {
@@ -96,7 +95,7 @@ td.is-true {
 
 @media (prefers-color-scheme: light) {
   td {
-    color: var(--color-background);
+    color: var(--background-primary);
   }
 }
 </style>
