@@ -1,12 +1,10 @@
 <template>
   <nav>
-    <Text element="ul" size="caption-1">
-      <li><NuxtLink to="/">Index</NuxtLink></li>
+    <ul>
+      <li><NuxtLink to="/">Work</NuxtLink></li>
       <li><NuxtLink to="/about">About</NuxtLink></li>
       <li><NuxtLink to="/contact">Contact</NuxtLink></li>
-      <li><NuxtLink to="/three">Three</NuxtLink></li>
-      <li><NuxtLink to="/viewport">Viewport</NuxtLink></li>
-    </Text>
+    </ul>
   </nav>
 </template>
 
@@ -16,13 +14,6 @@ nav {
 }
 
 ul {
-  display: flex;
-
-  li {
-    display: block;
-    margin-right: 0.4em;
-  }
-
   a {
     display: block;
     text-decoration: none;
@@ -31,7 +22,6 @@ ul {
 
     &.router-link-exact-active {
       color: var(--foreground-primary);
-      text-decoration: underline;
       text-decoration-color: var(--accent-primary);
     }
 

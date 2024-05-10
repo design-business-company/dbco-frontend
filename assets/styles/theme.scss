@@ -1,3 +1,10 @@
+$mobile: 360px;
+$phablet: 430px;
+$tablet: 600px;
+$laptop: 1024px;
+$desktop: 1512px;
+$ultrawide: 1920px;
+
 :root {
   /* Units */
   --tiniest: 4px;
@@ -14,12 +21,12 @@
   --hugest: 200px;
 
   /* Breakpoints */
-  --mobile: 360px;
-  --phablet: 430px;
-  --tablet: 600px;
-  --laptop: 1024px;
-  --desktop: 1512px;
-  --ultrawide: 1920px;
+  --mobile: #{$mobile};
+  --phablet: #{$phablet};
+  --tablet: #{$tablet};
+  --laptop: #{$laptop};
+  --desktop: #{$desktop};
+  --ultrawide: #{$ultrawide};
 
   /* Typography */
   --type-micro-size: 10px;
@@ -55,15 +62,15 @@
   --type-headline1-tracking: 0;
 
   /* Grid */
-  --grid-mobile-columns: 6;
+  --grid-mobile-columns: 12;
   --grid-mobile-margin: var(--smallest);
   --grid-mobile-gutter: var(--tinier);
 
-  --grid-phablet-columns: 6;
+  --grid-phablet-columns: 12;
   --grid-phablet-margins: var(--smallest);
   --grid-phablet-gutter: var(--tinier);
 
-  --grid-tablet-columns: 8;
+  --grid-tablet-columns: 12;
   --grid-tablet-margin: var(--small);
   --grid-tablet-gutter: var(--tinier);
 

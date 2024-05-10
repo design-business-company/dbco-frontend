@@ -1,8 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   css: [
-    "~/assets/styles/theme.css",
-    "~/assets/styles/reset.css",
+    "~/assets/styles/theme.scss",
+    "~/assets/styles/reset.scss",
+    "~/assets/styles/grid.scss",
     "~/assets/styles/fonts.css",
   ],
   modules: ["@pinia/nuxt"],

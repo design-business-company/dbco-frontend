@@ -159,7 +159,7 @@ html {
   overflow-y: scroll;
   position: relative;
   scroll-behavior: smooth;
-  font-family: sans-serif;
+  min-width: 320px;
 
   background-color: var(--background-primary);
   color: var(--foreground-primary);

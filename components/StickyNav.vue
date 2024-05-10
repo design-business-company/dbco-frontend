@@ -1,18 +1,31 @@
 <template>
-  <header :class="['site-header', { 'is-visible': headerIsVisible }]">
-    <div class="wrapper">
-      <HeaderLogo />
-      <HeaderNav />
-      <Debug v-if="isDev" />
-    </div>
-  </header>
+  <nav
+    :class="[
+      'sticky-nav',
+      { 'is-visible': headerIsVisible },
+      { 'is-disabled': !app.headerIsVisible },
+    ]"
+  >
+    <Grid class="wrapper">
+      <Column span="6">
+        <StickyNavLogo />
+      </Column>
+
+      <Column span="6">
+        <StickyNavLinks />
+      </Column>
+    </Grid>
+    <Debug v-if="isDev" />
+  </nav>
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from "vue";
 import { useDeviceStore } from "~/stores/device";
+import { useAppStore } from "~/stores/app";
+import { onMounted, onUnmounted } from "vue";
 const isDev = process.dev;
 
+const app = useAppStore();
 const deviceStore = useDeviceStore();
 const headerIsVisible = ref(true);
 
@@ -43,20 +56,29 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.site-header {
+.sticky-nav {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 100;
 
+  &:hover .wrapper {
+    transform: translate3d(0, 0, 0);
+  }
+
   .wrapper {
     transition: transform 300ms ease-out;
     transform: translate3d(0, -150%, 0);
+    background-color: var(--background-primary);
   }
 
   &.is-visible .wrapper {
     transform: translate3d(0, 0, 0);
+  }
+
+  &.is-disabled .wrapper {
+    transform: translate3d(0, -150%, 0);
   }
 }
 </style>
