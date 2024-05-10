@@ -1,0 +1,37 @@
+@import "../styles/theme.scss";
+
+@mixin mobile {
+  @media (min-width: #{$mobile}) {
+    @content;
+  }
+}
+
+@mixin phablet {
+  @media (min-width: #{$phablet}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$tablet}) {
+    @content;
+  }
+}
+
+@mixin laptop {
+  @media (min-width: #{$laptop}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$desktop}) {
+    @content;
+  }
+}
+
+@mixin ultrawide {
+  @media (min-width: #{$ultrawide}) {
+    @content;
+  }
+}

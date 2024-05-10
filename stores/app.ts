@@ -4,6 +4,7 @@ export const useAppStore = defineStore("app", {
   state: () => ({
     appHasLoaded: false as boolean | false,
     routeIsTransitioning: true as boolean | true,
+    headerIsVisible: true as boolean | true,
   }),
   actions: {
     setAppHasLoaded(loaded: boolean) {
@@ -11,6 +12,9 @@ export const useAppStore = defineStore("app", {
     },
     setRouteIsTransitioning(transitioning: boolean) {
       this.routeIsTransitioning = transitioning;
+    },
+    setHeaderIsVisible(visible: boolean) {
+      this.headerIsVisible = visible;
     },
   },
 });

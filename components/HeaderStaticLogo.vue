@@ -1,18 +1,16 @@
 <template>
-  <div id="app">
-    <h1>
-      <Text size="headline-2" @mouseover="() => shuffle(line[0])">{{
-        line[0].val
-      }}</Text>
-      <Text size="headline-2" @mouseover="() => shuffle(line[1])">{{
-        line[1].val
-      }}</Text>
-      <Text size="headline-2" @mouseover="() => shuffle(line[2])">{{
-        line[2].val
-      }}</Text>
-    </h1>
-  </div>
+  <h1>
+    <span @mouseover="() => shuffle(line[0])">{{ line[0].val }}</span>
+    <span @mouseover="() => shuffle(line[1])">{{ line[1].val }}</span>
+    <span @mouseover="() => shuffle(line[2])">{{ line[2].val }}</span>
+  </h1>
 </template>
+
+<style>
+span {
+  display: flex;
+}
+</style>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";

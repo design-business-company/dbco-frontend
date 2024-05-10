@@ -1,0 +1,44 @@
+@import "../styles/theme.scss";
+
+$grid-margin: clamp(16px, 2vw, 40px);
+$grid-gap: clamp(8px, 0.5vw, 12px);
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-mobile-columns), 1fr);
+  padding-left: $grid-margin;
+  padding-right: $grid-margin;
+  gap: $grid-gap;
+
+  /* @media (min-width: var(--mobile)) {} */
+  /* @media (min-width: var(--phablet)) {} */
+
+  @media (min-width: $tablet) {
+    grid-template-columns: repeat(var(--grid-tablet-columns), 1fr);
+
+    // padding-left: var(--grid-tablet-margin);
+    // padding-right: var(--grid-tablet-margin);
+    // gap: var(--grid-tablet-gutter);
+  }
+
+  @media (min-width: $laptop) {
+    grid-template-columns: repeat(var(--grid-laptop-columns), 1fr);
+    // padding-left: var(--grid-laptop-margin);
+    // padding-right: var(--grid-laptop-margin);
+    // gap: var(--grid-laptop-gutter);
+  }
+
+  @media (min-width: $desktop) {
+    grid-template-columns: repeat(var(--grid-desktop-columns), 1fr);
+    // padding-left: var(--grid-desktop-margin);
+    // padding-right: var(--grid-desktop-margin);
+    // gap: var(--grid-desktop-gutter);
+  }
+
+  @media (min-width: $ultrawide) {
+    grid-template-columns: repeat(var(--grid-ultrawide-columns), 1fr);
+    // padding-left: var(--grid-ultrawide-margin);
+    // padding-right: var(--grid-ultrawide-margin);
+    // gap: var(--grid-ultrawide-gutter);
+  }
+}
