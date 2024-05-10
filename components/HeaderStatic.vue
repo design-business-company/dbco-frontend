@@ -19,6 +19,8 @@
   width: 100%;
   position: relative;
   z-index: 999;
+  padding-top: var(--tinier);
+  padding-bottom: var(--tinier);
 }
 </style>
 

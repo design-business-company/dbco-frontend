@@ -64,15 +64,17 @@ onUnmounted(() => {
   left: 0;
   right: 0;
 
-  &:hover .wrapper {
-    transform: translate3d(0, 0, 0);
-  }
-
   .wrapper {
     transition: transform 300ms ease-out, opacity 300ms ease-out;
     transform: translate3d(0, -150%, 0);
     opacity: 1;
     background-color: var(--background-primary);
+    padding-top: var(--tinier);
+    padding-bottom: var(--tinier);
+  }
+
+  &:hover .wrapper {
+    transform: translate3d(0, 0, 0);
   }
 
   &.is-visible .wrapper {
