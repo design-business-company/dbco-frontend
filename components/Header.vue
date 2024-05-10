@@ -1,6 +1,7 @@
 <template>
   <header :class="['site-header', { 'is-visible': headerIsVisible }]">
     <div class="wrapper">
+      <HeaderLogo />
       <HeaderNav />
       <Debug v-if="isDev" />
     </div>
