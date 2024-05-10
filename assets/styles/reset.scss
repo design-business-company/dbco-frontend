@@ -148,7 +148,6 @@ table {
 html,
 body,
 #__nuxt {
-  font-family: "DBC Metaphor", sans-serif;
   min-height: 100dvh;
   margin: 0;
 }
@@ -160,6 +159,8 @@ html {
   position: relative;
   scroll-behavior: smooth;
   min-width: 320px;
+  font-family: "DBC Metaphor", sans-serif;
+  font-variation-settings: "wght" 500;
 
   background-color: var(--background-primary);
   color: var(--foreground-primary);

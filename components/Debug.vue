@@ -54,9 +54,9 @@ button {
   border: 0;
 
   position: fixed;
-  top: var(--small);
-  right: var(--big);
-  z-index: 999;
+  top: 0;
+  right: 0;
+  z-index: 9999;
 }
 
 table {

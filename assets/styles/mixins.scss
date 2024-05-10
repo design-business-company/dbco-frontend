@@ -1,3 +1,5 @@
+@use "sass:string";
+@use "sass:math";
 @import "../styles/theme.scss";
 
 @mixin mobile {
@@ -33,5 +35,36 @@
 @mixin ultrawide {
   @media (min-width: #{$ultrawide}) {
     @content;
+  }
+}
+
+@function px-from-percent($percentage, $width: 100) {
+  @return ($percentage * 0.01) * $width;
+}
+
+@function strip-units($number) {
+  @return math.div($number, $number * 0 + 1);
+}
+
+@function calc-vw($pixel, $container-size: 100) {
+  @return math.div(strip-units($pixel), strip-units($container-size)) * 100 +
+    0vw;
+}
+
+@function calc-leading($leading-in-pixels, $type-size) {
+  @return math.div(strip-units($leading-in-pixels), strip-units($type-size));
+}
+
+@mixin fluidScale(
+  $sizeInPixels,
+  $baselineInPixels,
+  $breakpointInPixels: 1024px
+) {
+  font-size: $sizeInPixels;
+  line-height: $baselineInPixels;
+
+  @media (min-width: $breakpointInPixels) {
+    font-size: calc-vw($sizeInPixels, $breakpointInPixels);
+    line-height: calc-leading($baselineInPixels, $sizeInPixels);
   }
 }

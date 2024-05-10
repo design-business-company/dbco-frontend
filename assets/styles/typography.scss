@@ -1,0 +1,61 @@
+@import "~/assets/styles/mixins";
+
+.text-micro {
+  font-size: var(--type-micro-size);
+  line-height: var(--type-micro-leading);
+  letter-spacing: var(--type-micro-tracking);
+}
+
+.text-caption-1 {
+  font-size: var(--type-caption1-size);
+  line-height: var(--type-caption1-leading);
+  letter-spacing: var(--type-caption1-tracking);
+
+  @include fluidScale(28px, 32px, $laptop);
+}
+
+.text-caption-2 {
+  font-size: var(--type-caption2-size);
+  line-height: var(--type-caption2-leading);
+  letter-spacing: var(--type-caption2-tracking);
+}
+
+.text-body-1 {
+  font-size: var(--type-body1-size);
+  line-height: var(--type-body1-leading);
+  letter-spacing: var(--type-body1-tracking);
+}
+
+.text-body-2 {
+  font-size: var(--type-body2-size);
+  line-height: var(--type-body2-leading);
+  letter-spacing: var(--type-body2-tracking);
+}
+
+.text-headline-1 {
+  font-size: var(--type-headline1-size);
+  line-height: var(--type-headline1-leading);
+  letter-spacing: var(--type-headline1-tracking);
+}
+
+.text-headline-2 {
+  font-size: var(--type-headline2-size);
+  line-height: var(--type-headline2-leading);
+  letter-spacing: var(--type-headline2-tracking);
+}
+
+.text-headline-3 {
+  font-size: var(--type-headline3-size);
+  line-height: var(--type-headline3-leading);
+  letter-spacing: var(--type-headline3-tracking);
+}
+
+.foo {
+  @include fluidScale(28px, 32px, $laptop);
+  letter-spacing: -0.02em;
+}
+
+@font-face {
+  src: url("~/assets/fonts/DBC-MetaphorGX.ttf");
+  font-family: "DBC Metaphor";
+}

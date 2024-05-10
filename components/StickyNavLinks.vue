@@ -11,7 +11,7 @@
 <style lang="scss" scoped>
 nav {
   position: relative;
-  z-index: 999;
+  z-index: 998;
 }
 
 ul {

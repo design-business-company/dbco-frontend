@@ -9,6 +9,7 @@
 <style>
 span {
   display: flex;
+  cursor: crosshair;
 }
 </style>
 

@@ -4,7 +4,7 @@ export default defineNuxtConfig({
     "~/assets/styles/theme.scss",
     "~/assets/styles/reset.scss",
     "~/assets/styles/grid.scss",
-    "~/assets/styles/fonts.css",
+    "~/assets/styles/typography.scss",
   ],
   modules: ["@pinia/nuxt"],
   plugins: [

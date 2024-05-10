@@ -1,6 +1,6 @@
 <template>
   <Observer :onEnter="onEnter" :onLeave="onLeave">
-    <Grid>
+    <Grid class="static-header foo">
       <Column span="6" laptop-start="7" laptop-span="3">
         <HeaderStaticLogo />
       </Column>
@@ -10,6 +10,17 @@
     </Grid>
   </Observer>
 </template>
+
+<style>
+.static-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  position: relative;
+  z-index: 999;
+}
+</style>
 
 <script setup>
 import { useAppStore } from "~/stores/app";
