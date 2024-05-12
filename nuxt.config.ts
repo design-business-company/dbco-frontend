@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     "~/assets/styles/grid.scss",
     "~/assets/styles/typography.scss",
   ],
-  modules: ["@pinia/nuxt"],
+  modules: ["@pinia/nuxt", "@nuxtjs/plausible"],
   plugins: [
     { src: "~/plugins/device/deviceInfo.ts", mode: "client" },
     { src: "~/plugins/device/deviceDimensions.ts", mode: "client" },
@@ -24,5 +24,9 @@ export default defineNuxtConfig({
         lang: "en",
       },
     },
+  },
+  plausible: {
+    // Prevent tracking on localhost
+    ignoredHostnames: ["localhost"],
   },
 });

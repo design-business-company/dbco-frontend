@@ -1,30 +1,12 @@
 <template>
   <div style="margin-top: 500px">
     <Grid>
-      <!-- <Column mobile="4" tablet="3/8" >
-        <Text size="headline-2" element="h1">Hello World</Text>
-      </Column> -->
-
-      <!-- <div class="foo">
-        <Text size="caption-2" element="h1">Hello World</Text>
-      </div>
-      <div class="foo">
-        <Text size="caption-2" element="h1">Hello World</Text>
-      </div>
-      <div class="foo">
-        <Text size="caption-2" element="h1">Hello World</Text>
-      </div>
-      <div class="foo">
-        <Text size="caption-2" element="h1">Hello World</Text>
-      </div>
-      <div class="foo">
-        <Text size="caption-2" element="h1">Hello World</Text>
-      </div>
-      <div class="foo">
-        <Text size="caption-2" element="h1">Hello World</Text>
-      </div> -->
-
-      <Column>
+      <Column
+        style="background-color: red"
+        span="12"
+        tablet-span="8"
+        laptop-span="6"
+      >
         <Text size="caption-1" element="h1"
           >To support a wide array of mobile devices, we design grids for
           screens as small as 360px wide—a resolution that’s typical for smaller
@@ -32,7 +14,7 @@
           include large devices like the  iPhone 15 Max.</Text
         >
       </Column>
-      <Column laptop-span="4" desktop-span="3">
+      <Column mobile-start="1" laptop-span="4" desktop-span="3">
         <Rule />
         <Text size="caption-1" element="h1">Hello World</Text>
       </Column>

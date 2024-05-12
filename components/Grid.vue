@@ -1,6 +1,5 @@
 <template>
   <component :is="element" class="grid">
-    <!-- Placeholder for Column components -->
     <slot></slot>
   </component>
 </template>
