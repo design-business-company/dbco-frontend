@@ -2,18 +2,17 @@
   <nav
     :class="[
       'sticky-nav',
-      'foo',
       { 'is-visible': headerIsVisible },
       { 'is-disabled': !app.headerIsVisible },
       { 'is-behind-static-header': device.scrollNearTop },
     ]"
   >
     <Grid class="wrapper">
-      <Column span="4" tablet-span="6">
+      <Column class="text-body-1" span="4" tablet-span="6">
         <StickyNavLogo />
       </Column>
 
-      <Column span="6">
+      <Column class="text-body-1" span="6">
         <StickyNavLinks />
       </Column>
     </Grid>
@@ -63,14 +62,18 @@ onUnmounted(() => {
   top: 0;
   left: 0;
   right: 0;
+  z-index: 999;
 
   .wrapper {
-    transition: transform 300ms ease-out, opacity 300ms ease-out;
     transform: translate3d(0, -150%, 0);
     opacity: 1;
     background-color: var(--background-primary);
     padding-top: var(--tinier);
     padding-bottom: var(--tinier);
+    transition: background-color var(--transition) var(--transition-page-delay),
+      color var(--transition) var(--transition-page-delay),
+      transform 200ms var(--transition-function),
+      opacity 300ms var(--transition-function);
   }
 
   &:hover .wrapper {

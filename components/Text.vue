@@ -20,7 +20,7 @@ type SizeType =
 const props = defineProps({
   size: {
     type: String as PropType<SizeType>,
-    default: "body1",
+    default: "body-2",
     validator: (value: SizeType): boolean =>
       [
         "micro",

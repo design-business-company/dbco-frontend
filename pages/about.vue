@@ -13,6 +13,14 @@
 <script setup>
 import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
+import { Theme } from "~/composables/Theme";
+const { setTheme } = Theme();
+
+setTheme({
+  background: "#282c34",
+  foreground: "#abb2bf",
+  accent: "#c678dd",
+});
 
 // Run common mount/unmount scripts. Seup SEO, etc.
 PageSetup({

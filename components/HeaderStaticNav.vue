@@ -4,6 +4,7 @@
       <li><NuxtLink to="/">Work</NuxtLink></li>
       <li><NuxtLink to="/about">About</NuxtLink></li>
       <li><NuxtLink to="/contact">Contact</NuxtLink></li>
+      <li><NuxtLink to="/type">Type</NuxtLink></li>
     </ul>
   </nav>
 </template>

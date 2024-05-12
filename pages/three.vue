@@ -111,24 +111,3 @@ onUnmounted(() => {
   if (frameId != null) cancelAnimationFrame(frameId);
 });
 </script>
-
-<style>
-:root {
-  /* backgrounds */
-  --background-primary: var(--black);
-  --background-secondary: var(--gray-950);
-  --background-tertiary: var(--gray-900);
-
-  /* foreground */
-  --foreground-primary: var(--gray-50);
-  --foreground-secondary: var(--gray-150);
-  --foreground-tertiary: var(--gray-300);
-
-  /* accent */
-  --accent-primary: var(--gray-50);
-  --accent-primary-text: var(--indigo-50);
-  --accent-secondary: var(--gray-900);
-  --accent-error: var(--red-500);
-  --accent-valid: var(--green-500);
-}
-</style>

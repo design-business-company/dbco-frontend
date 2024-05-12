@@ -1,11 +1,15 @@
-$mobile: 360px;
-$phablet: 430px;
-$tablet: 600px;
-$laptop: 1024px;
-$desktop: 1512px;
-$ultrawide: 1920px;
+@import "../styles/vars.scss";
+@import "../styles/mixins.scss";
 
 :root {
+  /* Breakpoints */
+  --mobile: #{$mobile};
+  --phablet: #{$phablet};
+  --tablet: #{$tablet};
+  --laptop: #{$laptop};
+  --desktop: #{$desktop};
+  --ultrawide: #{$ultrawide};
+
   /* Units */
   --tiniest: 4px;
   --tinier: 8px;
@@ -20,46 +24,20 @@ $ultrawide: 1920px;
   --huger: 160px;
   --hugest: 200px;
 
-  /* Breakpoints */
-  --mobile: #{$mobile};
-  --phablet: #{$phablet};
-  --tablet: #{$tablet};
-  --laptop: #{$laptop};
-  --desktop: #{$desktop};
-  --ultrawide: #{$ultrawide};
-
-  /* Typography */
-  --type-micro-size: 10px;
-  --type-micro-leading: 12px;
-  --type-micro-tracking: 0;
-
-  --type-caption2-size: 13px;
-  --type-caption2-leading: 16px;
-  --type-caption2-tracking: 0;
-
-  --type-caption1-size: 16px;
-  --type-caption1-leading: 20px;
-  --type-caption1-tracking: 0;
-
-  --type-body2-size: 20px;
-  --type-body2-leading: 24px;
-  --type-body2-tracking: 0;
-
-  --type-body1-size: 26px;
-  --type-body1-leading: 32px;
-  --type-body1-tracking: 0;
-
-  --type-headline3-size: 36px;
-  --type-headline3-leading: 40px;
-  --type-headline3-tracking: 0;
-
-  --type-headline2-size: 54px;
-  --type-headline2-leading: 56px;
-  --type-headline2-tracking: 0;
-
-  --type-headline1-size: 76px;
-  --type-headline1-leading: 80px;
-  --type-headline1-tracking: 0;
+  @include desktop {
+    --tiniest: #{calc-vw(4px, $desktop)};
+    --tinier: #{calc-vw(8px, $desktop)};
+    --tiny: #{calc-vw(12px, $desktop)};
+    --smallest: #{calc-vw(16px, $desktop)};
+    --smaller: #{calc-vw(24px, $desktop)};
+    --small: #{calc-vw(32px, $desktop)};
+    --big: #{calc-vw(48px, $desktop)};
+    --bigger: #{calc-vw(64px, $desktop)};
+    --biggest: #{calc-vw(96px, $desktop)};
+    --huge: #{calc-vw(128px, $desktop)};
+    --huger: #{calc-vw(160px, $desktop)};
+    --hugest: #{calc-vw(200px, $desktop)};
+  }
 
   /* Grid */
   --grid-mobile-columns: 12;
@@ -170,4 +148,9 @@ $ultrawide: 1920px;
   --accent-secondary: var(--gray-900);
   --accent-error: var(--red-500);
   --accent-valid: var(--green-500);
+
+  --transition-function: ease-out;
+  --transition-time: 400ms;
+  --transition: var(--transition-time) var(--transition-function);
+  --transition-page-delay: 250ms;
 }

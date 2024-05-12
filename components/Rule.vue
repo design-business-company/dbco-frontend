@@ -2,9 +2,9 @@
   <hr class="rule" />
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .rule {
-  border-color: var(--background-tertiary);
+  border-color: var(--foreground-primary);
   margin: var(--tiny) 0;
 }
 </style>

@@ -1,6 +1,6 @@
 @use "sass:string";
 @use "sass:math";
-@import "../styles/theme.scss";
+@import "../styles/vars";
 
 @mixin mobile {
   @media (min-width: #{$mobile}) {
@@ -58,7 +58,7 @@
 @mixin fluidScale(
   $sizeInPixels,
   $baselineInPixels,
-  $breakpointInPixels: 1024px
+  $breakpointInPixels: $desktop
 ) {
   font-size: $sizeInPixels;
   line-height: $baselineInPixels;

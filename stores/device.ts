@@ -6,6 +6,12 @@ interface PreferredTheme {
 
 type ScrollDirection = "up" | "down" | "left" | "right";
 
+interface Theme {
+  background: string;
+  foreground: string;
+  accent: string;
+}
+
 export const useDeviceStore = defineStore("device", {
   state: () => ({
     // context
@@ -22,17 +28,21 @@ export const useDeviceStore = defineStore("device", {
     scrollNearTop: null as boolean | null,
     scrollAtBottom: null as boolean | null,
     scrollNearBottom: null as boolean | null,
-
     // user prefs
     userMotionReduced: null as boolean | null,
     userThemePreference: null as PreferredTheme | null,
-
     // viewport metrics
     winWidth: 0 as number | 0,
     winHeight: 0 as number | 0,
     docWidth: 0 as number | 0,
     docHeight: 0 as number | 0,
     dpi: 0 as number | 0,
+    // theme
+    theme: {
+      background: "#ffffff", // Default white background
+      foreground: "#000000", // Default black foreground
+      accent: "#ff0000", // Default red accent
+    } as Theme,
   }),
   actions: {
     setTouch(val: boolean) {
@@ -91,6 +101,14 @@ export const useDeviceStore = defineStore("device", {
     },
     setResizing(val: boolean) {
       this.isResizing = val;
+    },
+    updateTheme(newTheme: Partial<Theme>) {
+      // Update each theme property if provided
+      if (newTheme.background !== undefined)
+        this.theme.background = newTheme.background;
+      if (newTheme.foreground !== undefined)
+        this.theme.foreground = newTheme.foreground;
+      if (newTheme.accent !== undefined) this.theme.accent = newTheme.accent;
     },
   },
 });

@@ -1,58 +1,72 @@
 @import "~/assets/styles/mixins";
 
 .text-micro {
-  font-size: var(--type-micro-size);
-  line-height: var(--type-micro-leading);
-  letter-spacing: var(--type-micro-tracking);
-}
-
-.text-caption-1 {
-  font-size: var(--type-caption1-size);
-  line-height: var(--type-caption1-leading);
-  letter-spacing: var(--type-caption1-tracking);
-
-  @include fluidScale(28px, 32px, $laptop);
+  font-size: 10px;
+  line-height: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  word-spacing: 0.01em;
+  max-width: 50ch;
+  @include fluidScale(10px, 12px, $desktop);
 }
 
 .text-caption-2 {
-  font-size: var(--type-caption2-size);
-  line-height: var(--type-caption2-leading);
-  letter-spacing: var(--type-caption2-tracking);
+  font-size: 13px;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+  max-width: 75ch;
+
+  @include fluidScale(13px, 16px, $desktop);
 }
 
-.text-body-1 {
-  font-size: var(--type-body1-size);
-  line-height: var(--type-body1-leading);
-  letter-spacing: var(--type-body1-tracking);
+.text-caption-1 {
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+  max-width: 80ch;
+
+  @include fluidScale(16px, 20px, $desktop);
 }
 
 .text-body-2 {
-  font-size: var(--type-body2-size);
-  line-height: var(--type-body2-leading);
-  letter-spacing: var(--type-body2-tracking);
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  max-width: 80ch;
+
+  @include fluidScale(20px, 24px, $desktop);
 }
 
-.text-headline-1 {
-  font-size: var(--type-headline1-size);
-  line-height: var(--type-headline1-leading);
-  letter-spacing: var(--type-headline1-tracking);
-}
+.text-body-1 {
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: -0.015em;
+  max-width: 80ch;
 
-.text-headline-2 {
-  font-size: var(--type-headline2-size);
-  line-height: var(--type-headline2-leading);
-  letter-spacing: var(--type-headline2-tracking);
+  @include fluidScale(26px, 32px, $desktop);
 }
 
 .text-headline-3 {
-  font-size: var(--type-headline3-size);
-  line-height: var(--type-headline3-leading);
-  letter-spacing: var(--type-headline3-tracking);
+  font-size: 36px;
+  line-height: 40px;
+  letter-spacing: -0.025em;
+  max-width: 80ch;
+
+  @include fluidScale(36px, 40px, $desktop);
 }
 
-.foo {
-  @include fluidScale(28px, 32px, $laptop);
-  letter-spacing: -0.02em;
+.text-headline-2 {
+  font-size: 54px;
+  line-height: 56px;
+  letter-spacing: -0.025em;
+  @include fluidScale(54px, 56px, $desktop);
+}
+
+.text-headline-1 {
+  font-size: 76px;
+  line-height: 80px;
+  letter-spacing: -0.04em;
+  @include fluidScale(76px, 80px, $desktop);
 }
 
 @font-face {

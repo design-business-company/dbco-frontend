@@ -33,16 +33,18 @@ function onEnter(el, done) {
 function onLeave(el, done) {
   gsap.to(el, {
     ease: "Power2.easeOut",
-    duration: 0.5,
+    duration: 1,
+    delay: 0.125,
     opacity: 0,
     onComplete: done,
   });
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .scrim {
-  background-color: var(--background-primary);
+  // background-color: var(--background-primary);
+  background-color: black;
   position: fixed;
   top: 0;
   left: 0;
