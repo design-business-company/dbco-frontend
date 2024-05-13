@@ -60,12 +60,12 @@ export default defineNuxtPlugin((nuxtApp) => {
       this.setPosition();
     },
     isAtTop() {
-      const scrollPosition = this.instance.y;
+      const scrollPosition = this.instance?.y || 0;
       deviceStore.setScrollAtTop(scrollPosition === 0);
     },
     isAtBottom() {
       const totalPageHeight = deviceStore.docHeight;
-      const scrollPosition = this.instance.y + deviceStore.winHeight;
+      const scrollPosition = this.instance?.y + deviceStore.winHeight;
 
       deviceStore.setScrollAtBottom(totalPageHeight < scrollPosition + 1);
     },
@@ -86,10 +86,12 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
 
     isNearTop(threshold = 50) {
+      if (!this.instance) return;
       const scrollPosition = this.instance.y;
       deviceStore.setScrollNearTop(scrollPosition <= threshold);
     },
     isNearBottom(threshold = 50) {
+      if (!this.instance) return;
       const totalPageHeight = deviceStore.docHeight;
       const scrollPosition = this.instance.y + deviceStore.winHeight;
 

@@ -74,7 +74,7 @@ const styleObject = computed(() => {
 </script>
 
 <style scoped lang="scss">
-@import "~/assets/styles/mixins"; // Ensure you have mixins for responsive behavior
+@import "~/assets/styles/mixins";
 
 .column {
   grid-column: var(--grid-column); // Use general settings

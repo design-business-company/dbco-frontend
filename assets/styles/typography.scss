@@ -31,19 +31,19 @@
 .text-body-2 {
   font-size: 20px;
   line-height: 24px;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   max-width: 80ch;
 
   @include fluidScale(20px, 24px, $desktop);
 }
 
 .text-body-1 {
-  font-size: 26px;
+  font-size: 30px;
   line-height: 32px;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.04em;
   max-width: 80ch;
 
-  @include fluidScale(26px, 32px, $desktop);
+  @include fluidScale(30px, 32px, $desktop);
 }
 
 .text-headline-3 {

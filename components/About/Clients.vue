@@ -1,65 +1,55 @@
 <template>
-  <Grid style="overflow: visible">
-    <Column style="overflow: visible">
-      <Observer :on-enter="onEnter" once="true">
-        <swiper
-          class="clients"
-          :speed="500"
-          :slides-per-view="slidesPerView"
-          :space-between="8"
-          :loop="true"
-          :grabCursor="true"
-          :autoplay="{
-            delay: 2500,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true,
-          }"
-          :keyboard="{
-            enabled: true,
-          }"
-          :mousewheel="true"
-        >
-          <swiper-slide v-for="client in data">
-            <figure class="client">
-              <div
-                class="logo"
-                v-html="client?.logo?.code"
-                role="img"
-                aria-label="Logo of {{ client.title }}"
-              ></div>
-              <figcaption>
-                <Text size="micro" element="h2" class="name">{{
-                  client.title
-                }}</Text>
-              </figcaption>
-            </figure>
-          </swiper-slide>
-        </swiper>
+  <Grid class="clients">
+    <Column>
+      <Observer :onEnter="onEnter" :onLeave="onLeave">
+        <div class="swiper-container" ref="swiperContainer">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide" v-for="client in data">
+              <figure class="client">
+                <div
+                  class="client__logo"
+                  v-html="client?.logo?.code"
+                  role="img"
+                  :aria-label="'Logo of ' + client.title"
+                ></div>
+                <figcaption class="client__name">
+                  <Text size="micro">{{ client.title }}</Text>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
       </Observer>
     </Column>
   </Grid>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "swiper/css";
 
-.swiper {
-  overflow: visible;
-}
+.clients {
+  cursor: grab;
 
-.swiper-wrapper:hover .name {
-  opacity: 0.2;
-  transform: translate3d(0, 0, 0);
+  &:hover {
+    .client__name {
+      opacity: 0.2;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 .client {
-  .logo {
+  &__logo {
     background-color: rgba(black, 0.05);
     border-radius: var(--border-radius);
     overflow: hidden;
   }
 
-  .name {
+  &__name {
     transition: opacity 300ms ease-out, transform 200ms ease-out;
     opacity: 0;
     margin-top: var(--tiniest);
@@ -68,7 +58,7 @@
     pointer-events: none;
   }
 
-  &:hover .name {
+  &:hover .client__name {
     opacity: 1;
   }
 }
@@ -85,65 +75,104 @@ svg {
 </style>
 
 <script setup>
-import { Swiper, SwiperSlide } from "swiper/vue";
-import SwiperCore from "swiper";
-import { Keyboard, Mousewheel, Autoplay } from "swiper/modules";
+import { onMounted, ref } from "vue";
+import Swiper from "swiper";
+import { Autoplay, Mousewheel, FreeMode, Keyboard } from "swiper/modules";
 import gsap from "gsap";
 
-import { ref, onMounted, onUnmounted } from "vue";
+const query = groq`*[_type=="clients"]`;
+const { data } = useSanityQuery(query);
 
-const slidesPerView = ref(3); // Default value
+const swiperContainer = ref(null);
+const swiperInstance = ref(null);
+const swiperHasFadedIntoView = ref(false);
 
-const updateSlidesPerView = () => {
-  const width = window.innerWidth;
-  if (width <= 360) slidesPerView.value = 1;
-  else if (width <= 600) slidesPerView.value = 2;
-  else if (width <= 1024) slidesPerView.value = 3;
-  else if (width <= 1512) slidesPerView.value = 4;
-  else if (width <= 1920) slidesPerView.value = 6;
-  else slidesPerView.value = 8;
+const swiperInit = () => {
+  swiperInstance.value = new Swiper(swiperContainer.value, {
+    modules: [Autoplay, Mousewheel, FreeMode, Keyboard],
+    speed: 400,
+    freeMode: {
+      enabled: true,
+      sticky: true,
+      momentumRatio: 0.9,
+      momentumVelocityRatio: 0.8,
+    },
+    slidesPerView: 2,
+    spaceBetween: 8,
+    loop: true,
+    autoplay: {
+      delay: 1500,
+      pauseOnMouseEnter: true,
+    },
+    keyboard: {
+      enabled: true,
+    },
+    mousewheel: {
+      enabled: true,
+      forceToAxis: true,
+    },
+    breakpoints: {
+      320: {
+        slidesPerView: 2,
+        spaceBetween: 8,
+      },
+      600: {
+        slidesPerView: 3,
+        spaceBetween: 9,
+      },
+      1024: {
+        slidesPerView: 4,
+        spaceBetween: 10,
+      },
+      1512: {
+        slidesPerView: 6,
+        spaceBetween: 11,
+      },
+    },
+  });
+};
+
+const onEnter = () => {
+  // swiperInstance.value.resume();
+
+  // console.log(swiperInstance.value.autoplay);
+  swiperInstance.value.autoplay.start();
+
+  const els = swiperContainer.value.querySelectorAll(".swiper-slide");
+
+  if (!swiperHasFadedIntoView.value) {
+    gsap.fromTo(
+      els,
+      {
+        opacity: 0,
+      },
+      {
+        stagger: 0.1,
+        opacity: 1,
+        delay: 0.5,
+      }
+    );
+    swiperHasFadedIntoView.value = true;
+  }
+};
+
+const onLeave = () => {
+  // swiperInstance.value.pause();
+  swiperInstance.value.autoplay.stop();
+};
+
+const swiperDestroy = () => {
+  swiperInstance.value.destroy();
 };
 
 onMounted(() => {
-  window.addEventListener("resize", updateSlidesPerView);
-  updateSlidesPerView(); // Initialize on mount
+  swiperInit();
+  onEnter();
+
+  console.log();
 });
 
 onUnmounted(() => {
-  window.removeEventListener("resize", updateSlidesPerView);
+  swiperDestroy();
 });
-
-// Importing the additional Swiper modules
-SwiperCore.use([Keyboard, Mousewheel, Autoplay]);
-
-const query = groq`*[]`;
-const { data } = useSanityQuery(query);
-
-// Swiper instances as refs to access Swiper's instance methods if needed
-const swiperInstance = ref(null);
-
-const onSwiper = (swiper) => {
-  swiperInstance.value = swiper; // Storing swiper instance if needed for further manipulation
-  console.log(swiper);
-};
-
-const onSlideChange = () => {
-  console.log("slide change");
-};
-
-function onEnter(el) {
-  nextTick(() => {
-    // Ensure the Swiper is initialized and the DOM is updated
-    gsap.from(".swiper-slide", {
-      opacity: 0,
-      y: 50,
-      stagger: 0.1,
-      duration: 1,
-      ease: "power2.out",
-      onComplete: () => {
-        // Animation complete actions
-      },
-    });
-  });
-}
 </script>

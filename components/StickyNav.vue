@@ -8,11 +8,11 @@
     ]"
   >
     <Grid class="wrapper">
-      <Column class="text-body-1" span="4" tablet-span="6">
+      <Column class="text-body-2" span="4" tablet-span="6">
         <StickyNavLogo />
       </Column>
 
-      <Column class="text-body-1" span="6">
+      <Column class="text-body-2" span="6">
         <StickyNavLinks />
       </Column>
     </Grid>

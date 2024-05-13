@@ -23,12 +23,9 @@ const swiperInstance = ref(null);
 
 const onSwiper = (swiper) => {
   swiperInstance.value = swiper; // Storing swiper instance if needed for further manipulation
-  console.log(swiper);
 };
 
-const onSlideChange = () => {
-  console.log("slide change");
-};
+const onSlideChange = () => {};
 </script>
 
 <style lang="css">

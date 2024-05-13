@@ -1,10 +1,14 @@
 <template>
-  <component :is="element" :class="`text-${size}`">
-    <slot></slot>
-  </component>
+  <Observer :onEnter="handleEnter" :once="true">
+    <div ref="container" :class="`text-${size}`">
+      <slot></slot>
+    </div>
+  </Observer>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { gsap } from "gsap";
 import { type PropType } from "vue";
 
 type SizeType =
@@ -37,5 +41,18 @@ const props = defineProps({
     type: String as PropType<string>,
     default: "p",
   },
+  animateOnEnter: {
+    type: Boolean,
+    default: true,
+  },
 });
+
+const container = ref<HTMLElement | null>(null);
+
+const handleEnter = () => {
+  if (props.animateOnEnter && container.value) {
+    // Animate each child element of the container
+    gsap.fromTo(container.value, { opacity: 0 }, { opacity: 1, duration: 0.5 });
+  }
+};
 </script>

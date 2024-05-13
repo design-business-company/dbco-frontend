@@ -31,11 +31,10 @@ const app = useAppStore();
 function onEnter() {
   // disable sticky nav when header in view
   app.setHeaderIsVisible(false);
-  console.log("hide", app.headerIsVisible);
+  // console.log("hide", app.headerIsVisible);
 }
 
 function onLeave() {
   app.setHeaderIsVisible(true);
-  console.log("show", app.headerIsVisible);
 }
 </script>
