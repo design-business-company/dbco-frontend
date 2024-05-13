@@ -2,8 +2,9 @@ import { ref, onUnmounted } from "vue";
 import gsap from "gsap";
 import SplitText from "gsap/SplitText";
 
-// Ensure GSAP plugins are registered
-gsap.registerPlugin(SplitText);
+if (process.client) {
+  gsap.registerPlugin(SplitText);
+}
 
 export function useSplitText() {
   const splitInstance = ref<SplitText | null>(null);
