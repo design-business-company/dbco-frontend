@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     "~/assets/styles/grid.scss",
     "~/assets/styles/typography.scss",
   ],
-  modules: ["@pinia/nuxt", "@nuxtjs/plausible"],
+  modules: ["@pinia/nuxt", "@nuxtjs/sanity", "@nuxtjs/plausible"],
   plugins: [
     { src: "~/plugins/device/deviceInfo.ts", mode: "client" },
     { src: "~/plugins/device/deviceDimensions.ts", mode: "client" },
@@ -28,5 +28,10 @@ export default defineNuxtConfig({
   plausible: {
     // Prevent tracking on localhost
     ignoredHostnames: ["localhost"],
+  },
+  sanity: {
+    projectId: "5jjj3zhb",
+    dataset: "production",
+    apiVersion: "2022-03-07", // currently used in vision
   },
 });

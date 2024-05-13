@@ -1,12 +1,20 @@
 <template>
   <div>
-    <p class="placeholder-hero">About</p>
-    <p>
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nostrum
-      molestias, amet recusandae aspernatur illum veniam enim minima, fuga
-      dolorum minus ab repellat voluptatum sapiente eum quaerat? Unde officiis
-      libero autem!
-    </p>
+    <Grid>
+      <!-- <Column v-for="client in data" span="4" v-if="!client.title">
+        <pre><code>{{ client }}</code></pre>
+      </Column> -->
+
+      <Column tablet-span="6">
+        <Text size="headline-1"
+          >Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor
+          inventore nemo exercitationem? Ex nihil cupiditate exercitationem
+          deserunt quisquam tenetur, voluptas libero consectetur dolorem esse
+          rerum, labore explicabo maiores sint autem.</Text
+        ></Column
+      >
+    </Grid>
+    <AboutClients />
   </div>
 </template>
 
@@ -17,9 +25,9 @@ import { Theme } from "~/composables/Theme";
 const { setTheme } = Theme();
 
 setTheme({
-  background: "#282c34",
-  foreground: "#abb2bf",
-  accent: "#c678dd",
+  background: "#ffffff",
+  foreground: "#000000",
+  accent: "#ff0000",
 });
 
 // Run common mount/unmount scripts. Seup SEO, etc.
@@ -31,4 +39,7 @@ PageSetup({
 definePageMeta({
   pageTransition: pageTransitionDefault(),
 });
+
+const query = groq`*[_type=="clients"]`;
+const { data } = useSanityQuery(query);
 </script>

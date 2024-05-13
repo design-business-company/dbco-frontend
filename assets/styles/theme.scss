@@ -153,4 +153,9 @@
   --transition-time: 400ms;
   --transition: var(--transition-time) var(--transition-function);
   --transition-page-delay: 250ms;
+
+  --grid-margin: #{$grid-margin};
+  --grid-gap: #{$grid-gap};
+
+  --border-radius: var(--tiniest);
 }

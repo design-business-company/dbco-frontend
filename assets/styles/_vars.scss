@@ -4,3 +4,6 @@ $tablet: 600px;
 $laptop: 1024px;
 $desktop: 1512px;
 $ultrawide: 1920px;
+
+$grid-margin: clamp(16px, 2vw, 40px);
+$grid-gap: clamp(8px, 0.5vw, 12px);

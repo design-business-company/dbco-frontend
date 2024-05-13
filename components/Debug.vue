@@ -55,8 +55,9 @@ button {
 
   position: fixed;
   top: 0;
-  right: 0;
-  z-index: 9999;
+  left: 0;
+  z-index: 100000;
+  cursor: pointer;
 }
 
 table {
@@ -65,8 +66,8 @@ table {
   border: 2px solid var(--background-primary);
   position: fixed;
   z-index: 999;
-  top: var(--bigger);
-  right: 0;
+  bottom: var(--bigger);
+  left: 0;
 }
 
 tr {
