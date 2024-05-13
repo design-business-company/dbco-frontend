@@ -19,7 +19,7 @@
     "@nuxtjs/plausible": "^1.0.0",
     "@nuxtjs/sanity": "^1.11.3",
     "@pinia/nuxt": "^0.5.1",
-    "gsap": "npm:@gsap/shockingly@^3.12.5",
+    "gsap": "npm:@gsap/business@^3.12.5",
     "nuxt": "^3.10.1",
     "pinia": "^2.1.7",
     "swiper": "^11.1.1",
