@@ -80,7 +80,7 @@ import Swiper from "swiper";
 import { Autoplay, Mousewheel, FreeMode, Keyboard } from "swiper/modules";
 import gsap from "gsap";
 
-const query = groq`*[_type=="clients"]`;
+const query = groq`*[_type=="client"]`;
 const { data } = useSanityQuery(query);
 
 const swiperContainer = ref(null);

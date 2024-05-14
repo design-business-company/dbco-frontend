@@ -109,6 +109,6 @@ definePageMeta({
   pageTransition: pageTransitionDefault(),
 });
 
-const query = groq`*[_type=="clients"]`;
+const query = groq`*[_type=="client"]`;
 const { data } = useSanityQuery(query);
 </script>
