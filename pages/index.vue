@@ -1,7 +1,10 @@
 <template>
-  <Grid>
+  <Grid v-if="data">
     <Column>
       <Text size="headline-1">Hello World</Text>
+    </Column>
+    <Column>
+      <BlockHypertext :blocks="data[0]?.foo.text" />
     </Column>
   </Grid>
 </template>
@@ -30,6 +33,9 @@ setTheme({
   foreground: "#0000ff",
   accent: "#ff0000",
 });
+
+const query = groq`*[_type=="homepage"]`;
+const { data } = useSanityQuery(query);
 
 // Run common mount/unmount scripts. Setup SEO, etc.
 PageSetup({
