@@ -7,6 +7,7 @@
 This is a [Nuxt](https://nuxt.com/docs/getting-started/introduction) project which includes a handful of very help packages and plugins that I often use. Specifically:
 
 - [GSAP](https://gsap.com/docs/v3/) for animations.
+    - We have a business membership with GSAP to access all of their libraries and plugins. You will need to install the business library and set-up the business token. You can find set-up instructions [here](https://gsap.com/docs/v3/Installation/guides/Netlify/). Contact Jordan or Emma with questions!
 - [Pinia](https://pinia.vuejs.org/introduction.html) for storing data that I share globally.
 - [SASS](https://sass-lang.com/documentation/) has been configured so `scss` and `sass` are valid within single file components.
 - A number of small plugins which help track user preferences and devie info.
