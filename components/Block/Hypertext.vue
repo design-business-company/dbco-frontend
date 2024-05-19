@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { defineProps, markRaw } from "vue";
+import { markRaw } from "vue";
 import BlockHypertextSpan from "@/components/Block/HypertextSpan.vue";
 
 // Props
