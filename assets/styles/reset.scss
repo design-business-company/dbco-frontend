@@ -164,6 +164,8 @@ html {
 
   background-color: var(--background-primary);
   color: var(--foreground-primary);
+  // this code gets added after Scrim.vue animates
+  // this is done to solve a race condition where the theme updates a few moments after client renders, causing a flicker
   // transition: background-color var(--transition), color var(--transition);
   // transition-delay: var(--transition-page-delay);
 }
