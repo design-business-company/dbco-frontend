@@ -164,8 +164,8 @@ html {
 
   background-color: var(--background-primary);
   color: var(--foreground-primary);
-  transition: background-color var(--transition), color var(--transition);
-  transition-delay: var(--transition-page-delay);
+  // transition: background-color var(--transition), color var(--transition);
+  // transition-delay: var(--transition-page-delay);
 }
 
 a {

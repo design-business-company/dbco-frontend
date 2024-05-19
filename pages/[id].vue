@@ -7,7 +7,9 @@
 </template>
 
 <script setup>
+import { watch } from "vue";
 import { useRoute } from "vue-router";
+import { useTheme } from "~/composables/useTheme";
 import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 
@@ -24,7 +26,27 @@ const query = groq`*[_type=="page" && slug.current=='${pageId}']{
     "image": image.asset->url
   }
 }`;
-const { data } = useSanityQuery(query);
+const { data, error, pending, refresh } = useSanityQuery(query);
+
+if (error.value) await navigateTo("/error");
+
+/* ----------------------------------------------------------------------------
+ * Set page theme
+ * --------------------------------------------------------------------------*/
+
+watch(
+  data,
+  (sanityData) => {
+    if (!process.client || !sanityData || sanityData.length === 0) return;
+
+    const { setTheme } = useTheme();
+
+    if (sanityData[0]?.pageTheme?.theme) {
+      setTheme(sanityData[0].pageTheme.theme);
+    }
+  },
+  { immediate: true }
+);
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
@@ -61,3 +83,4 @@ svg {
   }
 }
 </style>
+~/composables/useTheme

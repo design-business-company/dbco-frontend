@@ -59,10 +59,10 @@ The `Theme` composable is a powerful tool for dynamically managing and applying 
 
 ```js
 // Import the composable into your component
-import { Theme } from "~/composables/Theme";
+import { useTheme } from "~/composables/useTheme";
 
 // Initialize the theme composable
-const { setTheme, theme } = Theme();
+const { setTheme, theme } = useTheme();
 
 // You can set a new theme dynamically
 setTheme({

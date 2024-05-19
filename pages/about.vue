@@ -90,8 +90,8 @@
 <script setup>
 import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
-import { Theme } from "~/composables/Theme";
-const { setTheme } = Theme();
+import { useTheme } from "~/composables/useTheme";
+const { setTheme } = useTheme();
 
 setTheme({
   background: "#ffffff",

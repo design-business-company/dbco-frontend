@@ -1,7 +1,7 @@
 <template>
   <transition @leave="onLeave" @enter="onEnter">
     <div
-      v-show="app.routeIsTransitioning && !app.appHasLoaded"
+      v-if="app.routeIsTransitioning && !app.appHasLoaded"
       class="scrim cover"
     ></div>
   </transition>
@@ -38,6 +38,10 @@ function onLeave(el, done) {
     opacity: 0,
     onComplete: done,
   });
+
+  const root = document.documentElement;
+  root.style["transition"] = "var(--transition), color var(--transition)";
+  root.style["transition-delay"] = "var(--transition-page-delay)";
 }
 </script>
 

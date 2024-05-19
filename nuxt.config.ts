@@ -1,5 +1,3 @@
-import sanityClient from "./plugins/sanity/sanityClient";
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   css: [
@@ -28,7 +26,6 @@ export default defineNuxtConfig({
     },
   },
   plausible: {
-    // Prevent tracking on localhost
     ignoredHostnames: ["localhost"],
   },
   sanity: {

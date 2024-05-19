@@ -1,20 +1,29 @@
 import { useDeviceStore } from "~/stores/device";
-import { onBeforeMount, watch } from "vue";
 
-export const Theme = () => {
+export const useTheme = () => {
   const deviceStore = useDeviceStore();
 
-  const updateCssVariables = (theme: {
-    background: string;
-    foreground: string;
-    accent: string;
-  }) => {
+  // Define default themes
+  const defaultThemes = {
+    light: {
+      background: "#ffffff",
+      foreground: "#f0f0f0",
+      accent: "#007aff",
+    },
+    dark: {
+      background: "#000000",
+      foreground: "#ffffff",
+      accent: "red",
+    },
+  };
+
+  const updateCssVariables = (theme) => {
     document.documentElement.style.setProperty(
       "--background-primary",
       theme.background
     );
     document.documentElement.style.setProperty(
-      "--background-secondary",
+      "--foreground-primary",
       theme.foreground
     );
     document.documentElement.style.setProperty(
@@ -22,10 +31,6 @@ export const Theme = () => {
       theme.accent
     );
   };
-
-  onBeforeMount(() => {
-    updateCssVariables(deviceStore.theme);
-  });
 
   // Watch for changes in theme
   watch(
@@ -37,14 +42,12 @@ export const Theme = () => {
   );
 
   // Provide methods to update theme
-  const setTheme = (
-    newTheme: Partial<{
-      background: string;
-      foreground: string;
-      accent: string;
-    }>
-  ) => {
-    deviceStore.updateTheme(newTheme);
+  const setTheme = (newTheme) => {
+    if (newTheme === "light" || newTheme === "dark") {
+      deviceStore.updateTheme(defaultThemes[newTheme]);
+    } else if (typeof newTheme === "object") {
+      deviceStore.updateTheme(newTheme);
+    }
   };
 
   return {
