@@ -1,3 +1,5 @@
+import sanityClient from "./plugins/sanity/sanityClient";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   css: [
@@ -32,6 +34,6 @@ export default defineNuxtConfig({
   sanity: {
     projectId: "5jjj3zhb",
     dataset: "production",
-    apiVersion: "2022-03-07", // currently used in vision
+    apiVersion: "2022-03-07",
   },
 });

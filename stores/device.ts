@@ -25,7 +25,7 @@ export const useDeviceStore = defineStore("device", {
     scrollY: null as number | null,
     scrollDirection: null as ScrollDirection | null,
     scrollAtTop: null as boolean | null,
-    scrollNearTop: null as boolean | null,
+    scrollNearTop: true as boolean | true,
     scrollAtBottom: null as boolean | null,
     scrollNearBottom: null as boolean | null,
     // user prefs
