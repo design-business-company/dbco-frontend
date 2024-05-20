@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="hypertext">
     <SanityContent :blocks="blocks" :serializers="serializers" />
   </div>
 </template>
@@ -23,3 +23,14 @@ const serializers = {
   },
 };
 </script>
+
+<style lang="scss">
+.hypertext p {
+  text-indent: var(--text-indent);
+  margin-bottom: 1em;
+
+  .hypertext__span {
+    text-indent: 0;
+  }
+}
+</style>

@@ -7,7 +7,7 @@
   letter-spacing: 0.04em;
   word-spacing: 0.01em;
   max-width: 50ch;
-  @include fluidScale(10px, 12px, $desktop);
+  @include fluidScale(10px, 12px, $ultrawide);
 }
 
 .text-caption-2 {
@@ -16,7 +16,8 @@
   letter-spacing: 0.01em;
   max-width: 75ch;
 
-  @include fluidScale(13px, 16px, $desktop);
+  // @include fluidScale(13px, 16px, $ultrawide);
+  @include fluidScale(13px, 16px, $ultrawide);
 }
 
 .text-caption-1 {
@@ -25,7 +26,7 @@
   letter-spacing: 0.01em;
   max-width: 80ch;
 
-  @include fluidScale(16px, 20px, $desktop);
+  @include fluidScale(16px, 20px, $ultrawide);
 }
 
 .text-body-2 {
@@ -34,7 +35,7 @@
   letter-spacing: -0.02em;
   max-width: 80ch;
 
-  @include fluidScale(20px, 24px, $desktop);
+  @include fluidScale(20px, 24px, $ultrawide);
 }
 
 .text-body-1 {
@@ -43,7 +44,7 @@
   letter-spacing: -0.04em;
   max-width: 80ch;
 
-  @include fluidScale(30px, 32px, $desktop);
+  @include fluidScale(30px, 32px, $ultrawide);
 }
 
 .text-headline-3 {
@@ -52,21 +53,21 @@
   letter-spacing: -0.025em;
   max-width: 80ch;
 
-  @include fluidScale(36px, 40px, $desktop);
+  @include fluidScale(36px, 40px, $ultrawide);
 }
 
 .text-headline-2 {
   font-size: 54px;
   line-height: 56px;
   letter-spacing: -0.025em;
-  @include fluidScale(54px, 56px, $desktop);
+  @include fluidScale(54px, 56px, $ultrawide);
 }
 
 .text-headline-1 {
   font-size: 76px;
   line-height: 80px;
   letter-spacing: -0.04em;
-  @include fluidScale(76px, 80px, $desktop);
+  @include fluidScale(76px, 80px, $ultrawide);
 }
 
 @font-face {

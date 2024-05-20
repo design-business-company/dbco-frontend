@@ -1,5 +1,5 @@
 <template>
-  <span :class="['hypertext']">
+  <span :class="['hypertext__span']">
     <slot />
   </span>
 </template>
@@ -8,12 +8,12 @@
 import { useGsapPulse } from "@/composables/Hypertext/Pulse.js";
 import { useGsapWave } from "@/composables/Hypertext/Wave.js";
 
-useGsapPulse('.hypertext[name="new"]');
-useGsapWave('.hypertext[name="design"]');
+useGsapPulse(".hypertext__span.new");
+useGsapWave(".hypertext__span.design");
 </script>
 
 <style scoped>
-.hypertext {
-  display: inline-block;
+.hypertext__span {
+  display: inline-flex;
 }
 </style>

@@ -24,19 +24,19 @@
   --huger: 160px;
   --hugest: 200px;
 
-  @include desktop {
-    --tiniest: #{calc-vw(4px, $desktop)};
-    --tinier: #{calc-vw(8px, $desktop)};
-    --tiny: #{calc-vw(12px, $desktop)};
-    --smallest: #{calc-vw(16px, $desktop)};
-    --smaller: #{calc-vw(24px, $desktop)};
-    --small: #{calc-vw(32px, $desktop)};
-    --big: #{calc-vw(48px, $desktop)};
-    --bigger: #{calc-vw(64px, $desktop)};
-    --biggest: #{calc-vw(96px, $desktop)};
-    --huge: #{calc-vw(128px, $desktop)};
-    --huger: #{calc-vw(160px, $desktop)};
-    --hugest: #{calc-vw(200px, $desktop)};
+  @include ultrawide {
+    --tiniest: #{calc-vw(4px, $ultrawide)};
+    --tinier: #{calc-vw(8px, $ultrawide)};
+    --tiny: #{calc-vw(12px, $ultrawide)};
+    --smallest: #{calc-vw(16px, $ultrawide)};
+    --smaller: #{calc-vw(24px, $ultrawide)};
+    --small: #{calc-vw(32px, $ultrawide)};
+    --big: #{calc-vw(48px, $ultrawide)};
+    --bigger: #{calc-vw(64px, $ultrawide)};
+    --biggest: #{calc-vw(96px, $ultrawide)};
+    --huge: #{calc-vw(128px, $ultrawide)};
+    --huger: #{calc-vw(160px, $ultrawide)};
+    --hugest: #{calc-vw(200px, $ultrawide)};
   }
 
   /* Grid */
@@ -158,4 +158,9 @@
   --grid-gap: #{$grid-gap};
 
   --border-radius: var(--tiniest);
+
+  --text-indent: var(--bigger);
+  @include tablet {
+    --text-indent: var(--biggest);
+  }
 }

@@ -7,7 +7,7 @@ export const useTheme = () => {
   const defaultThemes = {
     light: {
       background: "#ffffff",
-      foreground: "#f0f0f0",
+      foreground: "#111111",
       accent: "#007aff",
     },
     dark: {

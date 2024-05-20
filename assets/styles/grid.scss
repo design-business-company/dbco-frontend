@@ -9,7 +9,7 @@ $grid-gap: clamp(8px, 0.5vw, 12px);
   grid-template-columns: repeat(var(--grid-mobile-columns), 1fr);
   padding-left: $grid-margin;
   padding-right: $grid-margin;
-  gap: $grid-gap;
+  column-gap: $grid-gap;
   width: 100%;
 
   /* @media (min-width: var(--mobile)) {} */

@@ -4,7 +4,7 @@
       <Text size="headline-1">Hello World</Text>
     </Column>
     <Column>
-      <BlockHypertext :blocks="data[0]?.foo.text" />
+      <!-- <BlockHypertext :blocks="data[0]?.foo.text" /> -->
     </Column>
   </Grid>
 </template>

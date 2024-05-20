@@ -1,9 +1,12 @@
 <template>
-  <Grid>
-    <Column>
-      <pre>{{ data }}</pre>
-    </Column>
-  </Grid>
+  <section :class="['page']">
+    <template v-if="pending">
+      <p>pending</p>
+    </template>
+    <template v-else>
+      <ContentBlocks :content="data[0].content" />
+    </template>
+  </section>
 </template>
 
 <script setup>
@@ -28,7 +31,7 @@ const query = groq`*[_type=="page" && slug.current=='${pageId}']{
 }`;
 const { data, error, pending, refresh } = useSanityQuery(query);
 
-if (error.value) await navigateTo("/error");
+// if (error.value) await navigateTo("/error");
 
 /* ----------------------------------------------------------------------------
  * Set page theme
@@ -82,5 +85,15 @@ svg {
     fill: var(--foreground-primary);
   }
 }
+
+.stroke {
+  text-indent: var(--big);
+
+  @include tablet {
+    text-indent: 0;
+    border-left: 1px solid var(--foreground-primary);
+    padding-left: var(--tiny);
+    padding-right: var(--smallest);
+  }
+}
 </style>
-~/composables/useTheme

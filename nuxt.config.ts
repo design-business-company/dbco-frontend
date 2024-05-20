@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     { src: "~/plugins/device/deviceThemePreference.ts", mode: "client" },
     { src: "~/plugins/device/deviceScroll.ts", mode: "client" },
     { src: "~/plugins/device/deviceResize.ts", mode: "client" },
+    "~/plugins/sanity/sanity-image-builder.js",
   ],
   pinia: {
     storesDirs: ["./stores/app", "./stores/device"],

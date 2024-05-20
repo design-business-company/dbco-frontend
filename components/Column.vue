@@ -12,19 +12,19 @@ const props = defineProps({
     type: String,
     default: "div",
   },
-  span: String, // General span, applies if no specific breakpoint spans are set
-  mobileSpan: String,
-  mobileStart: String,
-  phabletSpan: String,
-  phabletStart: String,
-  tabletSpan: String,
-  tabletStart: String,
-  laptopSpan: String,
-  laptopStart: String,
-  desktopSpan: String,
-  desktopStart: String,
-  ultrawideSpan: String,
-  ultrawideStart: String,
+  span: String,
+  spanMobile: String,
+  startMobile: String,
+  spanPhablet: String,
+  startPhablet: String,
+  spanTablet: String,
+  startTablet: String,
+  spanLaptop: String,
+  startLaptop: String,
+  spanDesktop: String,
+  startDesktop: String,
+  spanUltrawide: String,
+  startUltrawide: String,
   style: Object,
 });
 
@@ -35,36 +35,32 @@ const setGridColumn = (start, span) => {
 
 // Compute the style object with default and responsive settings
 const styleObject = computed(() => {
-  // Default to full width if no general span is provided
   let lastSpan = props.span || "12";
   let lastStart = undefined;
 
   const styles = {
-    "--grid-column": setGridColumn(undefined, lastSpan), // Set general grid-column
+    "--grid-column": setGridColumn(undefined, lastSpan),
   };
 
-  // List of breakpoints in order
   const breakpoints = [
-    "mobile",
-    "phablet",
-    "tablet",
-    "laptop",
-    "desktop",
-    "ultrawide",
+    { key: "mobile", span: "spanMobile", start: "startMobile" },
+    { key: "phablet", span: "spanPhablet", start: "startPhablet" },
+    { key: "tablet", span: "spanTablet", start: "startTablet" },
+    { key: "laptop", span: "spanLaptop", start: "startLaptop" },
+    { key: "desktop", span: "spanDesktop", start: "startDesktop" },
+    { key: "ultrawide", span: "spanUltrawide", start: "startUltrawide" },
   ];
-  breakpoints.forEach((bp) => {
-    const bpSpan = props[`${bp}Span`];
-    const bpStart = props[`${bp}Start`];
 
-    // Update lastSpan/lastStart if new values are provided
+  breakpoints.forEach(({ key, span, start }) => {
+    const bpSpan = props[span];
+    const bpStart = props[start];
+
     lastSpan = bpSpan || lastSpan;
     lastStart = bpStart || lastStart;
 
-    // Set CSS variables for each breakpoint
-    styles[`--${bp}-grid-column`] = setGridColumn(lastStart, lastSpan);
+    styles[`--${key}-grid-column`] = setGridColumn(lastStart, lastSpan);
   });
 
-  // Merge additional inline styles provided through props
   if (props.style) {
     Object.assign(styles, props.style);
   }
