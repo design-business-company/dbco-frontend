@@ -1,18 +1,18 @@
 @import "~/assets/styles/mixins";
 
 .text-micro {
-  display: inline-block;
-  font-size: 10px;
-  line-height: 12px;
+  display: block;
+  font-size: 11px;
+  line-height: 14px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   word-spacing: 0.01em;
   max-width: 50ch;
-  @include fluidScale(10px, 12px, $ultrawide);
+  @include fluidScale(11px, 14px, $ultrawide);
 }
 
 .text-caption-2 {
-  display: inline-block;
+  display: block;
   font-size: 13px;
   line-height: 16px;
   letter-spacing: 0.01em;
@@ -23,7 +23,7 @@
 }
 
 .text-caption-1 {
-  display: inline-block;
+  display: block;
   font-size: 16px;
   line-height: 20px;
   letter-spacing: 0.01em;
@@ -33,37 +33,34 @@
 }
 
 .text-body-2 {
-  display: inline-block;
+  display: block;
   font-size: 20px;
   line-height: 24px;
   letter-spacing: -0.02em;
-  max-width: 80ch;
 
   @include fluidScale(20px, 24px, $ultrawide);
 }
 
 .text-body-1 {
-  display: inline-block;
+  display: block;
   font-size: 30px;
   line-height: 32px;
   letter-spacing: -0.04em;
-  max-width: 80ch;
 
   @include fluidScale(30px, 32px, $ultrawide);
 }
 
 .text-headline-3 {
-  display: inline-block;
+  display: block;
   font-size: 36px;
   line-height: 40px;
   letter-spacing: -0.025em;
-  max-width: 80ch;
 
   @include fluidScale(36px, 40px, $ultrawide);
 }
 
 .text-headline-2 {
-  display: inline-block;
+  display: block;
   font-size: 54px;
   line-height: 56px;
   letter-spacing: -0.025em;
@@ -71,7 +68,7 @@
 }
 
 .text-headline-1 {
-  display: inline-block;
+  display: block;
   font-size: 76px;
   line-height: 80px;
   letter-spacing: -0.04em;

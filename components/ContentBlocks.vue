@@ -4,11 +4,13 @@
     :class="['block', `block--${block._type}`]"
     :key="block._key"
   >
-    <div v-if="block._type === 'richText'">
+    <Grid v-if="block._type === 'richText'">
       <Space />
-      <BlockRichText :blocks="block.text" />
+      <Column>
+        <BlockRichText :blocks="block.text" />
+      </Column>
       <Space />
-    </div>
+    </Grid>
 
     <div v-if="block._type === 'video'">
       <Grid>
@@ -44,9 +46,9 @@
     </div>
 
     <div v-if="block._type === 'rule'">
-      <Rule
-        :space-above="block.spaceAbove.size"
-        :space-below="block.spaceBelow.size"
+      <BlockRule
+        :space-above="block.spaceAbove"
+        :space-below="block.spaceBelow"
       />
     </div>
   </div>

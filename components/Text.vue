@@ -1,9 +1,9 @@
 <template>
-  <Observer :onEnter="handleEnter" :once="true">
-    <div ref="container" :class="`text-${size}`">
-      <slot></slot>
-    </div>
-  </Observer>
+  <component :is="element" ref="container" :class="`text-${size}`">
+    <!-- <Observer :onEnter="handleEnter" :once="true"> -->
+    <slot></slot>
+    <!-- </Observer> -->
+  </component>
 </template>
 
 <script setup lang="ts">

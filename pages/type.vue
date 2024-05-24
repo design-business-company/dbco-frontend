@@ -1,7 +1,7 @@
 <template>
   <Grid>
     <Column>
-      <Rule />
+      <BlockRule />
       <Text size="micro"
         >Micro. I give all this background information because I do not think
         one can assess a writer’s motives without knowing something of his early
@@ -20,7 +20,7 @@
       </Text>
     </Column>
     <Column>
-      <Rule />
+      <BlockRule />
       <Text size="caption-2"
         >Caption 2. I give all this background information because I do not
         think one can assess a writer’s motives without knowing something of his
@@ -39,7 +39,7 @@
       </Text>
     </Column>
     <Column>
-      <Rule />
+      <BlockRule />
       <Text size="caption-1"
         >Caption 1. I give all this background information because I do not
         think one can assess a writer’s motives without knowing something of his
@@ -58,7 +58,7 @@
       </Text>
     </Column>
     <Column>
-      <Rule />
+      <BlockRule />
       <Text size="body-2"
         >Body 2. I give all this background information because I do not think
         one can assess a writer’s motives without knowing something of his early
@@ -77,7 +77,7 @@
       </Text>
     </Column>
     <Column>
-      <Rule />
+      <BlockRule />
       <Text size="body-1"
         >Body 1. I give all this background information because I do not think
         one can assess a writer’s motives without knowing something of his early
@@ -96,7 +96,7 @@
       </Text>
     </Column>
     <Column>
-      <Rule />
+      <BlockRule />
       <Text size="headline-3"
         >Headline 3. I give all this background information because I do not
         think one can assess a writer’s motives without knowing something of his
@@ -115,7 +115,7 @@
       </Text>
     </Column>
     <Column>
-      <Rule />
+      <BlockRule />
       <Text size="headline-2"
         >Headline 2. I give all this background information because I do not
         think one can assess a writer’s motives without knowing something of his
@@ -134,7 +134,7 @@
       </Text>
     </Column>
     <Column>
-      <Rule />
+      <BlockRule />
       <Text size="headline-1"
         >Headline 1.I give all this background information because I do not
         think one can assess a writer’s motives without knowing something of his

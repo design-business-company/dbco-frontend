@@ -1,7 +1,5 @@
 <template>
-  <li>
+  <Text element="li">
     <slot></slot>
-  </li>
+  </Text>
 </template>
-
-<script setup></script>

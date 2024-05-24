@@ -1,5 +1,7 @@
 <template>
-  <SanityContent :blocks="blocks" :serializers="serializers" />
+  <div class="content">
+    <SanityContent :blocks="blocks" :serializers="serializers" />
+  </div>
 </template>
 
 <script setup>
@@ -13,6 +15,7 @@ import BlockCopyStrike from "~/components/Block/CopyStrike.vue";
 import BlockCopyParagraph from "~/components/Block/CopyParagraph.vue";
 import BlockCopyList from "~/components/Block/CopyList.vue";
 import BlockCopyListItem from "~/components/Block/CopyListItem.vue";
+import BlockRule from "~/components/Block/Rule.vue";
 
 defineProps({
   blocks: Array,
@@ -20,9 +23,9 @@ defineProps({
 
 const serializers = {
   types: {
-    // list: BlockCopyList,
-    // listItem: BlockCopyListItem,
+    rule: BlockRule,
   },
+  listItem: BlockCopyListItem,
   styles: {
     // h2, h3, h4, etc
     h1: BlockCopyParagraph,
@@ -48,7 +51,53 @@ const serializers = {
 </script>
 
 <style lang="scss" scoped>
-// .content:deep(span) {
-//   display: inline;
-// }
+// @import "~/assets/styles/grid";
+
+.content:deep(ol) {
+  list-style-position: outside;
+  list-style-type: decimal-leading-zero;
+  padding-left: 2em;
+
+  li {
+    margin-bottom: 1em;
+    display: list-item;
+
+    &::marker {
+      color: color-mix(
+        in srgb,
+        var(--foreground-primary) 50%,
+        var(--background-primary) 50%
+      );
+    }
+  }
+}
+
+.content:deep(ul) {
+  list-style-position: outside;
+  list-style-type: disc;
+  padding-left: 2em;
+
+  li {
+    margin-bottom: 1em;
+    display: list-item;
+
+    &::marker {
+      color: color-mix(
+        in srgb,
+        var(--foreground-primary) 50%,
+        var(--background-primary) 50%
+      );
+    }
+  }
+}
+
+.content:deep(p) {
+  + p {
+    margin-top: 1em;
+  }
+
+  > span {
+    display: contents;
+  }
+}
 </style>

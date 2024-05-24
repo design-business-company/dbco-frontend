@@ -1,17 +1,17 @@
 <template>
-  <mark class="ts-highlight"><slot /></mark>
+  <mark class="highlight"><slot /></mark>
 </template>
 
 <style lang="scss">
-.ts-highlight {
-  display: inline-block;
+.highlight {
   background-color: color-mix(
     in srgb,
-    yellow 80%,
-    var(--background-primary) 100%
+    yellow 50%,
+    var(--background-primary) 50%
   );
   color: inherit;
-  padding: 0 0.1em;
+  padding: 0 0;
   border-radius: 0.1em;
+  mix-blend-mode: screen;
 }
 </style>
