@@ -35,5 +35,9 @@ export default defineNuxtConfig({
     projectId: "5jjj3zhb",
     dataset: "production",
     apiVersion: "2022-03-07",
+    visualEditing: {
+      token: process.env.NUXT_SANITY_VISUAL_EDITING_TOKEN,
+      studioUrl: process.env.NUXT_SANITY_VISUAL_EDITING_STUDIO_URL,
+    },
   },
 });

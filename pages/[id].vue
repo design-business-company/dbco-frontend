@@ -1,6 +1,6 @@
 <template>
   <section :class="['page']">
-    <template v-if="pending">
+    <template v-if="pending && !data">
       <p>pending</p>
     </template>
     <template v-else>
@@ -46,8 +46,11 @@ const query = groq`*[_type=="page" && slug.current=='${pageId}']{
 }`;
 const { data, error, pending, refresh } = useSanityQuery(query);
 
-// if (error.value) await navigateTo("/error");
-
+// if (error) {
+//   console.error(error);
+// } else {
+//   console.log(data.value);
+// }
 /* ----------------------------------------------------------------------------
  * Set page theme
  * --------------------------------------------------------------------------*/
@@ -71,13 +74,13 @@ watch(
  * --------------------------------------------------------------------------*/
 
 PageSetup({
-  seoMeta: {
-    title: () => `${data.value[0].title} • Design Business Company`,
-    description: () => `${data.value[0].seo.description}`,
-    image: () => `${data.value[0].seo.image}?w=1200`,
-    url: () => `https://dbco.online${route.fullPath}`,
-    noIndexNoFollow: () => `${data.value[0].seo.noIndexNoFollow}`,
-  },
+  // seoMeta: {
+  //   title: () => `${data.value[0].title} • Design Business Company`,
+  //   description: () => `${data.value[0].seo.description}`,
+  //   image: () => `${data.value[0].seo.image}?w=1200`,
+  //   url: () => `https://dbco.online${route.fullPath}`,
+  //   noIndexNoFollow: () => `${data.value[0].seo.noIndexNoFollow}`,
+  // },
 });
 
 /* ----------------------------------------------------------------------------
