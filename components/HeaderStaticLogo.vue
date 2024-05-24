@@ -6,7 +6,7 @@
   </h1>
 </template>
 
-<style>
+<style scoped>
 span {
   display: flex;
   cursor: crosshair;

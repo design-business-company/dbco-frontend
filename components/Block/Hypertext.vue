@@ -1,7 +1,9 @@
 <template>
-  <div class="hypertext">
-    <SanityContent :blocks="blocks" :serializers="serializers" />
-  </div>
+  <Grid class="hypertext">
+    <Column span="12" span-tablet="10">
+      <SanityContent :blocks="blocks" :serializers="serializers" />
+    </Column>
+  </Grid>
 </template>
 
 <script setup>

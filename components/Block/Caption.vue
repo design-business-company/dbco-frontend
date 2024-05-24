@@ -6,8 +6,6 @@
 </template>
 
 <script setup>
-import BlockInternalLink from "~/components/Block/LinkInternal.vue";
-
 const props = defineProps({
   caption: {
     type: Array,

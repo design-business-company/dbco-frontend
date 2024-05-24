@@ -52,7 +52,11 @@ const container = ref<HTMLElement | null>(null);
 const handleEnter = () => {
   if (props.animateOnEnter && container.value) {
     // Animate each child element of the container
-    gsap.fromTo(container.value, { opacity: 0 }, { opacity: 1, duration: 0.5 });
+    gsap.fromTo(
+      container.value,
+      { opacity: 0.2 },
+      { opacity: 1, duration: 0.5, delay: 0.25 }
+    );
   }
 };
 </script>

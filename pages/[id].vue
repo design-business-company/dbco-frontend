@@ -24,7 +24,22 @@ const pageId = route.params.id;
 
 const query = groq`*[_type=="page" && slug.current=='${pageId}']{
   ...,
-  seo {
+  content[]{
+    ...,
+    _type == "richText" => {
+      ...,
+      text[]{
+        ...,
+        markDefs[]{
+          ...,
+          _type == "internalLink" => {
+            "slug": @.reference->slug.current
+          }
+        }
+      }
+    }
+  },
+    seo {
     ...,
     "image": image.asset->url
   }

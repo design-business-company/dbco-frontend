@@ -1,36 +1,48 @@
 <template>
-  <Grid>
-    <template v-for="block in content" :key="block._key">
-      <Column v-if="block._type === 'video'">
-        <Space />
+  <div
+    v-for="block in content"
+    :class="['block', `block--${block._type}`]"
+    :key="block._key"
+  >
+    <div v-if="block._type === 'richText'">
+      <Space />
+      <BlockRichText :blocks="block.text" />
+      <Space />
+    </div>
 
-        <BlockVid
-          :src="block.url"
-          :alt="block.alt"
-          :settings="block.settings"
-          :poster="block.poster.asset._ref"
-        />
-        <BlockCaption v-if="block.caption" :caption="block.caption" />
-        <Space />
-      </Column>
+    <div v-if="block._type === 'video'">
+      <Grid>
+        <Column>
+          <Space />
 
-      <Column v-if="block._type === 'picture'">
-        <Space />
+          <BlockVid
+            :src="block.url"
+            :alt="block.alt"
+            :settings="block.settings"
+            :poster="block.poster.asset._ref"
+          />
+          <BlockCaption v-if="block.caption" :caption="block.caption" />
+          <Space />
+        </Column>
+      </Grid>
+    </div>
 
-        <BlockPic :src="block.asset._ref" :alt="block.alt" />
-        <BlockCaption v-if="block.caption" :caption="block.caption" />
-        <Space />
-      </Column>
+    <div v-if="block._type === 'picture'">
+      <Space />
 
-      <Column v-if="block._type === 'hypertext'">
-        <Space />
-        <Text size="body-1">
-          <BlockHypertext :blocks="block.text" />
-        </Text>
-        <Space />
-      </Column>
-    </template>
-  </Grid>
+      <BlockPic :src="block.asset._ref" :alt="block.alt" />
+      <BlockCaption v-if="block.caption" :caption="block.caption" />
+      <Space />
+    </div>
+
+    <div v-if="block._type === 'hyperText'">
+      <Space />
+      <Text size="body-1">
+        <BlockHypertext :blocks="block.text" />
+      </Text>
+      <Space />
+    </div>
+  </div>
 </template>
 
 <script setup>
