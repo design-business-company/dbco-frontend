@@ -25,6 +25,12 @@ const serializers = {
   },
   styles: {
     // h2, h3, h4, etc
+    h1: BlockCopyParagraph,
+    h2: BlockCopyParagraph,
+    h3: BlockCopyParagraph,
+    h4: BlockCopyParagraph,
+    h5: BlockCopyParagraph,
+    h6: BlockCopyParagraph,
     normal: BlockCopyParagraph,
   },
   marks: {

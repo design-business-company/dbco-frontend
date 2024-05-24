@@ -42,6 +42,13 @@
       </Text>
       <Space />
     </div>
+
+    <div v-if="block._type === 'rule'">
+      <Rule
+        :space-above="block.spaceAbove.size"
+        :space-below="block.spaceBelow.size"
+      />
+    </div>
   </div>
 </template>
 
