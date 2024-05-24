@@ -10,8 +10,8 @@
   text-decoration-thickness: 0.08em;
   text-decoration-color: color-mix(
     in srgb,
-    var(--foreground-primary) 50%,
-    var(--background-primary) 100%
+    red 70%,
+    var(--background-primary) 30%
   );
 }
 </style>

@@ -19,16 +19,20 @@ ul {
     display: block;
     text-decoration: none;
     text-underline-offset: 0.15em;
-    color: var(--foreground-tertiary);
+    transition: color var(--transition);
+
+    color: color-mix(
+      in srgb,
+      var(--foreground-primary) 40%,
+      var(--background-primary) 60%
+    );
 
     &.router-link-exact-active {
       color: var(--foreground-primary);
-      text-decoration-color: var(--accent-primary);
     }
 
     &:hover {
       color: var(--foreground-primary);
-      text-decoration: underline;
     }
   }
 }

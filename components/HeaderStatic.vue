@@ -2,10 +2,10 @@
   <Observer :onEnter="onEnter" :onLeave="onLeave">
     <header class="static-header">
       <Grid>
-        <Column class="text-body-1" span="6" laptop-start="7" laptop-span="3">
+        <Column class="text-body-1" span="6" span-laptop="4" span-desktop="3">
           <HeaderStaticLogo />
         </Column>
-        <Column class="text-body-1" span="6" laptop-start="10" laptop-span="3">
+        <Column class="text-body-1" span="6" span-laptop="4" span-desktop="3">
           <HeaderStaticNav />
         </Column>
       </Grid>

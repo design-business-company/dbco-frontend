@@ -1,15 +1,32 @@
 <template>
   <h1>
-    <span @mouseover="() => shuffle(line[0])">{{ line[0].val }}</span>
-    <span @mouseover="() => shuffle(line[1])">{{ line[1].val }}</span>
-    <span @mouseover="() => shuffle(line[2])">{{ line[2].val }}</span>
+    <span
+      @mouseenter="() => shuffle(line[0])"
+      @click="() => shuffle(line[0])"
+      >{{ line[0].val }}</span
+    >
+    <span
+      @mouseenter="() => shuffle(line[1])"
+      @click="() => shuffle(line[1])"
+      >{{ line[1].val }}</span
+    >
+    <span
+      @mouseenter="() => shuffle(line[2])"
+      @click="() => shuffle(line[2])"
+      >{{ line[2].val }}</span
+    >
   </h1>
 </template>
 
 <style scoped>
+h1 {
+  display: grid;
+}
+
 span {
-  display: flex;
-  cursor: crosshair;
+  display: inline-flex;
+  cursor: default;
+  /* cursor: crosshair; */
 }
 </style>
 
