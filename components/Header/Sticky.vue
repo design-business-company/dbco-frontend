@@ -14,7 +14,12 @@
         <HeaderStickyLogo />
       </Column>
 
-      <Column class="links text-body-1" span="6" span-tablet="8">
+      <Column
+        class="links text-body-1"
+        span="6"
+        span-tablet="8"
+        span-laptop="8"
+      >
         <HeaderStickyLinks class="default-nav" />
         <HeaderMobileNavTrigger
           @click="handleMobileNavClick"
@@ -28,15 +33,6 @@
     </Grid>
     <Debug v-if="isDev" />
   </nav>
-
-  <!--     :class="[
-      'sticky-nav',
-      { 'is-visible': headerIsVisible },
-      { 'is-disabled': !app.headerIsVisible },
-      { 'is-behind-static-header': device.scrollNearTop },
-      { 'nav-is-open': app.mobileNavIsVisible },
-    ]"
-  > -->
 </template>
 
 <script setup>
@@ -148,11 +144,18 @@ onClickOutside(nav, (event) => {
     }
   }
 
-  &.is-behind-static-header .wrapper {
-    @include tablet {
-      transform: translate3d(0, -150%, 0);
+  &.is-behind-static-header {
+    // pointer-events: none;
+
+    .wrapper {
+      @include tablet {
+        transform: translate3d(0, -150%, 0);
+      }
     }
-    // visibility: hidden;
+
+    @include tablet {
+      visibility: hidden;
+    }
   }
 
   // &.nav-is-open {
