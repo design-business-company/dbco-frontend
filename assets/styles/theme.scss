@@ -152,7 +152,9 @@
   --transition-function: ease-out;
   --transition-time: 400ms;
   --transition: var(--transition-time) var(--transition-function);
-  --transition-page-delay: 250ms;
+  --transition-fast-time: 300ms;
+  --transition-fast: var(--transition-fast-time) var(--transition-function);
+  --transition-page-delay: 300ms;
 
   --grid-margin: #{$grid-margin};
   --grid-gap: #{$grid-gap};

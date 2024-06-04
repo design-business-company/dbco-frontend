@@ -6,6 +6,7 @@
     <span class="hide">usiness</span>
     <span>Co</span>
     <span class="hide">mpany</span>
+    <span>.</span>
   </h1>
 </template>
 

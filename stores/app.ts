@@ -5,6 +5,7 @@ export const useAppStore = defineStore("app", {
     appHasLoaded: false as boolean | false,
     routeIsTransitioning: true as boolean | true,
     headerIsVisible: true as boolean | true,
+    mobileNavIsVisible: false as boolean | false,
   }),
   actions: {
     setAppHasLoaded(loaded: boolean) {
@@ -15,6 +16,9 @@ export const useAppStore = defineStore("app", {
     },
     setHeaderIsVisible(visible: boolean) {
       this.headerIsVisible = visible;
+    },
+    setMobileNavVisibility(visible: boolean) {
+      this.mobileNavIsVisible = visible;
     },
   },
 });

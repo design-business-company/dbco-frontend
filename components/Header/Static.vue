@@ -13,13 +13,21 @@
   </Observer>
 </template>
 
-<style>
+<style lang="scss">
+@import "~/assets/styles/mixins";
+
 .static-header {
   position: relative;
   width: 100%;
   z-index: 999;
   padding-top: var(--tinier);
   padding-bottom: var(--tinier);
+
+  display: none;
+
+  @include tablet {
+    display: block;
+  }
 }
 </style>
 
@@ -30,11 +38,11 @@ const app = useAppStore();
 
 function onEnter() {
   // disable sticky nav when header in view
-  app.setHeaderIsVisible(false);
+  // app.setMobileNavVisibility(false);
   // console.log("hide", app.headerIsVisible);
 }
 
 function onLeave() {
-  app.setHeaderIsVisible(true);
+  // app.setMobileNavVisibility(true);
 }
 </script>

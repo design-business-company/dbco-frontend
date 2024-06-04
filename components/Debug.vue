@@ -54,8 +54,8 @@ button {
   border: 0;
 
   position: fixed;
-  top: 0;
-  left: 0;
+  top: var(--smaller);
+  right: var(--small);
   z-index: 100000;
   cursor: pointer;
 }
