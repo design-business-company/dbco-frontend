@@ -1,10 +1,10 @@
 <template>
   <div style="display: grid">
-    <Space :size="spaceAbove.size" />
+    <Space :size="spaceAbove.size || spaceAbove" />
     <Column>
       <hr class="rule" />
     </Column>
-    <Space :size="spaceAbove.size" />
+    <Space :size="spaceAbove.size || spaceBelow" />
   </div>
 </template>
 

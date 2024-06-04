@@ -10,17 +10,11 @@
     ]"
   >
     <Grid class="wrapper">
-      <Column
-        class="text-body-1"
-        span="6"
-        tablet-span="4"
-        span-laptop="4"
-        span-desktop="3"
-      >
+      <Column class="text-body-1" span="6" span-tablet="4" span-desktop="3">
         <HeaderStickyLogo />
       </Column>
 
-      <Column class="links text-body-1" span="6" tablet-span="6">
+      <Column class="links text-body-1" span="6" span-tablet="8">
         <HeaderStickyLinks class="default-nav" />
         <HeaderMobileNavTrigger
           @click="handleMobileNavClick"

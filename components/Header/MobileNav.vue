@@ -1,12 +1,45 @@
 <template>
   <transition @leave="onLeave" @enter="onEnter">
     <div v-if="app.mobileNavIsVisible" class="mobile-nav">
-      <ul ref="navItems" class="text-headline-3">
+      <ul ref="navItems" class="text-headline-3 mobile-nav__primary">
         <li><NuxtLink to="/">Work</NuxtLink></li>
         <li><NuxtLink to="/about">About</NuxtLink></li>
         <li><NuxtLink to="/contact">Contact</NuxtLink></li>
         <li><NuxtLink to="/test">Slug</NuxtLink></li>
       </ul>
+
+      <!-- <div class="cols">
+        <BlockRule />
+        <div class="col">
+          <Text size="caption-1">Social</Text>
+        </div>
+        <div class="col"></div>
+      </div> -->
+      <Grid>
+        <Column>
+          <BlockRule space-above="tiny" space-below="tiny" />
+        </Column>
+        <Column span="6">
+          <Text size="caption-1">Social</Text>
+        </Column>
+        <Column span="6" element="ul">
+          <li><a href="" target="_blank">Instagram</a></li>
+          <li><a href="" target="_blank">Twitter</a></li>
+          <li><a href="" target="_blank">Are.na</a></li>
+          <li><a href="" target="_blank">LinkedIn</a></li>
+          <li><a href="" target="_blank">GitHub</a></li>
+        </Column>
+        <Column>
+          <BlockRule space-above="big" space-below="tiny" />
+        </Column>
+        <Column span="6">
+          <Text size="caption-1">Copyright</Text>
+        </Column>
+        <Column span="6" element="ul">
+          <Text size="caption-1">2023-{{ new Date().getFullYear() }}</Text>
+        </Column>
+        <Space size="huge" />
+      </Grid>
     </div>
   </transition>
 </template>
@@ -22,26 +55,24 @@ const navItems = ref(null);
 const device = useDeviceStore();
 
 // scroll to close
+// watch(
+//   () => device.scrollY,
+//   (changes, oldValue) => {
+//     // only watch if nav is visible
+//     if (app.mobileNavIsVisible && changes) {
+//       app.setMobileNavVisibility(false);
+//     }
+//   }
+// );
+
 watch(
-  () => device.scrollY,
-  (changes, oldValue) => {
-    // only watch if nav is visible
-    if (app.mobileNavIsVisible && changes) {
+  () => device.winWidth,
+  (windowSize) => {
+    if (windowSize >= 600) {
       app.setMobileNavVisibility(false);
     }
   }
 );
-
-// watch(
-//   () => device.winWidth,
-//   (windowSize) => {
-//     if (windowSize >= 600) {
-//       app.setMobileNavVisibility(false);
-//     } else {
-//       app.setMobileNavVisibility(true);
-//     }
-//   }
-// );
 
 function getRandom(min, max) {
   return Math.random() * (max - min) + min;
@@ -89,12 +120,12 @@ function onEnter(el, done) {
 }
 function onLeave(el, done) {
   const timeline = gsap.timeline({ onComplete: done });
-  const children = el.getElementsByTagName("li");
+  const children = el.querySelectorAll(".mobile-nav__primary li");
 
   timeline.to(children, {
     opacity: 0,
-    y: -40,
-    stagger: 0.1,
+    // y: -40,
+    stagger: -0.1,
     duration: 0.3,
     ease: "Power2.easeOut",
   });
@@ -108,7 +139,7 @@ function onLeave(el, done) {
       height: 0,
       onComplete: done,
     },
-    "-=0.1"
+    "-=0"
   );
 }
 </script>
@@ -117,23 +148,19 @@ function onLeave(el, done) {
 @import "~/assets/styles/grid";
 
 .mobile-nav {
-  // overflow: hidden;
+  overflow-y: auto;
+  height: 100%;
+}
 
-  ul {
-    margin: 0;
-    padding-top: var(--small);
-    padding-bottom: var(--small);
-    display: flex;
-    flex-direction: column;
-    height: 80%;
-    gap: $grid-gap;
-
-    &:hover {
-      > li {
-        flex: 1;
-      }
-    }
-  }
+.mobile-nav__primary {
+  margin: 0;
+  padding-top: var(--small);
+  padding-bottom: var(--small);
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+  gap: $grid-gap;
+  overflow: hidden;
 
   li {
     display: flex;
