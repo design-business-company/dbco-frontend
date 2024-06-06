@@ -1,5 +1,5 @@
 <template>
-  <Observer :onEnter="onEnter" :onLeave="onLeave">
+  <Observer :onEnter="onEnter" :onLeave="onLeave" class="static-header-wrapper">
     <header class="static-header">
       <Grid>
         <Column class="text-body-1" span="6" span-laptop="4" span-desktop="3">
@@ -13,13 +13,29 @@
   </Observer>
 </template>
 
-<style>
+<style lang="scss">
+@import "~/assets/styles/mixins";
+
+.static-header-wrapper {
+  margin-top: var(--huge);
+
+  @include tablet {
+    margin-top: 0;
+  }
+}
+
 .static-header {
   position: relative;
   width: 100%;
   z-index: 999;
   padding-top: var(--tinier);
-  padding-bottom: var(--tinier);
+  padding-bottom: var(--big);
+
+  display: none;
+
+  @include tablet {
+    display: block;
+  }
 }
 </style>
 
@@ -30,11 +46,11 @@ const app = useAppStore();
 
 function onEnter() {
   // disable sticky nav when header in view
-  app.setHeaderIsVisible(false);
+  // app.setMobileNavVisibility(false);
   // console.log("hide", app.headerIsVisible);
 }
 
 function onLeave() {
-  app.setHeaderIsVisible(true);
+  // app.setMobileNavVisibility(true);
 }
 </script>

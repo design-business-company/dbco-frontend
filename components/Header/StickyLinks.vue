@@ -30,12 +30,10 @@ ul {
 
     &.router-link-exact-active {
       color: var(--foreground-primary);
-      text-decoration-color: var(--accent-primary);
     }
 
     &:hover {
       color: var(--foreground-primary);
-      text-decoration: underline;
     }
   }
 }
