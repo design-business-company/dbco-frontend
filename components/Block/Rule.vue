@@ -23,12 +23,8 @@ const props = defineProps({
 
 <style lang="scss">
 .rule {
-  border-color: color-mix(
-    in srgb,
-    var(--foreground-primary) 30%,
-    var(--background-primary) 70%
-  );
+  border-color: var(--background-tertiary);
   transition: border-color var(--transition);
-  transition-delay: var(--transition-page-delay);
+  // transition-delay: var(--transition-page-delay);
 }
 </style>

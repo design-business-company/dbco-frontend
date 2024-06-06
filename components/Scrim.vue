@@ -41,7 +41,7 @@ function onLeave(el, done) {
 
   const root = document.documentElement;
   root.style["transition"] = "var(--transition), color var(--transition)";
-  root.style["transition-delay"] = "var(--transition-page-delay)";
+  // root.style["transition-delay"] = "var(--transition-page-delay)";
 }
 </script>
 

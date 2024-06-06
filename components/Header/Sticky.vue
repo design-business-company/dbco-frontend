@@ -123,8 +123,7 @@ onClickOutside(nav, (event) => {
     background-color: var(--background-primary);
     padding-top: var(--tinier);
     padding-bottom: var(--tinier);
-    transition: background-color var(--transition) var(--transition-page-delay),
-      color var(--transition) var(--transition-page-delay),
+    transition: background-color var(--transition), color var(--transition),
       transform 200ms var(--transition-function);
   }
 

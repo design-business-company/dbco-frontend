@@ -134,18 +134,11 @@
 
   /* backgrounds */
   --background-primary: var(--white);
-  --background-secondary: var(--gray-50);
-  --background-tertiary: var(--gray-150);
-
-  /* foreground */
   --foreground-primary: var(--gray-950);
-  --foreground-secondary: var(--gray-500);
-  --foreground-tertiary: var(--gray-150);
 
   /* accent */
   --accent-primary: var(--gray-950);
   --accent-primary-text: var(--indigo-50);
-  --accent-secondary: var(--gray-900);
   --accent-error: var(--red-500);
   --accent-valid: var(--green-500);
 
@@ -165,4 +158,34 @@
   @include tablet {
     --text-indent: var(--biggest);
   }
+
+  --background-secondary: color-mix(
+    in srgb,
+    var(--background-primary) 90%,
+    var(--foreground-primary) 10%
+  );
+
+  --background-tertiary: color-mix(
+    in srgb,
+    var(--background-primary) 80%,
+    var(--foreground-primary) 20%
+  );
+
+  --foreground-secondary: color-mix(
+    in srgb,
+    var(--foreground-primary) 55%,
+    var(--background-primary) 45%
+  );
+
+  --foreground-tertiary: color-mix(
+    in srgb,
+    var(--foreground-primary) 30%,
+    var(--background-primary) 70%
+  );
+
+  --accent-secondary: color-mix(
+    in srgb,
+    var(--accent-primary) 50%,
+    var(--background-primary) 50%
+  );
 }

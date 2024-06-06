@@ -174,7 +174,7 @@ function onLeave(el, done) {
 
     &:has(.router-link-active) {
       a {
-        background-color: red !important;
+        background-color: var(--accent-primary);
         border-radius: 100vw;
         width: 100%;
         padding-top: calc(50% - 20px);
@@ -187,7 +187,7 @@ function onLeave(el, done) {
   a {
     text-decoration: none;
     color: inherit;
-    background: gray;
+    background: var(--background-tertiary);
     width: 100%;
     height: 100%;
     border-radius: var(--tinier);
