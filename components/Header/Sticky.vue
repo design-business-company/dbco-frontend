@@ -10,15 +10,15 @@
     ]"
   >
     <Grid class="wrapper">
-      <Column class="text-body-1" span="6" span-tablet="4" span-desktop="3">
+      <Column class="text-body-1" span="6" span-laptop="4" span-desktop="3">
         <HeaderStickyLogo />
       </Column>
 
       <Column
         class="links text-body-1"
         span="6"
-        span-tablet="8"
-        span-laptop="8"
+        span-laptop="4"
+        span-desktop="3"
       >
         <HeaderStickyLinks class="default-nav" />
         <HeaderMobileNavTrigger
@@ -66,7 +66,7 @@ const handleScroll = () => {
   ) {
     app.setHeaderIsVisible(true);
   } else if (
-    currentScrollY < previousScrollY.value - scrollUpThreshold &&
+    // currentScrollY < previousScrollY.value - scrollUpThreshold &&
     device.scrollDirection === "up"
   ) {
     app.setHeaderIsVisible(true);
@@ -74,7 +74,6 @@ const handleScroll = () => {
     // currentScrollY > previousScrollY.value + scrollUpThreshold &&
     device.scrollDirection === "down"
   ) {
-    console.log("scroll down");
     app.setHeaderIsVisible(false);
   }
 };
@@ -117,6 +116,7 @@ onClickOutside(nav, (event) => {
   left: 0;
   right: 0;
   z-index: 999;
+  transition: transform 200ms var(--transition-function);
 
   .wrapper {
     transform: translate3d(0, 0, 0);
@@ -154,7 +154,8 @@ onClickOutside(nav, (event) => {
     }
 
     @include tablet {
-      visibility: hidden;
+      transform: translate3d(0, -150%, 0);
+      // visibility: hidden;
     }
   }
 
