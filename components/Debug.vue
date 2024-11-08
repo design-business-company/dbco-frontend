@@ -84,6 +84,7 @@ td:first-child {
 
 td:last-child {
   background: blue;
+  color: white;
 }
 
 td.is-false {
