@@ -108,7 +108,7 @@ onClickOutside(nav, (event) => {
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/styles/mixins";
+@use "~/assets/styles/mixins";
 
 .sticky-nav {
   position: fixed;

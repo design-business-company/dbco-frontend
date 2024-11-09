@@ -70,7 +70,7 @@ const styleObject = computed(() => {
 </script>
 
 <style scoped lang="scss">
-@import "~/assets/styles/mixins";
+@use "~/assets/styles/mixins";
 
 .column {
   grid-column: var(--grid-column); // Use general settings

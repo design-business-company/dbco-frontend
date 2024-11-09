@@ -1,6 +1,3 @@
-@import "../styles/vars.scss";
-@import "../styles/mixins.scss";
-
 :root {
   /* Breakpoints */
   --mobile: #{$mobile};
@@ -23,21 +20,6 @@
   --huge: 128px;
   --huger: 160px;
   --hugest: 200px;
-
-  @include ultrawide {
-    --tiniest: #{calc-vw(4px, $ultrawide)};
-    --tinier: #{calc-vw(8px, $ultrawide)};
-    --tiny: #{calc-vw(12px, $ultrawide)};
-    --smallest: #{calc-vw(16px, $ultrawide)};
-    --smaller: #{calc-vw(24px, $ultrawide)};
-    --small: #{calc-vw(32px, $ultrawide)};
-    --big: #{calc-vw(48px, $ultrawide)};
-    --bigger: #{calc-vw(64px, $ultrawide)};
-    --biggest: #{calc-vw(96px, $ultrawide)};
-    --huge: #{calc-vw(128px, $ultrawide)};
-    --huger: #{calc-vw(160px, $ultrawide)};
-    --hugest: #{calc-vw(200px, $ultrawide)};
-  }
 
   /* Grid */
   --grid-mobile-columns: 12;
@@ -155,9 +137,6 @@
   --border-radius: var(--tiniest);
 
   --text-indent: var(--bigger);
-  @include tablet {
-    --text-indent: var(--biggest);
-  }
 
   --background-secondary: color-mix(
     in srgb,
@@ -189,3 +168,24 @@
     var(--background-primary) 50%
   );
 }
+
+// :root {
+//   @include ultrawide {
+//     --tiniest: #{calc-vw(4px, $ultrawide)};
+//     --tinier: #{calc-vw(8px, $ultrawide)};
+//     --tiny: #{calc-vw(12px, $ultrawide)};
+//     --smallest: #{calc-vw(16px, $ultrawide)};
+//     --smaller: #{calc-vw(24px, $ultrawide)};
+//     --small: #{calc-vw(32px, $ultrawide)};
+//     --big: #{calc-vw(48px, $ultrawide)};
+//     --bigger: #{calc-vw(64px, $ultrawide)};
+//     --biggest: #{calc-vw(96px, $ultrawide)};
+//     --huge: #{calc-vw(128px, $ultrawide)};
+//     --huger: #{calc-vw(160px, $ultrawide)};
+//     --hugest: #{calc-vw(200px, $ultrawide)};
+//   }
+
+//   @include tablet {
+//     --text-indent: var(--biggest);
+//   }
+// }

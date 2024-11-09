@@ -28,6 +28,6 @@ const onSwiper = (swiper) => {
 const onSlideChange = () => {};
 </script>
 
-<style lang="css">
-@import "swiper/css";
+<style lang="scss">
+@use "swiper/css";
 </style>

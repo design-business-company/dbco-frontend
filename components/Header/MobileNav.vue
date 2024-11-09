@@ -145,7 +145,7 @@ function onLeave(el, done) {
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/styles/grid";
+// @use "~/assets/styles/grid";
 
 .mobile-nav {
   overflow-y: auto;

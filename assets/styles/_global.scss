@@ -1,0 +1,5 @@
+// what's the deal with this file?
+// nuxt >3.14 is why. to expose the sass files below, we import one file here::after
+// nuxt.config.ts -> vite.css.preprocessorOptions.scss.additionalData
+@forward "vars";
+@forward "mixins";

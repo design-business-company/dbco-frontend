@@ -14,7 +14,7 @@
 </template>
 
 <style lang="scss">
-@import "~/assets/styles/mixins";
+@use "~/assets/styles/mixins";
 
 .static-header-wrapper {
   margin-top: var(--huge);

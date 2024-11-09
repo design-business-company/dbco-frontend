@@ -37,8 +37,6 @@
 </template>
 
 <style lang="scss">
-@import "@/assets/styles/mixins.scss";
-
 .swatch {
   aspect-ratio: 1 / 1;
   transition: background-color var(--transition);

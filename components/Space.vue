@@ -46,7 +46,7 @@ const spaceStyle = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/styles/mixins";
+@use "~/assets/styles/mixins";
 
 .space {
   margin-top: var(--margin-top);

@@ -1,6 +1,6 @@
+@use "./assets/styles/_vars" as *;
 @use "sass:string";
 @use "sass:math";
-@import "../styles/vars";
 
 @mixin mobile {
   @media (min-width: #{$mobile}) {

@@ -89,8 +89,6 @@ definePageMeta({
 </script>
 
 <style lang="scss">
-@import "@/assets/styles/mixins.scss";
-
 svg {
   display: flex;
   width: 100%;

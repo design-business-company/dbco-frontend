@@ -25,7 +25,7 @@
 </template>
 
 <style lang="scss">
-@import "swiper/css";
+@use "swiper/css";
 
 .clients {
   cursor: grab;
