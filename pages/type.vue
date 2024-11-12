@@ -160,10 +160,12 @@ import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 const { setTheme } = useTheme();
 
-setTheme({
-  background: "#00ff00",
-  foreground: "#000",
-  accent: "blue",
+onBeforeMount(() => {
+  setTheme({
+    background: "#00ff00",
+    foreground: "#000000",
+    accent: "#0000ff",
+  });
 });
 
 // Run common mount/unmount scripts. Seup SEO, etc.

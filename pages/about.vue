@@ -1,114 +1,113 @@
-<style lang="scss" scoped>
-.wrapper {
-  width: 100%;
-  overflow: hidden;
-}
-
-.intro {
-  p {
-    text-indent: var(--bigger);
-  }
-}
-</style>
-
 <template>
-  <Grid class="wrapper">
-    <Space size="huge" />
-    <Column class="intro" tablet-span="10" laptop-span="6" laptop-start="7">
-      <Text size="body-1">
-        <p>
-          We realize that naming a design company “Design Business Company” is
-          like naming a dog, “dog”. Or a cat, “jerk”. It makes good sense and
-          also makes us chuckle, so here we are. Anyhow, welcome. We’re glad
-          you’re here.
-        </p>
-        <p>
-          We’re a creative studio that designs brand identities, websites, apps,
-          typefaces, and much more. We do this sort of thing for clients of all
-          shapes and sizes—from startups to Fortune 500s, musicians to tech
-          giants. tenetur recusandae distinctio?
-        </p>
-        <!-- <Space size="b" /> -->
-      </Text>
-    </Column>
-    <Space size="bigger" />
-
-    <Column class="intro">
+  <section :class="['page']">
+    <template v-if="pending">
+      <p>pending</p>
+    </template>
+    <template v-else>
       <AboutClients />
-    </Column>
-    <Space size="bigger" />
-    <Column class="intro" tablet-span="9" laptop-span="6" laptop-start="7">
-      <Text size="body-2">
-        <p>
-          We realize that naming a design company “Design Business Company” is
-          like naming a dog, “dog”. Or a cat, “jerk”. It makes good sense and
-          also makes us chuckle, so here we are. Anyhow, welcome. We’re glad
-          you’re here.
-        </p>
-        <p>
-          We’re a creative studio that designs brand identities, websites, apps,
-          typefaces, and much more. We do this sort of thing for clients of all
-          shapes and sizes—from startups to Fortune 500s, musicians to tech
-          giants. tenetur recusandae distinctio?
-        </p>
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus
-          assumenda quis odit similique. Delectus necessitatibus magni
-          reprehenderit repellat in perspiciatis? Exercitationem ipsum optio
-          natus doloribus unde aliquid distinctio rerum numquam.
-        </p>
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus
-          assumenda quis odit similique. Delectus necessitatibus magni
-          reprehenderit repellat in perspiciatis? Exercitationem ipsum optio
-          natus doloribus unde aliquid distinctio rerum numquam.
-        </p>
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus
-          assumenda quis odit similique. Delectus necessitatibus magni
-          reprehenderit repellat in perspiciatis? Exercitationem ipsum optio
-          natus doloribus unde aliquid distinctio rerum numquam.
-        </p>
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus
-          assumenda quis odit similique. Delectus necessitatibus magni
-          reprehenderit repellat in perspiciatis? Exercitationem ipsum optio
-          natus doloribus unde aliquid distinctio rerum numquam.
-        </p>
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus
-          assumenda quis odit similique. Delectus necessitatibus magni
-          reprehenderit repellat in perspiciatis? Exercitationem ipsum optio
-          natus doloribus unde aliquid distinctio rerum numquam.
-        </p>
-        <!-- <Space size="b" /> -->
-      </Text>
-    </Column>
-  </Grid>
+      <ContentBlocks :content="data[0].content" />
+    </template>
+  </section>
 </template>
 
 <script setup>
+import { watch } from "vue";
+import { useRoute } from "vue-router";
+import { useTheme } from "~/composables/useTheme";
 import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
-import { useTheme } from "~/composables/useTheme";
-const { setTheme } = useTheme();
 
-setTheme({
-  background: "#ffffff",
-  foreground: "#000000",
-  accent: "#ff0000",
-});
+/* ----------------------------------------------------------------------------
+ * Fetch data from sanity
+ * --------------------------------------------------------------------------*/
+const route = useRoute();
+const pageId = route.params.id;
 
-// Run common mount/unmount scripts. Seup SEO, etc.
+const query = groq`*[_type=="about"]{
+  ...,
+  content[]{
+    ...,
+    _type == "richText" => {
+      ...,
+      text[]{
+        ...,
+        markDefs[]{
+          ...,
+          _type == "internalLink" => {
+            "slug": @.reference->slug.current
+          }
+        }
+      }
+    }
+  },
+    seo {
+    ...,
+    "image": image.asset->url
+  }
+}`;
+const { data, error, pending, refresh } = useSanityQuery(query);
+
+// if (error.value) await navigateTo("/error");
+
+/* ----------------------------------------------------------------------------
+ * Set page theme
+ * --------------------------------------------------------------------------*/
+
+watch(
+  data,
+  (sanityData) => {
+    if (!process.client || !sanityData || sanityData.length === 0) return;
+
+    const { setTheme } = useTheme();
+
+    if (sanityData[0]?.pageTheme?.theme) {
+      setTheme(sanityData[0].pageTheme);
+    }
+  },
+  { immediate: true }
+);
+
+/* ----------------------------------------------------------------------------
+ * Handle SEO Shit
+ * --------------------------------------------------------------------------*/
+
 PageSetup({
-  seoMeta: { title: "About" },
+  seoMeta: {
+    title: () => `${data.value[0].title} • Design Business Company`,
+    description: () => `${data.value[0].seo.description}`,
+    image: () => `${data.value[0].seo.image}?w=1200`,
+    url: () => `https://dbco.online${route.fullPath}`,
+    noIndexNoFollow: () => `${data.value[0].seo.noIndexNoFollow}`,
+  },
 });
 
-// Define page transitions or other page meta
+/* ----------------------------------------------------------------------------
+ * Define page transitions or other page meta
+ * --------------------------------------------------------------------------*/
 definePageMeta({
   pageTransition: pageTransitionDefault(),
 });
-
-const query = groq`*[_type=="client"]`;
-const { data } = useSanityQuery(query);
 </script>
+
+<style lang="scss">
+svg {
+  display: flex;
+  width: 100%;
+  height: auto;
+
+  path {
+    fill: var(--foreground-primary);
+  }
+}
+
+.stroke {
+  text-indent: var(--big);
+
+  @include tablet {
+    text-indent: 0;
+    border-left: 1px solid var(--foreground-primary);
+    padding-left: var(--tiny);
+    padding-right: var(--smallest);
+  }
+}
+</style>
