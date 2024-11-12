@@ -10,7 +10,7 @@
                   class="client__logo"
                   v-html="client?.logo?.code"
                   role="img"
-                  :aria-label="'Logo of ' + client.title"
+                  :aria-label="client.title + ' Logo'"
                 ></div>
                 <figcaption class="client__name">
                   <Text size="micro">{{ client.title }}</Text>
@@ -44,9 +44,10 @@
 
 .client {
   &__logo {
-    background-color: rgba(black, 0.05);
+    background-color: var(--background-secondary);
     border-radius: var(--border-radius);
     overflow: hidden;
+    transition: background-color var(--transition);
   }
 
   &__name {
@@ -69,6 +70,7 @@ svg {
   height: auto;
 
   path {
+    transition: fill var(--transition);
     fill: var(--foreground-primary);
   }
 }
