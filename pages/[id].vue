@@ -58,7 +58,6 @@ watch(
     if (!process.client || !sanityData || sanityData.length === 0) return;
 
     const { setTheme } = useTheme();
-    console.log(sanityData[0]?.pageTheme);
 
     if (sanityData[0]?.pageTheme) {
       setTheme(sanityData[0].pageTheme);

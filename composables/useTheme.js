@@ -43,7 +43,6 @@ export const useTheme = () => {
 
   // Provide methods to update theme
   const setTheme = (newTheme) => {
-    console.log(newTheme);
     if (newTheme.theme === "light" || newTheme.theme === "dark") {
       deviceStore.updateTheme(defaultThemes[newTheme.theme]);
     } else if (typeof newTheme === "object") {
