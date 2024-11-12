@@ -72,7 +72,7 @@ watch(
 
 PageSetup({
   seoMeta: {
-    title: () => `${data.value[0].title} • Design Business Company`,
+    title: () => `Contact • Design Business Company`,
     description: () => `${data.value[0].seo.description}`,
     image: () => `${data.value[0].seo.image}?w=1200`,
     url: () => `https://dbco.online${route.fullPath}`,
