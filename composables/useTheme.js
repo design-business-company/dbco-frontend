@@ -43,10 +43,14 @@ export const useTheme = () => {
 
   // Provide methods to update theme
   const setTheme = (newTheme) => {
-    if (newTheme === "light" || newTheme === "dark") {
-      deviceStore.updateTheme(defaultThemes[newTheme]);
+    if (newTheme.theme === "light" || newTheme.theme === "dark") {
+      deviceStore.updateTheme(defaultThemes[newTheme.theme]);
     } else if (typeof newTheme === "object") {
-      deviceStore.updateTheme(newTheme);
+      deviceStore.updateTheme({
+        background: newTheme.background || newTheme.backgroundPrimary.hex,
+        foreground: newTheme.foreground || newTheme.foregroundPrimary.hex,
+        accent: newTheme.accent || newTheme.accentPrimary.hex,
+      });
     }
   };
 

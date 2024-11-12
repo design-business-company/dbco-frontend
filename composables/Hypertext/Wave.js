@@ -35,13 +35,11 @@ export function useGsapWave(selector) {
   const pauseAnimation = (element) => {
     const anim = animations.find((a) => a.element === element);
     if (anim) anim.animation.pause();
-    console.log("paused");
   };
 
   const playAnimation = (element) => {
     const anim = animations.find((a) => a.element === element);
     if (anim) anim.animation.play();
-    console.log("play");
   };
 
   const setupIntersectionObserver = (element) => {

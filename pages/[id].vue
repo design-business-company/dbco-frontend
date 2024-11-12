@@ -59,8 +59,8 @@ watch(
 
     const { setTheme } = useTheme();
 
-    if (sanityData[0]?.pageTheme?.theme) {
-      setTheme(sanityData[0].pageTheme.theme);
+    if (sanityData[0]?.pageTheme) {
+      setTheme(sanityData[0].pageTheme);
     }
   },
   { immediate: true }
