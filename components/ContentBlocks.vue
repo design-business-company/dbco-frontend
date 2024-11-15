@@ -37,6 +37,12 @@
       <Space />
     </div>
 
+    <div v-if="block._type === 'media'">
+      <Space />
+      <BlockMedia :media="block.media[0]" />
+      <Space />
+    </div>
+
     <div v-if="block._type === 'hyperText'">
       <Space />
       <Text size="body-1">
