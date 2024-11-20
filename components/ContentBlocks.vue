@@ -4,6 +4,8 @@
     :class="['block', `block--${block._type}`]"
     :key="block._key"
   >
+    <ModuleSpotlight v-if="block._type === 'spotlight'" v-bind="block"></ModuleSpotlight>
+
     <Grid v-if="block._type === 'richText'">
       <Space />
       <Column>

@@ -1,10 +1,10 @@
 <template>
-  <Grid class="clients">
+  <Grid class="clients grid--full">
     <Column>
       <Observer :onEnter="onEnter" :onLeave="onLeave">
-        <div class="swiper-container" ref="swiperContainer">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="client in data">
+        <div class="clients__container" ref="emblaRef">
+          <div class="clients__wrapper">
+            <div class="clients__slide" v-for="client in data">
               <figure class="client">
                 <div
                   class="client__logo"
@@ -25,8 +25,6 @@
 </template>
 
 <style lang="scss">
-@use "swiper/css";
-
 .clients {
   cursor: grab;
 
@@ -39,6 +37,22 @@
 
   &:active {
     cursor: grabbing;
+  }
+
+  &__container {
+    width: 100%;
+    overflow: hidden;
+    padding-inline: $grid-margin;
+  }
+
+  &__wrapper {
+    display: flex;
+  }
+
+  &__slide {
+    --client-columns: 6;
+    flex: 0 0 calc(calc(100vw - calc(var(--grid-margin) * var(--client-columns))) / var(--client-columns));
+    margin-right: var(--tiny);
   }
 }
 
@@ -77,70 +91,41 @@ svg {
 </style>
 
 <script setup>
+import emblaCarouselVue from "embla-carousel-vue";
+import AutoScroll from "embla-carousel-auto-scroll";
+
 import { onMounted, ref } from "vue";
-import Swiper from "swiper";
-import { Autoplay, Mousewheel, FreeMode, Keyboard } from "swiper/modules";
 import gsap from "gsap";
 
 const query = groq`*[_type=="client"]`;
 const { data } = useSanityQuery(query);
 
-const swiperContainer = ref(null);
+const [emblaRef, emblaApi] = emblaCarouselVue({
+  loop: true,
+  skipSnaps: true,
+  align: "start",
+  startIndex: 1,
+  containScroll: false,
+  inViewThreshold: 0.01,
+}, [
+  AutoScroll({
+    speed: 0.55,
+    startDelay: 0,
+    stopOnInteraction: false,
+    stopOnMouseEnter: true,
+  })
+]);
+
 const swiperInstance = ref(null);
 const swiperHasFadedIntoView = ref(false);
-
-const swiperInit = () => {
-  swiperInstance.value = new Swiper(swiperContainer.value, {
-    modules: [Autoplay, Mousewheel, FreeMode, Keyboard],
-    speed: 400,
-    freeMode: {
-      enabled: true,
-      sticky: true,
-      momentumRatio: 0.9,
-      momentumVelocityRatio: 0.8,
-    },
-    slidesPerView: 2,
-    spaceBetween: 8,
-    loop: true,
-    autoplay: {
-      delay: 1500,
-      pauseOnMouseEnter: true,
-    },
-    keyboard: {
-      enabled: true,
-    },
-    mousewheel: {
-      enabled: true,
-      forceToAxis: true,
-    },
-    breakpoints: {
-      320: {
-        slidesPerView: 2,
-        spaceBetween: 8,
-      },
-      600: {
-        slidesPerView: 3,
-        spaceBetween: 9,
-      },
-      1024: {
-        slidesPerView: 4,
-        spaceBetween: 10,
-      },
-      1512: {
-        slidesPerView: 6,
-        spaceBetween: 11,
-      },
-    },
-  });
-};
 
 const onEnter = () => {
   // swiperInstance.value.resume();
 
   // console.log(swiperInstance.value.autoplay);
-  swiperInstance.value.autoplay.start();
+  // swiperInstance.value.autoplay.start();
 
-  const els = swiperContainer.value.querySelectorAll(".swiper-slide");
+  const els = emblaRef.value.querySelectorAll(".clients__slide");
 
   if (!swiperHasFadedIntoView.value) {
     gsap.fromTo(
@@ -160,21 +145,20 @@ const onEnter = () => {
 
 const onLeave = () => {
   // swiperInstance.value.pause();
-  swiperInstance.value.autoplay.stop();
+  // swiperInstance.value.autoplay.stop();
 };
 
-const swiperDestroy = () => {
-  swiperInstance.value.destroy();
+const destroy = () => {
+  // swiperInstance.value.destroy();
 };
 
 onMounted(() => {
-  swiperInit();
   onEnter();
 
   console.log();
 });
 
 onUnmounted(() => {
-  swiperDestroy();
+  destroy();
 });
 </script>

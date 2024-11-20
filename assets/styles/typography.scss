@@ -11,6 +11,15 @@
   @include fluidScale(11px, 14px, $ultrawide);
 }
 
+.text-tag {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  line-height: 100%;
+  text-transform: uppercase;
+  @include fluidScale(8px, 8px, $ultrawide);
+}
+
 .text-caption-2 {
   display: block;
   font-size: 13px;

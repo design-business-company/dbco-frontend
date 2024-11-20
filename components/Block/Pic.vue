@@ -66,5 +66,7 @@ const props = defineProps({
   display: block;
   width: 100%;
   height: auto;
+  border-radius: var(--border-radius);
+  overflow: hidden;
 }
 </style>

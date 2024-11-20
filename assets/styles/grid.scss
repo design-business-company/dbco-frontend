@@ -7,8 +7,7 @@ $grid-gap: clamp(8px, 0.5vw, 12px);
 .grid {
   display: grid;
   grid-template-columns: repeat(var(--grid-mobile-columns), 1fr);
-  padding-left: $grid-margin;
-  padding-right: $grid-margin;
+  padding-inline: $grid-margin;
   column-gap: $grid-gap;
   width: 100%;
 
@@ -43,4 +42,8 @@ $grid-gap: clamp(8px, 0.5vw, 12px);
     // padding-right: var(--grid-ultrawide-margin);
     // gap: var(--grid-ultrawide-gutter);
   }
+}
+
+.grid--full {
+  padding-inline: 0;
 }
