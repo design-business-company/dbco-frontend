@@ -116,18 +116,12 @@ const [emblaRef, emblaApi] = emblaCarouselVue({
   })
 ]);
 
-const swiperInstance = ref(null);
-const swiperHasFadedIntoView = ref(false);
+const componentHasFadedIntoView = ref(false);
 
 const onEnter = () => {
-  // swiperInstance.value.resume();
-
-  // console.log(swiperInstance.value.autoplay);
-  // swiperInstance.value.autoplay.start();
-
   const els = emblaRef.value.querySelectorAll(".clients__slide");
 
-  if (!swiperHasFadedIntoView.value) {
+  if (!componentHasFadedIntoView.value) {
     gsap.fromTo(
       els,
       {
@@ -139,17 +133,12 @@ const onEnter = () => {
         delay: 0.5,
       }
     );
-    swiperHasFadedIntoView.value = true;
+    componentHasFadedIntoView.value = true;
   }
 };
 
-const onLeave = () => {
-  // swiperInstance.value.pause();
-  // swiperInstance.value.autoplay.stop();
-};
-
 const destroy = () => {
-  // swiperInstance.value.destroy();
+  emblaApi.value.destroy();
 };
 
 onMounted(() => {

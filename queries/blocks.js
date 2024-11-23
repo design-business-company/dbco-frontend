@@ -19,6 +19,10 @@ export const spotlightQuery = groq`
       _type == "video" => {
         ${videoFields}
       }
+    },
+    settings {
+      autoplay,
+      variableWidth
     }
   }
 `;

@@ -22,7 +22,7 @@
     </Grid>
     <div class="spotlight__media">
       <BlockSpotlightMedia :items="media" v-if="media.length < 4" />
-      <BlockSpotlightMediaCarousel :items="media" v-else />
+      <BlockSpotlightMediaCarousel :settings="settings" :items="media" v-else />
     </div>
   </div>
 </template>
@@ -52,6 +52,10 @@ const props = defineProps({
   media: {
     type: Array,
     required: true,
+  },
+  settings: {
+    type: Object,
+    required: false,
   },
 });
 </script>

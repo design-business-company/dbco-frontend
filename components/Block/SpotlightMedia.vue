@@ -24,6 +24,7 @@ const props = defineProps({
 <style lang="scss" scoped>
 .spotlight-media {
   width: 100%;
+  padding-inline: $grid-margin;
 
   &__container {
     display: grid;

@@ -22,7 +22,7 @@
     "@nuxtjs/sanity": "^1.11.3",
     "@pinia/nuxt": "^0.5.1",
     "@sanity/image-url": "^1.0.2",
-    "@vueuse/core": "^10.10.0",
+    "@vueuse/core": "^10.11.1",
     "embla-carousel-auto-scroll": "^8.4.0",
     "embla-carousel-vue": "^8.4.0",
     "gsap": "file:gsap-bonus.tgz",

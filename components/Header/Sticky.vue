@@ -1,6 +1,7 @@
 <template>
   <nav
     ref="nav"
+    v-bind="inertAttribute"
     :class="[
       'sticky-nav',
       { 'nav-is-open': app.mobileNavIsVisible },
@@ -48,6 +49,14 @@ const device = useDeviceStore();
 
 const scrollUpThreshold = 5;
 const previousScrollY = ref(0);
+
+const inertAttribute = computed(() => {
+  if (!app.headerIsVisible || device.scrollNearTop) {
+    return { inert: true };
+  }
+  
+  return {};
+});
 
 // watch main window event
 const nuxt = useNuxtApp();

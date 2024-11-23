@@ -1,6 +1,9 @@
 <template>
   <Observer :onEnter="onEnter" :onLeave="onLeave" class="static-header-wrapper">
-    <header class="static-header">
+    <header
+      class="static-header"
+      v-bind="inertAttribute"
+    >
       <Grid>
         <Column class="text-body-1" span="6" span-laptop="4" span-desktop="3">
           <HeaderStaticLogo />
@@ -43,6 +46,13 @@
 import { useAppStore } from "~/stores/app";
 
 const app = useAppStore();
+
+const inertAttribute = computed(() => {
+  if (app.headerIsVisible) {
+    return { inert: true };
+  }
+  return {};
+});
 
 function onEnter() {
   // disable sticky nav when header in view

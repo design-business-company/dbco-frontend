@@ -1,5 +1,6 @@
 export const pictureFields = groq`
   ...,
+  "aspectRatio": asset->metadata.dimensions.aspectRatio
 `
 
 export const videoFields = groq`
