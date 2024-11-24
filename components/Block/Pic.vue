@@ -1,5 +1,8 @@
 <template>
-  <picture ref="pic">
+  <picture
+    ref="pic"
+    :style="{'--pic-aspect-ratio': aspectRatio}"
+  >
     <source
       :srcset="`
         ${$urlFor(src).width(320).url()} 320w,
@@ -58,6 +61,10 @@ const props = defineProps({
     type: String,
     default: "An image by Design Business Company",
   },
+  aspectRatio: {
+    type: String,
+    default: '4/6',
+  },
 });
 </script>
 
@@ -68,5 +75,6 @@ const props = defineProps({
   height: auto;
   border-radius: var(--border-radius);
   overflow: hidden;
+  aspect-ratio: var(--pic-aspect-ratio);
 }
 </style>

@@ -6,6 +6,8 @@
   >
     <ModuleSpotlight v-if="block._type === 'spotlight'" v-bind="block"></ModuleSpotlight>
 
+    <ModuleSnackGrid v-if="block._type === 'snackGrid'" v-bind="block"></ModuleSnackGrid>
+
     <Grid v-if="block._type === 'richText'">
       <Space />
       <Column>

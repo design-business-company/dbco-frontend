@@ -27,21 +27,46 @@ export const spotlightQuery = groq`
   }
 `;
 
+export const snackGridQuery = groq`
+_type == "snackGrid" => {
+  items[] -> {
+    _key,
+    type,
+    title,
+    "slug": slug.current,
+    shortDescription,
+    media[] {
+      _type == "picture" => {
+        ${pictureFields}
+      },
+      _type == "video" => {
+        ${videoFields}
+      }
+    },
+  }
+}
+`
+
+const richTextQuery = groq`
+_type == "richText" => {
+  ...,
+  text[]{
+    ...,
+    markDefs[]{
+      ...,
+      _type == "internalLink" => {
+        "slug": @.reference->slug.current
+      }
+    }
+  }
+}
+`
+
 export const contentBlocksQuery = groq`
 content[]{
   ...,
   ${spotlightQuery},
-  _type == "richText" => {
-    ...,
-    text[]{
-      ...,
-      markDefs[]{
-        ...,
-        _type == "internalLink" => {
-          "slug": @.reference->slug.current
-        }
-      }
-    }
-  }
+  ${richTextQuery},
+  ${snackGridQuery}
 }
 `

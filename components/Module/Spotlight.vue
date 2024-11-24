@@ -5,7 +5,7 @@
         <Text element="div" size="body-2">
           <h2 class="spotlight__title">{{ title }}</h2>
           <span v-if="shortDescription" class="spotlight__separator"> — </span>
-          <span v-if="shortDescription" class="spotlight__short-description">{{ shortDescription }}</span>
+          <SanityContent v-if="shortDescription" :blocks="shortDescription.text" />
         </Text>
         <div class="spotlight__tags">
           <BlockTag v-for="tag in tags" :text="tag.title" :key="tag._key" />
@@ -83,10 +83,13 @@ const props = defineProps({
     display: flex;
     flex-direction: column;
     row-gap: var(--tiny);
+
+    p {
+      display: inline;
+    }
   }
   
-  &__title,
-  &__short-description {
+  &__title {
     display: inline;
   }
   

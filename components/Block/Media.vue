@@ -14,7 +14,7 @@
     </div>
 
     <div v-if="media._type === 'picture'" class="media__picture">
-      <BlockPic :src="media.asset._ref" :alt="media.alt" />
+      <BlockPic :src="media.asset._ref" :alt="media.alt" :aspect-ratio="media.aspectRatio" />
       <BlockCaption v-if="media.caption" :caption="media.caption" class="media__caption" />
     </div>
   </div>
