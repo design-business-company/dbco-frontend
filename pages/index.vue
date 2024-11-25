@@ -13,6 +13,8 @@
 import { watch } from "vue";
 import { useRoute } from "vue-router";
 import { useTheme } from "~/composables/useTheme";
+import { contentBlocksQuery } from "~/queries/blocks";
+import { seoQuery } from "~/queries/global";
 import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 
@@ -24,25 +26,8 @@ const pageId = route.params.id;
 
 const query = groq`*[_type=="homepage"]{
   ...,
-  content[]{
-    ...,
-    _type == "richText" => {
-      ...,
-      text[]{
-        ...,
-        markDefs[]{
-          ...,
-          _type == "internalLink" => {
-            "slug": @.reference->slug.current
-          }
-        }
-      }
-    }
-  },
-    seo {
-    ...,
-    "image": image.asset->url
-  }
+  ${contentBlocksQuery},
+  ${seoQuery},
 }`;
 const { data, error, pending, refresh } = useSanityQuery(query);
 
