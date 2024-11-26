@@ -4,7 +4,7 @@
       v-if="items?.length"
       class="spotlight-media-carousel"
       :class="{
-        'variable-width': settings.variableWidth,
+        'variable-width': settings ? settings.variableWidth : null,
       }"
       ref="emblaRef"
       :style="{
@@ -50,7 +50,7 @@ const clamp = (value, min, max) => {
 };
 
 const emblaPlugins = computed(() => {
-  if (props.settings.autoplay) {
+  if (props.settings && props.settings.autoplay) {
     return [
       AutoScroll({
         speed: 0.9,
@@ -78,14 +78,14 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
 );
 
 const handleEnter = () => {
-  if (props.settings.autoplay) {
+  if (props.settings && props.settings.autoplay) {
     const instance = emblaPlugins.value[0];
 
     if (!instance.isPlaying()) instance.play();
   }
 };
 const handleExit = () => {
-  if (props.settings.autoplay) {
+  if (props.settings && props.settings.autoplay) {
     const instance = emblaPlugins.value[0];
 
     if (instance.isPlaying()) instance.stop();

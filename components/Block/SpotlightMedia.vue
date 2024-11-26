@@ -1,6 +1,6 @@
 <template>
-  <div 
-    v-if="items?.length" 
+  <div
+    v-if="items?.length"
     class="spotlight-media"
     :style="{
       '--grid-cols': items.length,
@@ -24,12 +24,19 @@ const props = defineProps({
 <style lang="scss" scoped>
 .spotlight-media {
   width: 100%;
-  padding-inline: $grid-margin;
+  padding-inline: var(--grid-margin);
 
   &__container {
     display: grid;
-    grid-template-columns: repeat(var(--grid-cols), 1fr);
-    gap: $grid-gap;
+    gap: var(--grid-gap);
+
+    @include laptop {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include desktop {
+      grid-template-columns: repeat(var(--grid-cols), 1fr);
+    }
   }
 }
 </style>
