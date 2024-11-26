@@ -17,32 +17,19 @@
       :loop="settings.loop"
       :metadata-video-title="alt"
       :playsinline="settings.playsinline"
+      ref="vid"
       accent-color="#ff0000"
       class="vid mux-player"
       :class="{
         'mux-player--controls-hidden': !settings.controls,
       }"
     />
-    <video
-      v-else
-      :aria-label="alt"
-      :muted="settings.mute"
-      :autoplay="settings.autoplay"
-      :controls="settings.controls"
-      :loop="settings.loop"
-      :playsinline="settings.playsinline"
-      :poster="$urlFor(poster).width(1920).url()"
-      ref="vid"
-      class="vid"
-    >
-      <source :src="src" />
-    </video>
   </Observer>
 </template>
 
 <script setup>
-import "@mux/mux-player"
-import { createBlurUp } from "@mux/blurup"
+import "@mux/mux-player";
+import { createBlurUp } from "@mux/blurup";
 
 const props = defineProps({
   playbackId: {
@@ -81,14 +68,13 @@ const vid = ref(null);
 const placeholder = ref(null);
 
 if (props.playbackId) {
-  createBlurUp(props.playbackId, {})
-    .then(res => {
-      placeholder.value = res.blurDataURL;
-    })
+  createBlurUp(props.playbackId, {}).then((res) => {
+    placeholder.value = res.blurDataURL;
+  });
 }
 
 const formattedAspectRatio = computed(() => {
-  return props.aspectRatio?.replaceAll(':', '/').trim() ?? 'auto';
+  return props.aspectRatio?.replaceAll(":", "/").trim() ?? "auto";
 });
 
 const handleEnter = () => {
@@ -119,7 +105,8 @@ const handleLeave = () => {
   overflow: hidden;
 }
 
-.mux-player, mux-player {
+.mux-player,
+mux-player {
   position: absolute;
   inset: 0;
   width: 100%;
