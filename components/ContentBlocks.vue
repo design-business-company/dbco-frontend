@@ -22,7 +22,7 @@
           <Space />
 
           <BlockVid
-            :src="block.url"
+            :playback-id="media.playbackId"
             :alt="block.alt"
             :settings="block.settings"
             :poster="block.poster.asset._ref"

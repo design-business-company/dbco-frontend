@@ -3,7 +3,6 @@
     <div v-if="media._type === 'video'" class="media__video">
       <BlockVid
         :playback-id="media.playbackId"
-        :src="media.url"
         :alt="media.alt"
         :settings="media.settings"
         :poster="media.poster?.asset?._ref"

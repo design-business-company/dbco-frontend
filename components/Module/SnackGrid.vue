@@ -19,8 +19,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-console.log(props.items);
 </script>
 
 <style lang="scss">

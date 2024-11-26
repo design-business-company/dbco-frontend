@@ -4,7 +4,7 @@
       <p>pending</p>
     </template>
     <template v-else>
-      <ContentBlocks :content="data[0].content" />
+      <ContentBlocks :content="data.content" />
     </template>
   </section>
 </template>
@@ -13,8 +13,7 @@
 import { watch } from "vue";
 import { useRoute } from "vue-router";
 import { useTheme } from "~/composables/useTheme";
-import { contentBlocksQuery } from "~/queries/blocks";
-import { seoQuery } from "~/queries/global";
+import { homeQuery } from "~/queries/pages/home";
 import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 
@@ -23,13 +22,7 @@ import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
  * --------------------------------------------------------------------------*/
 const route = useRoute();
 const pageId = route.params.id;
-
-const query = groq`*[_type=="homepage"]{
-  ...,
-  ${contentBlocksQuery},
-  ${seoQuery},
-}`;
-const { data, error, pending, refresh } = useSanityQuery(query);
+const { data, error, pending, refresh } = useSanityQuery(homeQuery);
 
 // if (error.value) await navigateTo("/error");
 
@@ -44,8 +37,8 @@ watch(
 
     const { setTheme } = useTheme();
 
-    if (sanityData[0]?.pageTheme) {
-      setTheme(sanityData[0].pageTheme);
+    if (sanityData?.pageTheme) {
+      setTheme(sanityData.pageTheme);
     }
   },
   { immediate: true }
@@ -58,10 +51,10 @@ watch(
 PageSetup({
   seoMeta: {
     title: () => `Design Business Company`,
-    description: () => `${data.value[0].seo.description}`,
-    image: () => `${data.value[0].seo.image}?w=1200`,
+    description: () => `${data.value.seo.description}`,
+    image: () => `${data.value.seo.image}?w=1200`,
     url: () => `https://dbco.online${route.fullPath}`,
-    noIndexNoFollow: () => `${data.value[0].seo.noIndexNoFollow}`,
+    noIndexNoFollow: () => `${data.value.seo.noIndexNoFollow}`,
   },
 });
 

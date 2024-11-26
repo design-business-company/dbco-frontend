@@ -1,7 +1,7 @@
 <template>
   <Grid class="clients grid--full">
     <Column>
-      <Observer :onEnter="onEnter" :onLeave="onLeave">
+      <Observer :onEnter="onEnter">
         <div class="clients__container" ref="emblaRef">
           <div class="clients__wrapper">
             <div class="clients__slide" v-for="client in data">

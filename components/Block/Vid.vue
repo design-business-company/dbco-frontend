@@ -40,10 +40,6 @@ const props = defineProps({
     type: String,
     required: false,
   },
-  src: {
-    type: String,
-    required: true,
-  },
   alt: {
     type: String,
     default: "An image by Design Business Company",

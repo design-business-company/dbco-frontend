@@ -62,8 +62,8 @@ const props = defineProps({
     default: "An image by Design Business Company",
   },
   aspectRatio: {
-    type: String,
-    default: '4/6',
+    type: Number,
+    default: 1,
   },
 });
 </script>
