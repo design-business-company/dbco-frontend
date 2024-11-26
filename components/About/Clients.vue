@@ -150,8 +150,6 @@ const destroy = () => {
 
 onMounted(() => {
   onEnter();
-
-  console.log();
 });
 
 onUnmounted(() => {

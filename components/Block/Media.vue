@@ -57,16 +57,9 @@ const props = defineProps({
     margin-top: var(--tiniest);
     transform-origin: 0 100%;
     pointer-events: none;
-    transition: opacity 300ms ease-out, transform 200ms ease-out;
-
-    @include tablet {
-      opacity: 0;
-      transform: translate3d(0, 10%, 0) scale(0.95);
-    }
   }
 
   &:hover .media__caption {
-    opacity: 1;
     transform: translate3d(0, 0, 0);
   }
 }

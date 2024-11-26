@@ -1,5 +1,5 @@
 <template>
-  <Text size="caption-2">
+  <Text size="micro">
     <SanityContent :blocks="caption" :serializers="serializers" />
   </Text>
 </template>

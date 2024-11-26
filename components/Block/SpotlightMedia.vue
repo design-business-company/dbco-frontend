@@ -6,7 +6,10 @@
       '--grid-cols': items.length,
     }"
   >
-    <div class="spotlight-media__container">
+    <div
+      class="spotlight-media__container"
+      :class="[{ 'full-width': items.length <= 1 }]"
+    >
       <BlockMedia v-for="item in items" :key="item._key" :media="item" />
     </div>
   </div>
@@ -29,6 +32,10 @@ const props = defineProps({
   &__container {
     display: grid;
     gap: var(--grid-gap);
+
+    &.full-width {
+      grid-template-columns: repeat(1, 1fr);
+    }
 
     @include laptop {
       grid-template-columns: repeat(2, 1fr);

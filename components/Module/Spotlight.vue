@@ -52,12 +52,6 @@
 <script setup>
 import { defaultThemes } from "~/composables/useTheme";
 
-// Access the default themes
-console.log(defaultThemes.light);
-console.log(defaultThemes.dark);
-
-// console.log(getDefaultThemes);
-
 const props = defineProps({
   title: {
     type: String,
