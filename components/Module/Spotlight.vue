@@ -1,5 +1,6 @@
 <template>
   <div class="spotlight">
+    <Space />
     <Grid class="grid--full spotlight__content">
       <Column
         startMobile="1"
@@ -38,6 +39,7 @@
       <BlockSpotlightMedia :items="media" v-if="media.length < 4" />
       <BlockSpotlightMediaCarousel :settings="settings" :items="media" v-else />
     </div>
+    <Space />
   </div>
 </template>
 
@@ -82,7 +84,7 @@ const props = defineProps({
   margin-block: var(--bigger);
 
   &__content {
-    padding-inline: $grid-margin;
+    padding-inline: var(--grid-margin);
     width: 100%;
     row-gap: var(--small);
     grid-template-rows: auto;
@@ -93,10 +95,13 @@ const props = defineProps({
   }
 
   &__heading {
-    max-width: 45ch;
     display: flex;
     flex-direction: column;
     row-gap: var(--tiny);
+
+    [class^="text-"] {
+      max-width: 30ch;
+    }
 
     p {
       display: inline;
@@ -115,7 +120,7 @@ const props = defineProps({
   &__tags {
     display: flex;
     align-items: center;
-    gap: var(--tiniest);
+    gap: var(--tinier);
     flex-wrap: wrap;
   }
 
