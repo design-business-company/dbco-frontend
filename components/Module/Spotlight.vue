@@ -42,7 +42,7 @@
       <Space size="small" sizeTablet="big" sizeLaptop="huge" />
     </Grid>
     <div class="spotlight__media">
-      <BlockSpotlightMedia :items="media" v-if="media.length < 4" />
+      <BlockSpotlightMedia :items="media" v-if="media.length < 5" />
       <BlockSpotlightMediaCarousel :settings="settings" :items="media" v-else />
     </div>
     <Space size="bigger" sizeTablet="big" sizeLaptop="huger" />
