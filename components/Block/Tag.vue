@@ -1,8 +1,6 @@
 <template>
   <div class="tag">
-    <Text element="div" size="tag" class="tag__text">
-      #{{ text }}
-    </Text>
+    <Text element="div" size="micro" class="tag__text"> #{{ text }} </Text>
   </div>
 </template>
 
