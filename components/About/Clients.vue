@@ -51,7 +51,11 @@
 
   &__slide {
     --client-columns: 6;
-    flex: 0 0 calc(calc(100vw - calc(var(--grid-margin) * var(--client-columns))) / var(--client-columns));
+    flex: 0 0
+      calc(
+        calc(100vw - calc(var(--grid-margin) * var(--client-columns))) /
+          var(--client-columns)
+      );
     margin-right: var(--tiny);
   }
 }
@@ -100,21 +104,24 @@ import gsap from "gsap";
 const query = groq`*[_type=="client"]`;
 const { data } = useSanityQuery(query);
 
-const [emblaRef, emblaApi] = emblaCarouselVue({
-  loop: true,
-  skipSnaps: true,
-  align: "start",
-  startIndex: 1,
-  containScroll: false,
-  inViewThreshold: 0.01,
-}, [
-  AutoScroll({
-    speed: 0.55,
-    startDelay: 0,
-    stopOnInteraction: false,
-    stopOnMouseEnter: true,
-  })
-]);
+const [emblaRef, emblaApi] = emblaCarouselVue(
+  {
+    loop: true,
+    skipSnaps: true,
+    align: "start",
+    startIndex: 1,
+    containScroll: false,
+    inViewThreshold: 0.01,
+  },
+  [
+    AutoScroll({
+      speed: 0.55,
+      startDelay: 0,
+      stopOnInteraction: false,
+      stopOnMouseEnter: true,
+    }),
+  ]
+);
 
 const componentHasFadedIntoView = ref(false);
 

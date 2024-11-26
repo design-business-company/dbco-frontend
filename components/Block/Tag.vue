@@ -1,6 +1,6 @@
 <template>
   <div class="tag">
-    <Text element="div" size="micro" class="tag__text"> #{{ text }} </Text>
+    <Text element="div" size="micro" class="tag__text">{{ text }}</Text>
   </div>
 </template>
 
@@ -15,9 +15,9 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .tag {
-  padding: 6px;
-  padding-block-start: 5px;
+  padding: var(--tiniest) var(--tinier);
   border-radius: var(--border-radius);
   background-color: var(--background-tertiary);
+  color: var(--foreground-secondary);
 }
 </style>
