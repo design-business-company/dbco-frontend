@@ -5,7 +5,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-// Define props with default and other size props
+// Define props
 const props = defineProps({
   size: {
     type: String,
@@ -19,26 +19,28 @@ const props = defineProps({
   sizeUltrawide: String,
 });
 
-// Compute the spaceStyle to apply styles dynamically based on props
+// Define the breakpoint hierarchy with proper typing
+const breakpointHierarchy = [
+  { name: "mobile", prop: "sizeMobile" },
+  { name: "phablet", prop: "sizePhablet" },
+  { name: "tablet", prop: "sizeTablet" },
+  { name: "laptop", prop: "sizeLaptop" },
+  { name: "desktop", prop: "sizeDesktop" },
+  { name: "ultrawide", prop: "sizeUltrawide" },
+] as const;
+
+// Compute spaceStyle with cascading sizes
 const spaceStyle = computed(() => {
   const style: Record<string, string> = {
-    marginTop: `var(--${props.size})`, // Default margin-top based on size prop
+    "--margin-top": `var(--${props.size})`, // Default size
   };
 
-  const breakpoints = [
-    { name: "mobile", prop: props.sizeMobile },
-    { name: "phablet", prop: props.sizePhablet },
-    { name: "tablet", prop: props.sizeTablet },
-    { name: "laptop", prop: props.sizeLaptop },
-    { name: "desktop", prop: props.sizeDesktop },
-    { name: "ultrawide", prop: props.sizeUltrawide },
-  ];
+  let previousValue = props.size; // Start with the default size
 
-  // Set CSS variables for breakpoints dynamically
-  breakpoints.forEach((bp) => {
-    if (bp.prop) {
-      style[`--${bp.name}-margin-top`] = `var(--${bp.prop})`;
-    }
+  breakpointHierarchy.forEach(({ name, prop }) => {
+    const value = props[prop as keyof typeof props] || previousValue;
+    style[`--${name}-margin-top`] = `var(--${value})`;
+    previousValue = value; // Update the previous value for cascading
   });
 
   return style;
@@ -51,7 +53,7 @@ const spaceStyle = computed(() => {
 .space {
   margin-top: var(--margin-top);
 
-  /* You can also apply breakpoint-specific styles using mixins if needed */
+  // Apply breakpoint-specific styles
   @include mobile {
     margin-top: var(--mobile-margin-top, var(--margin-top));
   }

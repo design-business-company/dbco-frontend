@@ -1,28 +1,32 @@
 <template>
-  <div 
-    v-if="items?.length"
-    class="spotlight-media-carousel"
-    :class="{
-      'variable-width': settings.variableWidth,
-    }"
-    ref="emblaRef"
-    :style="{
-      '--grid-cols': items.length,
-    }"
-    tabindex="0"
-  >
-    <div class="spotlight-media-carousel__container">
-      <BlockMedia 
-        v-for="item in items" 
-        :key="item._key" 
-        :media="item" 
-        class="spotlight-media-carousel__slide" 
-        :style="{
-          '--slide-aspect-ratio': item.aspectRatio?.toString().replace(':', '/'),
-        }"
-      />
+  <Observer :onEnter="handleEnter" :onLeave="handleExit">
+    <div
+      v-if="items?.length"
+      class="spotlight-media-carousel"
+      :class="{
+        'variable-width': settings ? settings.variableWidth : null,
+      }"
+      ref="emblaRef"
+      :style="{
+        '--grid-cols': items.length,
+      }"
+      tabindex="0"
+    >
+      <div class="spotlight-media-carousel__container">
+        <BlockMedia
+          v-for="item in items"
+          :key="item._key"
+          :media="item"
+          class="spotlight-media-carousel__slide"
+          :style="{
+            '--slide-aspect-ratio': item.aspectRatio
+              ?.toString()
+              .replace(':', '/'),
+          }"
+        />
+      </div>
     </div>
-  </div>
+  </Observer>
 </template>
 
 <script setup>
@@ -43,39 +47,57 @@ const props = defineProps({
 
 const clamp = (value, min, max) => {
   return Math.min(Math.max(value, min), max);
-}
+};
 
 const emblaPlugins = computed(() => {
-  if (props.settings.autoplay) {
+  if (props.settings && props.settings.autoplay) {
     return [
       AutoScroll({
         speed: 0.9,
         startDelay: 0,
         stopOnInteraction: false,
         stopOnMouseEnter: true,
-      })
+      }),
     ];
   }
 
   return [];
-})
+});
 
-const [emblaRef, emblaApi] = emblaCarouselVue({
-  loop: true,
-  skipSnaps: true,
-  align: (view) => {
-    return clamp(view * 0.02, 16, 40);
+const [emblaRef, emblaApi] = emblaCarouselVue(
+  {
+    loop: true,
+    skipSnaps: true,
+    align: (view) => {
+      return clamp(view * 0.02, 16, 40);
+    },
+    containScroll: false,
+    inViewThreshold: 0.01,
   },
-  containScroll: false,
-  inViewThreshold: 0.01,
-}, emblaPlugins.value);
+  emblaPlugins.value
+);
 
-onKeyStroke('ArrowRight', (e) => {
+const handleEnter = () => {
+  if (props.settings && props.settings.autoplay) {
+    const instance = emblaPlugins.value[0];
+
+    if (!instance.isPlaying()) instance.play();
+  }
+};
+const handleExit = () => {
+  if (props.settings && props.settings.autoplay) {
+    const instance = emblaPlugins.value[0];
+
+    if (instance.isPlaying()) instance.stop();
+  }
+};
+
+onKeyStroke("ArrowRight", (e) => {
   e.preventDefault();
   emblaApi.value.scrollNext();
 });
 
-onKeyStroke('ArrowLeft', (e) => {
+onKeyStroke("ArrowLeft", (e) => {
   e.preventDefault();
   emblaApi.value.scrollPrev();
 });
@@ -85,6 +107,7 @@ onKeyStroke('ArrowLeft', (e) => {
 .spotlight-media-carousel {
   width: 100%;
   overflow: hidden;
+  outline: none;
 
   &__container {
     display: flex;
@@ -98,6 +121,14 @@ onKeyStroke('ArrowLeft', (e) => {
     @include tablet {
       flex: 0 0 35vw;
     }
+  }
+
+  &:hover {
+    cursor: grab;
+  }
+
+  &:active {
+    cursor: grabbing;
   }
 
   &.variable-width {

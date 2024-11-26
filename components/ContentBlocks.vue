@@ -4,9 +4,15 @@
     :class="['block', `block--${block._type}`]"
     :key="block._key"
   >
-    <ModuleSpotlight v-if="block._type === 'spotlight'" v-bind="block"></ModuleSpotlight>
+    <ModuleSpotlight
+      v-if="block._type === 'spotlight'"
+      v-bind="block"
+    ></ModuleSpotlight>
 
-    <ModuleSnackGrid v-if="block._type === 'snackGrid'" v-bind="block"></ModuleSnackGrid>
+    <ModuleSnackGrid
+      v-if="block._type === 'snackGrid'"
+      v-bind="block"
+    ></ModuleSnackGrid>
 
     <Grid v-if="block._type === 'richText'">
       <Space />
@@ -16,7 +22,7 @@
       <Space />
     </Grid>
 
-    <div v-if="block._type === 'video'">
+    <!-- <div v-if="block._type === 'video'">
       <Grid>
         <Column>
           <Space />
@@ -31,15 +37,15 @@
           <Space />
         </Column>
       </Grid>
-    </div>
+    </div> -->
 
-    <div v-if="block._type === 'picture'">
+    <!-- <div v-if="block._type === 'picture'">
       <Space />
 
       <BlockPic :src="block.asset._ref" :alt="block.alt" />
       <BlockCaption v-if="block.caption" :caption="block.caption" />
       <Space />
-    </div>
+    </div> -->
 
     <div v-if="block._type === 'media'">
       <Space />

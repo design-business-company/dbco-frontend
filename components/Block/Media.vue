@@ -8,13 +8,25 @@
         :poster="media.poster?.asset?._ref"
         :aspect-ratio="media.aspectRatio"
       />
-      <BlockCaption v-if="media.caption" :caption="media.caption" class="media__caption" />
+      <BlockCaption
+        v-if="media.caption"
+        :caption="media.caption"
+        class="media__caption"
+      />
       <Space />
     </div>
 
     <div v-if="media._type === 'picture'" class="media__picture">
-      <BlockPic :src="media.asset._ref" :alt="media.alt" :aspect-ratio="media.aspectRatio" />
-      <BlockCaption v-if="media.caption" :caption="media.caption" class="media__caption" />
+      <BlockPic
+        :src="media.asset._ref"
+        :alt="media.alt"
+        :aspect-ratio="media.aspectRatio"
+      />
+      <BlockCaption
+        v-if="media.caption"
+        :caption="media.caption"
+        class="media__caption"
+      />
     </div>
   </div>
 </template>
@@ -32,7 +44,8 @@ const props = defineProps({
 .media {
   position: relative;
 
-  &__video, &__picture {
+  &__video,
+  &__picture {
     display: flex;
     flex-direction: column;
     gap: var(--tiniest);
@@ -43,16 +56,9 @@ const props = defineProps({
     margin-top: var(--tiniest);
     transform-origin: 0 100%;
     pointer-events: none;
-    transition: opacity 300ms ease-out, transform 200ms ease-out;
-
-    @include tablet {
-      opacity: 0;
-      transform: translate3d(0, 10%, 0) scale(0.95);
-    }
   }
 
   &:hover .media__caption {
-    opacity: 1;
     transform: translate3d(0, 0, 0);
   }
 }

@@ -1,12 +1,15 @@
 <template>
-  <div 
-    v-if="items?.length" 
+  <div
+    v-if="items?.length"
     class="spotlight-media"
     :style="{
       '--grid-cols': items.length,
     }"
   >
-    <div class="spotlight-media__container">
+    <div
+      class="spotlight-media__container"
+      :class="[{ 'full-width': items.length <= 1 }]"
+    >
       <BlockMedia v-for="item in items" :key="item._key" :media="item" />
     </div>
   </div>
@@ -24,12 +27,23 @@ const props = defineProps({
 <style lang="scss" scoped>
 .spotlight-media {
   width: 100%;
-  padding-inline: $grid-margin;
+  padding-inline: var(--grid-margin);
 
   &__container {
     display: grid;
-    grid-template-columns: repeat(var(--grid-cols), 1fr);
-    gap: $grid-gap;
+    gap: var(--grid-gap);
+
+    &.full-width {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    @include laptop {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include desktop {
+      grid-template-columns: repeat(var(--grid-cols), 1fr);
+    }
   }
 }
 </style>

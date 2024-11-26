@@ -25,7 +25,7 @@
   font-size: 13px;
   line-height: 16px;
   letter-spacing: 0.01em;
-  max-width: 75ch;
+  // max-width: 75ch;
 
   // @include fluidScale(13px, 16px, $ultrawide);
   @include fluidScale(13px, 16px, $ultrawide);

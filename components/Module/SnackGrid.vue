@@ -1,12 +1,21 @@
 <template>
   <div class="snack-grid">
-    <div v-for="(item, index) in items" :key="`${index}-${item._key}`" class="snack-grid__item">
-      <Text element="h3" size="micro" class="snack-grid__title">{{ item.title }}</Text>
+    <div
+      v-for="(item, index) in items"
+      :key="`${index}-${item._key}`"
+      class="snack-grid__item"
+    >
+      <Text element="h3" size="micro" class="snack-grid__title">{{
+        item.title
+      }}</Text>
       <div class="snack-grid__media">
         <BlockMedia :media="item.media?.[0]" />
       </div>
       <div class="snack-grid__description text-caption-2">
-        <SanityContent v-if="item.shortDescription" :blocks="item.shortDescription.text" />
+        <SanityContent
+          v-if="item.shortDescription"
+          :blocks="item.shortDescription.text"
+        />
       </div>
     </div>
   </div>
@@ -56,11 +65,10 @@ const props = defineProps({
   &__description {
     padding-right: var(--smallest);
     padding-top: var(--tinier);
-    
+
     a {
       color: inherit;
     }
   }
-
 }
 </style>

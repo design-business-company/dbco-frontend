@@ -1,6 +1,8 @@
 <template>
-  <div class="spotlight">
+  <div class="spotlight" ref="spotlightRef">
     <Grid class="grid--full spotlight__content">
+      <Space size="bigger" sizeTablet="big" />
+
       <Column
         startMobile="1"
         spanMobile="12"
@@ -10,15 +12,18 @@
         <Text element="div" size="body-2">
           <h2 class="spotlight__title">{{ title }}</h2>
           <span v-if="shortDescription" class="spotlight__separator"> — </span>
-          <SanityContent
-            v-if="shortDescription"
-            :blocks="shortDescription.text"
-          />
+          <span class="spotlight__short-description">
+            <SanityContent
+              v-if="shortDescription"
+              :blocks="shortDescription.text"
+            />
+          </span>
         </Text>
         <div class="spotlight__tags">
           <BlockTag v-for="tag in tags" :text="tag.title" :key="tag._key" />
         </div>
       </Column>
+
       <Column
         spanMobile="12"
         spanLaptop="6"
@@ -33,15 +38,20 @@
           <SanityContent v-if="credits?.text" :blocks="credits.text" />
         </Text>
       </Column>
+
+      <Space size="small" sizeTablet="big" sizeLaptop="huge" />
     </Grid>
     <div class="spotlight__media">
-      <BlockSpotlightMedia :items="media" v-if="media.length < 4" />
+      <BlockSpotlightMedia :items="media" v-if="media.length < 5" />
       <BlockSpotlightMediaCarousel :settings="settings" :items="media" v-else />
     </div>
+    <Space size="bigger" sizeTablet="big" sizeLaptop="huger" />
   </div>
 </template>
 
 <script setup>
+import { defaultThemes } from "~/composables/useTheme";
+
 const props = defineProps({
   title: {
     type: String,
@@ -71,6 +81,71 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  theme: {
+    type: Object,
+    required: false,
+  },
+});
+
+// Process the theme prop to return the appropriate theme
+const processedTheme = computed(() => {
+  if (!props.theme) return defaultThemes.light; // Default to light theme
+  if (props.theme.theme === "light") return defaultThemes.light; // Use default light theme
+  if (props.theme.theme === "dark") return defaultThemes.dark; // Use default dark theme
+  if (props.theme.theme === "custom") {
+    // Merge custom theme properties with defaults for missing fields
+    return {
+      background:
+        props.theme.backgroundPrimary?.hex || defaultThemes.light.background,
+      foreground:
+        props.theme.foregroundPrimary?.hex || defaultThemes.light.foreground,
+      accent: props.theme.accentPrimary?.hex || defaultThemes.light.accent,
+    };
+  }
+  return defaultThemes.light; // Fallback to light theme if nothing matches
+});
+
+// Reference the component's root element
+const spotlightRef = ref(null);
+
+// Override root-level variables locally within the component
+watchEffect(() => {
+  if (spotlightRef.value) {
+    spotlightRef.value.style.setProperty(
+      "--background-primary",
+      processedTheme.value.background
+    );
+    spotlightRef.value.style.setProperty(
+      "--foreground-primary",
+      processedTheme.value.foreground
+    );
+    spotlightRef.value.style.setProperty(
+      "--accent-primary",
+      processedTheme.value.accent
+    );
+
+    // Redefine dependent variables
+    spotlightRef.value.style.setProperty(
+      "--background-secondary",
+      `color-mix(in srgb, var(--background-primary) 90%, var(--foreground-primary) 10%)`
+    );
+    spotlightRef.value.style.setProperty(
+      "--background-tertiary",
+      `color-mix(in srgb, var(--background-primary) 90%, var(--foreground-primary) 10%)`
+    );
+    spotlightRef.value.style.setProperty(
+      "--foreground-secondary",
+      `color-mix(in srgb, var(--foreground-primary) 70%, var(--background-primary) 30%)`
+    );
+    spotlightRef.value.style.setProperty(
+      "--foreground-tertiary",
+      `color-mix(in srgb, var(--foreground-primary) 30%, var(--background-primary) 70%)`
+    );
+    spotlightRef.value.style.setProperty(
+      "--accent-secondary",
+      `color-mix(in srgb, var(--accent-primary) 50%, var(--background-primary) 50%)`
+    );
+  }
 });
 </script>
 
@@ -78,13 +153,12 @@ const props = defineProps({
 .spotlight {
   display: flex;
   flex-direction: column;
-  row-gap: var(--big);
-  margin-block: var(--bigger);
+  background-color: var(--background-primary);
+  color: var(--foreground-primary);
 
   &__content {
-    padding-inline: $grid-margin;
+    padding-inline: var(--grid-margin);
     width: 100%;
-    row-gap: var(--small);
     grid-template-rows: auto;
   }
 
@@ -93,10 +167,13 @@ const props = defineProps({
   }
 
   &__heading {
-    max-width: 45ch;
     display: flex;
     flex-direction: column;
     row-gap: var(--tiny);
+
+    [class^="text-"] {
+      max-width: 30ch;
+    }
 
     p {
       display: inline;
@@ -109,21 +186,21 @@ const props = defineProps({
 
   &__separator,
   &__short-description {
-    opacity: 0.6;
+    color: var(--foreground-primary);
   }
 
   &__tags {
     display: flex;
     align-items: center;
-    gap: var(--tiniest);
+    gap: var(--tinier);
     flex-wrap: wrap;
+    margin-bottom: var(--smaller);
   }
 
   &__details {
     display: flex;
     flex-direction: column;
-    column-gap: $grid-gap;
-    row-gap: var(--smaller);
+    row-gap: var(--smallest);
 
     @include tablet {
       display: grid;
@@ -140,7 +217,7 @@ const props = defineProps({
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-column: auto / span 2;
-      column-gap: $grid-gap;
+      column-gap: var(--grid-gap);
     }
 
     & > p:only-child {
@@ -154,6 +231,11 @@ const props = defineProps({
 
   &__credits {
     opacity: 0.6;
+  }
+
+  &__description > p,
+  &__credits {
+    max-width: 50ch;
   }
 }
 </style>
