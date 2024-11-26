@@ -1,4 +1,12 @@
-export default function pageSEO(seoData) {
+export interface SEOData {
+  title?: string;
+  description?: string;
+  image?: string;
+  url?: string;
+  noIndexNoFollow?: boolean;
+}
+
+export default function pageSEO(seoData: SEOData) {
   const defaultData = {
     title: seoData.title,
     description: seoData.description,

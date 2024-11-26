@@ -128,6 +128,8 @@ const componentHasFadedIntoView = ref(false);
 const onEnter = () => {
   const els = emblaRef.value.querySelectorAll(".clients__slide");
 
+  if (!els?.length) return;
+
   if (!componentHasFadedIntoView.value) {
     gsap.fromTo(
       els,

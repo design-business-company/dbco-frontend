@@ -49,11 +49,11 @@ watch(
 
 PageSetup({
   seoMeta: {
-    title: () => `Contact • Design Business Company`,
-    description: () => `${data.value.seo.description}`,
-    image: () => `${data.value.seo.image}?w=1200`,
-    url: () => `https://dbco.online${route.fullPath}`,
-    noIndexNoFollow: () => `${data.value.seo.noIndexNoFollow}`,
+    title: "Contact",
+    description: data.value?.seo?.description,
+    image: `${data.value?.seo?.image}?w=1200`,
+    url: `https://dbco.online${route.fullPath}`,
+    noIndexNoFollow: data.value?.seo?.noIndexNoFollow,
   },
 });
 

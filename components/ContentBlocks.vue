@@ -22,31 +22,6 @@
       <Space />
     </Grid>
 
-    <!-- <div v-if="block._type === 'video'">
-      <Grid>
-        <Column>
-          <Space />
-
-          <BlockVid
-            :playback-id="media.playbackId"
-            :alt="block.alt"
-            :settings="block.settings"
-            :poster="block.poster.asset._ref"
-          />
-          <BlockCaption v-if="block.caption" :caption="block.caption" />
-          <Space />
-        </Column>
-      </Grid>
-    </div> -->
-
-    <!-- <div v-if="block._type === 'picture'">
-      <Space />
-
-      <BlockPic :src="block.asset._ref" :alt="block.alt" />
-      <BlockCaption v-if="block.caption" :caption="block.caption" />
-      <Space />
-    </div> -->
-
     <div v-if="block._type === 'media'">
       <Space />
       <BlockMedia :media="block.media[0]" />
