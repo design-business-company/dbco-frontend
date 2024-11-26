@@ -13,7 +13,6 @@ import { type PropType } from "vue";
 
 type SizeType =
   | "micro"
-  | "tag"
   | "caption-1"
   | "caption-2"
   | "body-1"
@@ -29,7 +28,6 @@ const props = defineProps({
     validator: (value: SizeType): boolean =>
       [
         "micro",
-        "tag",
         "caption-1",
         "caption-2",
         "body-1",

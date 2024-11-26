@@ -1,23 +1,37 @@
 <template>
   <div class="spotlight">
     <Grid class="grid--full spotlight__content">
-      <Column startMobile="1" spanMobile="12" spanLaptop="5" class="spotlight__heading">
+      <Column
+        startMobile="1"
+        spanMobile="12"
+        spanLaptop="5"
+        class="spotlight__heading"
+      >
         <Text element="div" size="body-2">
           <h2 class="spotlight__title">{{ title }}</h2>
           <span v-if="shortDescription" class="spotlight__separator"> — </span>
-          <SanityContent v-if="shortDescription" :blocks="shortDescription.text" />
+          <SanityContent
+            v-if="shortDescription"
+            :blocks="shortDescription.text"
+          />
         </Text>
         <div class="spotlight__tags">
           <BlockTag v-for="tag in tags" :text="tag.title" :key="tag._key" />
         </div>
       </Column>
-      <Column spanMobile="12" spanLaptop="6" startMobile="1" startLaptop="7" class="spotlight__details">
-        <div class="spotlight__description">
+      <Column
+        spanMobile="12"
+        spanLaptop="6"
+        startMobile="1"
+        startLaptop="7"
+        class="spotlight__details"
+      >
+        <Text element="div" size="caption-2" class="spotlight__description">
           <SanityContent v-if="description?.text" :blocks="description.text" />
-        </div>
-        <div class="spotlight__credits">
+        </Text>
+        <Text element="div" size="caption-2" class="spotlight__credits">
           <SanityContent v-if="credits?.text" :blocks="credits.text" />
-        </div>
+        </Text>
       </Column>
     </Grid>
     <div class="spotlight__media">
@@ -66,18 +80,18 @@ const props = defineProps({
   flex-direction: column;
   row-gap: var(--big);
   margin-block: var(--bigger);
-  
+
   &__content {
     padding-inline: $grid-margin;
     width: 100%;
     row-gap: var(--small);
     grid-template-rows: auto;
   }
-  
+
   &__media {
     width: 100%;
   }
-  
+
   &__heading {
     max-width: 45ch;
     display: flex;
@@ -88,11 +102,11 @@ const props = defineProps({
       display: inline;
     }
   }
-  
+
   &__title {
     display: inline;
   }
-  
+
   &__separator,
   &__short-description {
     opacity: 0.6;
@@ -104,7 +118,7 @@ const props = defineProps({
     gap: var(--tiniest);
     flex-wrap: wrap;
   }
-  
+
   &__details {
     display: flex;
     flex-direction: column;
@@ -116,7 +130,7 @@ const props = defineProps({
       grid-template-columns: repeat(3, 1fr);
     }
   }
-  
+
   &__description {
     display: flex;
     flex-direction: column;
@@ -133,16 +147,13 @@ const props = defineProps({
       grid-column-end: -1;
     }
   }
-  
+
   &__details p {
-    font-size: 13px;
-    line-height: 16px;
     padding-right: var(--smallest);
   }
-  
+
   &__credits {
     opacity: 0.6;
   }
 }
-
 </style>

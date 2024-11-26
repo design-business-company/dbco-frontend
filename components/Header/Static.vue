@@ -1,9 +1,7 @@
 <template>
   <Observer :onEnter="onEnter" :onLeave="onLeave" class="static-header-wrapper">
-    <header
-      class="static-header"
-      v-bind="inertAttribute"
-    >
+    <header class="static-header">
+      <!-- <header class="static-header" v-bind="inertAttribute"> -->
       <Grid>
         <Column class="text-body-1" span="6" span-laptop="4" span-desktop="3">
           <HeaderStaticLogo />
