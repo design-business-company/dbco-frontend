@@ -1,21 +1,21 @@
 import { useDeviceStore } from "~/stores/device";
 
+// Define default themes outside the composable
+export const defaultThemes = {
+  light: {
+    background: "#ffffff",
+    foreground: "#111111",
+    accent: "#007aff",
+  },
+  dark: {
+    background: "#000000",
+    foreground: "#ffffff",
+    accent: "red",
+  },
+};
+
 export const useTheme = () => {
   const deviceStore = useDeviceStore();
-
-  // Define default themes
-  const defaultThemes = {
-    light: {
-      background: "#ffffff",
-      foreground: "#111111",
-      accent: "#007aff",
-    },
-    dark: {
-      background: "#000000",
-      foreground: "#ffffff",
-      accent: "red",
-    },
-  };
 
   const updateCssVariables = (theme) => {
     document.documentElement.style.setProperty(

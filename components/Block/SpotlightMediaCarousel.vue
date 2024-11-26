@@ -123,6 +123,14 @@ onKeyStroke("ArrowLeft", (e) => {
     }
   }
 
+  &:hover {
+    cursor: grab;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
   &.variable-width {
     .spotlight-media-carousel__slide {
       width: auto;
