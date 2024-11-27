@@ -38,10 +38,17 @@ export default defineNuxtConfig({
     ignoredHostnames: ["localhost"],
   },
 
+  // Details on warning in console: https://github.com/nuxt-modules/sanity/issues/1059
   sanity: {
     projectId: "5jjj3zhb",
     dataset: "production",
     apiVersion: "2022-03-07",
+  },
+  
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag.startsWith("mux-player"),
+    },
   },
 
   vite: {

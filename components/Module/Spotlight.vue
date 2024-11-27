@@ -58,7 +58,7 @@ const props = defineProps({
     required: true,
   },
   shortDescription: {
-    type: String,
+    type: Object,
     required: false,
   },
   description: {

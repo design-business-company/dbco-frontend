@@ -7,7 +7,7 @@
       { 'nav-is-open': app.mobileNavIsVisible },
       { 'is-hidden': !app.headerIsVisible },
       { 'is-disabled': !app.headerIsVisible && device.winHeight <= 600 },
-      { 'is-behind-static-header': device.scrollNearTop },
+      { 'is-behind-static-header': isHydrated && device.scrollNearTop },
     ]"
   >
     <Grid class="wrapper">
@@ -41,8 +41,10 @@ import { useDeviceStore } from "~/stores/device";
 import { useAppStore } from "~/stores/app";
 import { onMounted, onUnmounted } from "vue";
 import { onClickOutside } from "@vueuse/core";
+import { ref } from "vue";
 
 const isDev = process.dev;
+const isHydrated = ref(false);
 
 const app = useAppStore();
 const device = useDeviceStore();
@@ -97,6 +99,9 @@ const handleMobileNavClick = () => {
 };
 
 onMounted(() => {
+  nextTick(() => {
+    isHydrated.value = true;
+  });
   scrollEl.value = scroll.instance.el;
   scrollEl.value.addEventListener("scrollY", handleScroll);
   scrollEl.value.addEventListener("scrollStop", handleScrollStop);

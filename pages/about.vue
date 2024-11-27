@@ -5,7 +5,7 @@
     </template>
     <template v-else>
       <AboutClients />
-      <ContentBlocks :content="data[0].content" />
+      <ContentBlocks :content="data.content" />
     </template>
   </section>
 </template>
@@ -16,36 +16,13 @@ import { useRoute } from "vue-router";
 import { useTheme } from "~/composables/useTheme";
 import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
+import { aboutQuery } from "~/queries/pages/about";
 
 /* ----------------------------------------------------------------------------
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
 const route = useRoute();
-const pageId = route.params.id;
-
-const query = groq`*[_type=="about"]{
-  ...,
-  content[]{
-    ...,
-    _type == "richText" => {
-      ...,
-      text[]{
-        ...,
-        markDefs[]{
-          ...,
-          _type == "internalLink" => {
-            "slug": @.reference->slug.current
-          }
-        }
-      }
-    }
-  },
-    seo {
-    ...,
-    "image": image.asset->url
-  }
-}`;
-const { data, error, pending, refresh } = useSanityQuery(query);
+const { data, error, pending, refresh } = useSanityQuery(aboutQuery);
 
 // if (error.value) await navigateTo("/error");
 
@@ -60,8 +37,8 @@ watch(
 
     const { setTheme } = useTheme();
 
-    if (sanityData[0]?.pageTheme?.theme) {
-      setTheme(sanityData[0].pageTheme);
+    if (sanityData?.pageTheme?.theme) {
+      setTheme(sanityData.pageTheme);
     }
   },
   { immediate: true }
@@ -73,11 +50,11 @@ watch(
 
 PageSetup({
   seoMeta: {
-    title: () => `About • Design Business Company`,
-    description: () => `${data.value[0].seo.description}`,
-    image: () => `${data.value[0].seo.image}?w=1200`,
-    url: () => `https://dbco.online${route.fullPath}`,
-    noIndexNoFollow: () => `${data.value[0].seo.noIndexNoFollow}`,
+    title: "About",
+    description: data.value?.seo?.description,
+    image: `${data.value?.seo?.image}?w=1200`,
+    url: `https://dbco.online${route.fullPath}`,
+    noIndexNoFollow: data.value?.seo?.noIndexNoFollow,
   },
 });
 

@@ -40,10 +40,6 @@ const props = defineProps({
     type: String,
     required: false,
   },
-  src: {
-    type: String,
-    required: true,
-  },
   alt: {
     type: String,
     default: "An image by Design Business Company",
@@ -78,7 +74,7 @@ const formattedAspectRatio = computed(() => {
 });
 
 const handleEnter = () => {
-  if (props.settings.autoplay) {
+  if (props.settings.autoplay && vid.value?.readyState === 4) {
     vid.value.play();
   }
 };

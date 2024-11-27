@@ -1,4 +1,4 @@
-import { pictureFields, videoFields } from "./global";
+import { pictureFields, videoFields } from "./fragments";
 
 export const spotlightQuery = groq`
   _type == "spotlight" => {

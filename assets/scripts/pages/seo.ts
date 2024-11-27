@@ -1,4 +1,12 @@
-export default function pageSEO(seoData) {
+export interface SEOData {
+  title?: string;
+  description?: string;
+  image?: string;
+  url?: string;
+  noIndexNoFollow?: boolean;
+}
+
+export default function pageSEO(seoData: SEOData) {
   const defaultData = {
     title: seoData.title,
     description: seoData.description,
@@ -23,5 +31,10 @@ export default function pageSEO(seoData) {
     twitterCreator: "@designbizco",
   };
 
-  return { ...defaultData };
+  // Filter out empty values so they don't override the globals
+  const filteredData = Object.fromEntries(
+    Object.entries(defaultData).filter(([_, value]) => Boolean(value))
+  )
+
+  return filteredData;
 }
