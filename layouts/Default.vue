@@ -6,6 +6,7 @@
       <Scrim />
       <NuxtPage />
     </main>
+    <Footer />
   </div>
 </template>
 
@@ -37,8 +38,15 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+.site-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .site-content {
   transition: filter 400ms ease-in-out, opacity 400ms ease-in-out;
+  flex: 1;
 
   &.nav-is-open {
     filter: blur(var(--tiniest));
