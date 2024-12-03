@@ -1,5 +1,9 @@
 <template>
-  <component :is="element" ref="container" :class="`text-${size}`">
+  <component
+    :is="element"
+    ref="container"
+    :class="[`text-${size}`, { '--indent': indent }]"
+  >
     <!-- <Observer :onEnter="handleEnter" :once="true"> -->
     <slot></slot>
     <!-- </Observer> -->
@@ -41,6 +45,10 @@ const props = defineProps({
     type: String as PropType<string>,
     default: "p",
   },
+  indent: {
+    type: Boolean,
+    default: false,
+  },
   animateOnEnter: {
     type: Boolean,
     default: true,
@@ -60,3 +68,9 @@ const handleEnter = () => {
   }
 };
 </script>
+
+<style scoped>
+.--indent {
+  text-indent: var(--text-indent);
+}
+</style>

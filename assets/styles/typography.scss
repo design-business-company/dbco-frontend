@@ -46,6 +46,7 @@
   font-size: 20px;
   line-height: 24px;
   letter-spacing: -0.02em;
+  max-width: 80ch;
 
   @include fluidScale(20px, 24px, $ultrawide);
 }

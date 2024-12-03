@@ -7,8 +7,10 @@ $grid-gap: clamp(8px, 0.5vw, 12px);
 .grid {
   display: grid;
   grid-template-columns: repeat(var(--grid-mobile-columns), 1fr);
-  padding-inline: $grid-margin;
-  column-gap: $grid-gap;
+  // padding-inline: $grid-margin;
+  // column-gap: $grid-gap;
+  padding-inline: var(--grid-margin);
+  column-gap: var(--grid-gap);
   width: 100%;
 
   /* @media (min-width: var(--mobile)) {} */

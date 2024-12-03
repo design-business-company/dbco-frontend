@@ -21,7 +21,13 @@
   --huger: 160px;
   --hugest: 200px;
 
-  /* Grid */
+  /* Misc. */
+  --border-radius: var(--tiniest);
+  --text-indent: var(--bigger);
+
+  --grid-margin: var(--smallest);
+  --grid-gap: var(--tinier);
+
   --grid-mobile-columns: 12;
   --grid-mobile-margin: var(--smallest);
   --grid-mobile-gutter: var(--tinier);
@@ -45,6 +51,26 @@
   --grid-ultrawide-columns: 12;
   --grid-ultrawide-margin: var(--bigger);
   --grid-ultrawide-gutter: var(--tinier);
+
+  @media (min-width: $tablet) {
+    --grid-margin: var(--grid-tablet-margin);
+    --grid-gap: var(--grid-tablet-gap);
+  }
+
+  @media (min-width: $laptop) {
+    --grid-margin: var(--grid-laptop-margin);
+    --grid-gap: var(--grid-laptop-gap);
+  }
+
+  @media (min-width: $desktop) {
+    --grid-margin: var(--grid-desktop-margin);
+    --grid-gap: var(--grid-desktop-gap);
+  }
+
+  @media (min-width: $ultrawide) {
+    --grid-margin: var(--grid-ultrawide-margin);
+    --grid-gap: var(--grid-ultrawide-gap);
+  }
 
   /* Colors */
   --white: #ffffff;
@@ -131,13 +157,6 @@
   --transition-fast: var(--transition-fast-time) var(--transition-function);
   --transition-page-delay: 300ms;
 
-  --grid-margin: #{$grid-margin};
-  --grid-gap: #{$grid-gap};
-
-  --border-radius: var(--tiniest);
-
-  --text-indent: var(--bigger);
-
   --background-secondary: color-mix(
     in srgb,
     var(--background-primary) 90%,
@@ -183,9 +202,5 @@
     --huge: #{calc-vw(128px, $ultrawide)};
     --huger: #{calc-vw(160px, $ultrawide)};
     --hugest: #{calc-vw(200px, $ultrawide)};
-  }
-
-  @include tablet {
-    --text-indent: var(--biggest);
   }
 }
