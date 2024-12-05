@@ -21,7 +21,7 @@
         span-laptop="4"
         span-desktop="3"
       >
-        <HeaderStickyLinks class="default-nav" />
+        <HeaderStickyLinks :links="links" class="default-nav" />
         <HeaderMobileNavTrigger
           @click="handleMobileNavClick"
           class="mobile-nav-trigger"
@@ -43,6 +43,13 @@ import { onMounted, onUnmounted } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import { ref } from "vue";
 
+const props = defineProps({
+  links: {
+    type: Array,
+    required: true,
+  },
+});
+
 const isDev = process.dev;
 const isHydrated = ref(false);
 
@@ -56,7 +63,7 @@ const inertAttribute = computed(() => {
   if (!app.headerIsVisible || device.scrollNearTop) {
     return { inert: true };
   }
-  
+
   return {};
 });
 
