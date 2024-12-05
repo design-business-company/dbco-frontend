@@ -1,19 +1,27 @@
 <template>
   <span class="link">
-    <NuxtLink :to="slug === 'index' ? '/' : slug" class="link">
+    <NuxtLink :to="resolveLink($attrs)" class="link">
       <slot />
     </NuxtLink>
   </span>
 </template>
 
-<script>
-export default {
-  props: {
-    slug: {
-      type: String,
-      required: true,
-    },
-  },
+<script setup>
+defineOptions({
+  inheritAttrs: true,
+});
+
+// Map specific references to routes
+const routeMap = {
+  home: "/",
+  about: "/about",
+  contact: "/contact",
+};
+
+// Resolve the link
+const resolveLink = (attrs) => {
+  const ref = attrs.reference?._ref;
+  return routeMap[ref] || attrs.slug || "/"; // Fallback to slug or homepage
 };
 </script>
 

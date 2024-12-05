@@ -47,6 +47,7 @@ const props = defineProps({
   },
   indent: {
     type: Boolean,
+    required: false,
     default: false,
   },
   animateOnEnter: {

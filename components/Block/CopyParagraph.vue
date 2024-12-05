@@ -6,6 +6,6 @@
 
 <script setup>
 defineOptions({
-  inheritAttrs: false
-})
+  inheritAttrs: false,
+});
 </script>
