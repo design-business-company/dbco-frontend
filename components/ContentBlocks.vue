@@ -27,11 +27,13 @@
       <Space />
     </Grid>
 
-    <div v-if="block._type === 'media'">
+    <Grid v-if="block._type === 'media'">
       <Space />
-      <BlockMedia :media="block.media[0]" />
+      <Column>
+        <BlockMedia :media="block.media[0]" />
+      </Column>
       <Space />
-    </div>
+    </Grid>
 
     <div v-if="block._type === 'hyperText'">
       <Space />

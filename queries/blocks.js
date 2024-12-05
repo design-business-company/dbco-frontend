@@ -47,6 +47,17 @@ _type == "snackGrid" => {
 }
 `;
 
+export const mediaBlockQuery = groq`
+_type == "media" => {
+
+    media[] {
+      "aspectRatio": asset->metadata.dimensions.aspectRatio,
+      ${pictureFields},
+      ${videoFields}
+    },
+}
+`;
+
 const richTextQuery = groq`
 _type == "richText" => {
   ...,
@@ -83,6 +94,7 @@ content[]{
   ${spotlightQuery},
   ${richTextQuery},
   ${textBlockQuery},
+  ${mediaBlockQuery},
   ${snackGridQuery}
 }
 `;
