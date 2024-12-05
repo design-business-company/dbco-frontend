@@ -58,6 +58,22 @@ _type == "media" => {
 }
 `;
 
+export const carouselQuery = groq`
+_type == "carousel" => {
+    ...,
+
+    items[] {
+      ...,
+      _type == "picture" => {
+        ${pictureFields}
+      },
+      _type == "video" => {
+        ${videoFields}
+      },
+    },
+}
+`;
+
 const richTextQuery = groq`
 _type == "richText" => {
   ...,
@@ -95,6 +111,7 @@ content[]{
   ${richTextQuery},
   ${textBlockQuery},
   ${mediaBlockQuery},
+  ${carouselQuery},
   ${snackGridQuery}
 }
 `;

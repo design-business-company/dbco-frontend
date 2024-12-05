@@ -4,6 +4,8 @@
     :class="['block', `block--${block._type}`]"
     :key="block._key"
   >
+    <Space v-if="block._type === 'spacer'" :size="block.size" />
+
     <ModuleSpotlight
       v-if="block._type === 'spotlight'"
       v-bind="block"
@@ -43,17 +45,23 @@
       <Space />
     </div>
 
-    <div v-if="block._type === 'textBlock'">
+    <Grid v-if="block._type === 'textBlock'">
       <Space />
-      <BlockTextBlock :blocks="block.text" />
+      <Column>
+        <BlockTextBlock :blocks="block.text" />
+      </Column>
       <Space />
-    </div>
+    </Grid>
 
     <div v-if="block._type === 'rule'">
       <BlockRule
         :space-above="block.spaceAbove"
         :space-below="block.spaceBelow"
       />
+    </div>
+
+    <div v-if="block._type === 'carousel'">
+      <BlockCarousel :items="block.items" :settings="block.settings" />
     </div>
   </div>
 </template>
