@@ -31,7 +31,7 @@ const props = defineProps({
 
   &__container {
     display: grid;
-    gap: var(--grid-gap);
+    gap: var(--tinier);
 
     &.full-width {
       grid-template-columns: repeat(1, 1fr);

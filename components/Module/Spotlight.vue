@@ -50,7 +50,13 @@
 </template>
 
 <script setup>
-import { defaultThemes } from "~/composables/useTheme";
+import { clamp } from "@/utils/clamp";
+import tinycolor from "tinycolor2";
+
+import { defaultThemes, useTheme } from "~/composables/useTheme";
+import { useElementBounding, useElementVisibility } from "@vueuse/core";
+
+const { theme, setTemporaryTheme, restoreTheme } = useTheme();
 
 const props = defineProps({
   title: {
@@ -108,6 +114,63 @@ const processedTheme = computed(() => {
 // Reference the component's root element
 const spotlightRef = ref(null);
 
+const isVisible = useElementVisibility(spotlightRef);
+const { top } = useElementBounding(spotlightRef);
+
+const lastPosTop = ref(0);
+const scrollPercent = ref(0);
+const direction = ref(1);
+
+const startColors = ref(null);
+
+const handleScroll = () => {
+  if (!isVisible.value) return;
+
+  direction.value = top.value > lastPosTop.value ? 1 : -1;
+  const percentScrolled = (direction.value * (top.value / (window.innerHeight / 2))) + .5;
+
+  if (percentScrolled >= 0 && percentScrolled <= 1 && !startColors.value) {
+    const startBackground = getComputedStyle(document.documentElement).getPropertyValue('--background-primary').trim();
+    const startForeground = getComputedStyle(document.documentElement).getPropertyValue('--foreground-primary').trim();
+    const startAccent = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim();
+    console.log('setting start colors', startBackground, startForeground, startAccent)
+    startColors.value = {
+      background: startBackground,
+      foreground: startForeground,
+      accent: startAccent,
+    }
+  }
+
+  if ((percentScrolled > 1 || percentScrolled < 0) && startColors.value) {
+    startColors.value = null;
+    console.log('resetting start colors', startColors.value)
+  }
+
+  if (percentScrolled > 0 && isVisible.value && startColors.value) {
+    console.log(scrollPercent.value)
+    scrollPercent.value = percentScrolled;
+    const background = tinycolor.mix(startColors.value.background, processedTheme.value.background, scrollPercent.value * 100).toHexString()
+    const foreground = tinycolor.mix(startColors.value.foreground, processedTheme.value.foreground, scrollPercent.value * 100).toHexString()
+    const accent = tinycolor.mix(startColors.value.accent, processedTheme.value.accent, scrollPercent.value * 100).toHexString()
+
+    setTemporaryTheme({
+      background,
+      foreground,
+      accent,
+    })
+  }
+
+  lastPosTop.value = top.value;
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
+
 // Override root-level variables locally within the component
 watchEffect(() => {
   if (spotlightRef.value) {
@@ -146,6 +209,11 @@ watchEffect(() => {
       `color-mix(in srgb, var(--accent-primary) 50%, var(--background-primary) 50%)`
     );
   }
+
+  console.log('isVisible', isVisible.value)
+  if (!isVisible.value) {
+    restoreTheme();
+  }
 });
 </script>
 
@@ -153,8 +221,8 @@ watchEffect(() => {
 .spotlight {
   display: flex;
   flex-direction: column;
-  background-color: var(--background-primary);
-  color: var(--foreground-primary);
+  // background-color: var(--background-primary);
+  // color: var(--foreground-primary);
 
   &__content {
     padding-inline: var(--grid-margin);
@@ -186,7 +254,7 @@ watchEffect(() => {
 
   &__separator,
   &__short-description {
-    color: var(--foreground-primary);
+    color: inherit;
   }
 
   &__tags {

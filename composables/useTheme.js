@@ -41,6 +41,11 @@ export const useTheme = () => {
     { deep: true }
   );
 
+  const setTemporaryTheme = (newTheme) => {
+    document.documentElement.style["transition"] = "none";
+    updateCssVariables(newTheme);
+  }
+
   // Provide methods to update theme
   const setTheme = (newTheme) => {
     if (newTheme.theme === "light" || newTheme.theme === "dark") {
@@ -54,8 +59,17 @@ export const useTheme = () => {
     }
   };
 
+  const restoreTheme = () => {
+    document.documentElement.style["transition"] = "var(--transition), color var(--transition)";
+    console.log('restoring theme', deviceStore.theme)
+    deviceStore.updateTheme(deviceStore.theme);
+    updateCssVariables(deviceStore.theme);
+  }
+
   return {
     setTheme,
+    setTemporaryTheme,
+    restoreTheme,
     theme: deviceStore.theme,
   };
 };
