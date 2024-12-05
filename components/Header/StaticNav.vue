@@ -1,13 +1,23 @@
 <template>
   <nav>
     <ul>
-      <li><NuxtLink to="/">Work</NuxtLink></li>
-      <li><NuxtLink to="/about">About</NuxtLink></li>
-      <li><NuxtLink to="/contact">Contact</NuxtLink></li>
-      <li><NuxtLink to="/test">Slug</NuxtLink></li>
+      <li v-for="link in links">
+        <nuxt-link :to="link.slug === null ? '/' : link.slug">{{
+          link.title
+        }}</nuxt-link>
+      </li>
     </ul>
   </nav>
 </template>
+
+<script setup>
+const props = defineProps({
+  links: {
+    type: Array,
+    required: true,
+  },
+});
+</script>
 
 <style lang="scss" scoped>
 nav {
