@@ -45,7 +45,7 @@ _type == "snackGrid" => {
     },
   }
 }
-`
+`;
 
 const richTextQuery = groq`
 _type == "richText" => {
@@ -55,18 +55,34 @@ _type == "richText" => {
     markDefs[]{
       ...,
       _type == "internalLink" => {
-        "slug": @.reference->slug.current
-      }
+          "slug": coalesce(reference->slug.current, "/"),
+        }
     }
   }
 }
-`
+`;
+
+const textBlockQuery = groq`
+_type == "textBlock" => {
+  ...,
+  text[]{
+    ...,
+    markDefs[]{
+      ...,
+      _type == "internalLink" => {
+          "slug": coalesce(reference->slug.current, "/"),
+        }
+    }
+  }
+}
+`;
 
 export const contentBlocksQuery = groq`
 content[]{
   ...,
   ${spotlightQuery},
   ${richTextQuery},
+  ${textBlockQuery},
   ${snackGridQuery}
 }
-`
+`;

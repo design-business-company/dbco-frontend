@@ -16,8 +16,13 @@
 
     <Grid v-if="block._type === 'richText'">
       <Space />
+
       <Column>
-        <BlockRichText :blocks="block.text" />
+        <BlockRichText
+          :blocks="block.text"
+          :indent="block.indented"
+          :alignment="block.alignment"
+        />
       </Column>
       <Space />
     </Grid>
@@ -33,6 +38,12 @@
       <Text size="body-1">
         <BlockHypertext :blocks="block.text" />
       </Text>
+      <Space />
+    </div>
+
+    <div v-if="block._type === 'textBlock'">
+      <Space />
+      <BlockTextBlock :blocks="block.text" />
       <Space />
     </div>
 

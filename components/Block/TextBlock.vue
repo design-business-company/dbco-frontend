@@ -37,6 +37,10 @@ const serializers = {
     rule: BlockRule,
   },
   // listItem: BlockCopyListItem,
+  // listItem: (props) => {
+  //   console.log("BlockCopyListItem props:", props);
+  //   return h(BlockCopyListItem, props);
+  // },
   styles: {
     // h2, h3, h4, etc
     h1: BlockCopyParagraph,
