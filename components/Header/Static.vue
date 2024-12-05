@@ -42,9 +42,6 @@
 
 <script setup>
 import { useAppStore } from "~/stores/app";
-import { settingsHeader } from "~/queries/settingsHeader";
-
-const { data, error, pending, refresh } = useSanityQuery(settingsHeader);
 
 const app = useAppStore();
 
