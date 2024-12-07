@@ -7,7 +7,7 @@
           <HeaderStaticLogo />
         </Column>
         <Column class="text-body-1" span="6" span-laptop="4" span-desktop="3">
-          <HeaderStaticNav />
+          <HeaderStaticNav :links="links" />
         </Column>
       </Grid>
     </header>
@@ -44,6 +44,13 @@
 import { useAppStore } from "~/stores/app";
 
 const app = useAppStore();
+
+const props = defineProps({
+  links: {
+    type: Array,
+    required: true,
+  },
+});
 
 const inertAttribute = computed(() => {
   if (app.headerIsVisible) {

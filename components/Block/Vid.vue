@@ -81,7 +81,11 @@ const handleEnter = () => {
 
 const handleLeave = () => {
   if (props.settings.autoplay) {
-    vid.value.pause();
+    if (vid.value) {
+      vid.value.pause();
+    } else {
+      console.warn("Video element is not available in handleLeave.");
+    }
   }
 };
 </script>
@@ -89,16 +93,17 @@ const handleLeave = () => {
 <style>
 .vid-container {
   width: 100%;
+  height: 100%;
   aspect-ratio: var(--aspect-ratio);
   position: relative;
+  border-radius: var(--border-radius);
+  overflow: hidden;
 }
 
 .vid {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: var(--border-radius);
-  overflow: hidden;
 }
 
 .mux-player,

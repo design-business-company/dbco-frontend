@@ -45,7 +45,34 @@ _type == "snackGrid" => {
     },
   }
 }
-`
+`;
+
+export const mediaBlockQuery = groq`
+_type == "media" => {
+
+    media[] {
+      "aspectRatio": asset->metadata.dimensions.aspectRatio,
+      ${pictureFields},
+      ${videoFields}
+    },
+}
+`;
+
+export const carouselQuery = groq`
+_type == "carousel" => {
+    ...,
+
+    items[] {
+      ...,
+      _type == "picture" => {
+        ${pictureFields}
+      },
+      _type == "video" => {
+        ${videoFields}
+      },
+    },
+}
+`;
 
 const richTextQuery = groq`
 _type == "richText" => {
@@ -55,18 +82,36 @@ _type == "richText" => {
     markDefs[]{
       ...,
       _type == "internalLink" => {
-        "slug": @.reference->slug.current
-      }
+          "slug": coalesce(reference->slug.current, "/"),
+        }
     }
   }
 }
-`
+`;
+
+const textBlockQuery = groq`
+_type == "textBlock" => {
+  ...,
+  text[]{
+    ...,
+    markDefs[]{
+      ...,
+      _type == "internalLink" => {
+          "slug": coalesce(reference->slug.current, "/"),
+        }
+    }
+  }
+}
+`;
 
 export const contentBlocksQuery = groq`
 content[]{
   ...,
   ${spotlightQuery},
   ${richTextQuery},
+  ${textBlockQuery},
+  ${mediaBlockQuery},
+  ${carouselQuery},
   ${snackGridQuery}
 }
-`
+`;

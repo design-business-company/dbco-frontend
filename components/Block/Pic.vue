@@ -1,8 +1,5 @@
 <template>
-  <picture
-    ref="pic"
-    :style="{'--pic-aspect-ratio': aspectRatio}"
-  >
+  <picture ref="pic" :style="{ '--pic-aspect-ratio': aspectRatio }">
     <source
       :srcset="`
         ${$urlFor(src).width(320).url()} 320w,

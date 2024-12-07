@@ -4,6 +4,8 @@
     :class="['block', `block--${block._type}`]"
     :key="block._key"
   >
+    <Space v-if="block._type === 'spacer'" :size="block.size" />
+
     <ModuleSpotlight
       v-if="block._type === 'spotlight'"
       v-bind="block"
@@ -16,17 +18,24 @@
 
     <Grid v-if="block._type === 'richText'">
       <Space />
+
       <Column>
-        <BlockRichText :blocks="block.text" />
+        <BlockRichText
+          :blocks="block.text"
+          :indent="block.indented"
+          :alignment="block.alignment"
+        />
       </Column>
       <Space />
     </Grid>
 
-    <div v-if="block._type === 'media'">
+    <Grid v-if="block._type === 'media'">
       <Space />
-      <BlockMedia :media="block.media[0]" />
+      <Column>
+        <BlockMedia :media="block.media[0]" />
+      </Column>
       <Space />
-    </div>
+    </Grid>
 
     <div v-if="block._type === 'hyperText'">
       <Space />
@@ -36,11 +45,23 @@
       <Space />
     </div>
 
+    <Grid v-if="block._type === 'textBlock'">
+      <Space />
+      <Column>
+        <BlockTextBlock :blocks="block.text" />
+      </Column>
+      <Space />
+    </Grid>
+
     <div v-if="block._type === 'rule'">
       <BlockRule
         :space-above="block.spaceAbove"
         :space-below="block.spaceBelow"
       />
+    </div>
+
+    <div v-if="block._type === 'carousel'">
+      <BlockCarousel :items="block.items" :settings="block.settings" />
     </div>
   </div>
 </template>

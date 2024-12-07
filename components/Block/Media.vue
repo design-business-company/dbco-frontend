@@ -13,7 +13,6 @@
         :caption="media.caption"
         class="media__caption"
       />
-      <Space />
     </div>
 
     <div v-if="media._type === 'picture'" class="media__picture">
@@ -46,6 +45,7 @@ const props = defineProps({
 
   &__video,
   &__picture {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: var(--tiniest);

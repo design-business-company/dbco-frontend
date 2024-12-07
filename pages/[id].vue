@@ -24,7 +24,9 @@ import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 const route = useRoute();
 const pageId = route.params.id;
 
-const { data, error, pending, refresh } = useSanityQuery(pageQuery, { slug: pageId });
+const { data, error, pending, refresh } = useSanityQuery(pageQuery, {
+  slug: pageId,
+});
 
 // if (error.value) await navigateTo("/error");
 

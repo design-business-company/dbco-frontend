@@ -11,6 +11,8 @@
         '--grid-cols': items.length,
       }"
       tabindex="0"
+      @focus="handleFocus"
+      @blur="handleBlur"
     >
       <div class="spotlight-media-carousel__container">
         <BlockMedia
@@ -18,6 +20,14 @@
           :key="item._key"
           :media="item"
           class="spotlight-media-carousel__slide"
+          :class="[
+            {
+              '--center': settings?.slideAlignment === 'center',
+            },
+            {
+              '--bottom': settings?.slideAlignment === 'bottom',
+            },
+          ]"
           :style="{
             '--slide-aspect-ratio': item.aspectRatio
               ?.toString()
@@ -32,8 +42,8 @@
 <script setup>
 import emblaCarouselVue from "embla-carousel-vue";
 import AutoScroll from "embla-carousel-auto-scroll";
+import { ref, computed } from "vue";
 import { onKeyStroke } from "@vueuse/core";
-import { clamp } from "@/utils/clamp";
 
 const props = defineProps({
   items: {
@@ -45,6 +55,16 @@ const props = defineProps({
     required: false,
   },
 });
+
+const isFocused = ref(false); // Track if this carousel is focused
+
+const handleFocus = () => {
+  isFocused.value = true;
+};
+
+const handleBlur = () => {
+  isFocused.value = false;
+};
 
 const emblaPlugins = computed(() => {
   if (props.settings && props.settings.autoplay) {
@@ -66,7 +86,13 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
     loop: true,
     skipSnaps: true,
     align: (view) => {
-      return clamp(view * 0.02, 16, 40);
+      if (!process.client) return;
+      const marginValue = getComputedStyle(document.documentElement)
+        .getPropertyValue("--grid-margin")
+        .trim();
+      const marginNumber = parseInt(marginValue, 10);
+
+      return marginNumber;
     },
     containScroll: false,
     inViewThreshold: 0.01,
@@ -81,6 +107,7 @@ const handleEnter = () => {
     if (!instance.isPlaying()) instance.play();
   }
 };
+
 const handleExit = () => {
   if (props.settings && props.settings.autoplay) {
     const instance = emblaPlugins.value[0];
@@ -90,11 +117,13 @@ const handleExit = () => {
 };
 
 onKeyStroke("ArrowRight", (e) => {
+  if (!isFocused.value) return; // Only respond if this carousel is focused
   e.preventDefault();
   emblaApi.value.scrollNext();
 });
 
 onKeyStroke("ArrowLeft", (e) => {
+  if (!isFocused.value) return; // Only respond if this carousel is focused
   e.preventDefault();
   emblaApi.value.scrollPrev();
 });
@@ -114,9 +143,18 @@ onKeyStroke("ArrowLeft", (e) => {
     width: 100%;
     flex: 0 0 calc(100% - calc(var(--smallest) * 2));
     margin-right: var(--grid-gap);
+    display: flex;
+
+    &.--center {
+      align-items: center;
+    }
+
+    &.--bottom {
+      align-items: flex-end;
+    }
 
     @include tablet {
-      flex: 0 0 35vw;
+      flex: 0 0 calc(37.25vw - calc(var(--grid-margin) * 2));
     }
   }
 
@@ -137,7 +175,7 @@ onKeyStroke("ArrowLeft", (e) => {
 
       @include tablet {
         flex: unset;
-        height: clamp(350px, 60vh, 800px);
+        height: clamp(350px, 60vh, 1024px);
         aspect-ratio: var(--slide-aspect-ratio);
       }
     }

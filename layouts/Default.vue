@@ -1,7 +1,7 @@
 <template>
   <div class="site-wrapper">
-    <HeaderStatic />
-    <HeaderSticky />
+    <HeaderStatic :links="data.links" />
+    <HeaderSticky :links="data.links" />
     <main :class="['site-content', { 'nav-is-open': app.mobileNavIsVisible }]">
       <Scrim />
       <NuxtPage />
@@ -13,11 +13,11 @@
 <script setup>
 import { onMounted, watch } from "vue";
 import { useAppStore } from "~/stores/app";
-import { useDeviceStore } from "~/stores/device";
+import { settingsHeader } from "~/queries/settingsHeader";
 
 const app = useAppStore();
-const device = useDeviceStore();
 const route = useRoute();
+const { data, error, pending, refresh } = useSanityQuery(settingsHeader);
 
 onMounted(() => {
   app.setAppHasLoaded(true);
