@@ -45,13 +45,16 @@ export default defineNuxtConfig({
     dataset: "production",
     apiVersion: "2022-03-07",
   },
-  
+
   vue: {
     compilerOptions: {
       isCustomElement: (tag) => tag.startsWith("mux-player"),
     },
   },
 
+  // this is causing the netlify error:
+  // error decoding lambda response: error decoding lambda
+  // compatibilityDate: "2024-11-08",
   vite: {
     css: {
       preprocessorOptions: {
@@ -65,7 +68,5 @@ export default defineNuxtConfig({
     },
   },
 
-  // this is causing the netlify error:
-  // error decoding lambda response: error decoding lambda
-  // compatibilityDate: "2024-11-08",
+  compatibilityDate: "2024-12-05",
 });

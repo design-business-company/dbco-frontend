@@ -52,26 +52,6 @@
   --grid-ultrawide-margin: var(--bigger);
   --grid-ultrawide-gutter: var(--tinier);
 
-  @media (min-width: $tablet) {
-    --grid-margin: var(--grid-tablet-margin);
-    --grid-gap: var(--grid-tablet-gap);
-  }
-
-  @media (min-width: $laptop) {
-    --grid-margin: var(--grid-laptop-margin);
-    --grid-gap: var(--grid-laptop-gap);
-  }
-
-  @media (min-width: $desktop) {
-    --grid-margin: var(--grid-desktop-margin);
-    --grid-gap: var(--grid-desktop-gap);
-  }
-
-  @media (min-width: $ultrawide) {
-    --grid-margin: var(--grid-ultrawide-margin);
-    --grid-gap: var(--grid-ultrawide-gap);
-  }
-
   /* Colors */
   --white: #ffffff;
   --black: #000000;
@@ -186,6 +166,26 @@
     var(--accent-primary) 50%,
     var(--background-primary) 50%
   );
+
+  @media (min-width: $tablet) {
+    --grid-margin: var(--grid-tablet-margin);
+    --grid-gap: var(--grid-tablet-gap);
+  }
+
+  @media (min-width: $laptop) {
+    --grid-margin: var(--grid-laptop-margin);
+    --grid-gap: var(--grid-laptop-gap);
+  }
+
+  @media (min-width: $desktop) {
+    --grid-margin: var(--grid-desktop-margin);
+    --grid-gap: var(--grid-desktop-gap);
+  }
+
+  @media (min-width: $ultrawide) {
+    --grid-margin: var(--grid-ultrawide-margin);
+    --grid-gap: var(--grid-ultrawide-gap);
+  }
 }
 
 :root {

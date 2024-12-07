@@ -50,13 +50,10 @@
 </template>
 
 <script setup>
-import { clamp } from "@/utils/clamp";
-import tinycolor from "tinycolor2";
-
 import { defaultThemes, useTheme } from "~/composables/useTheme";
 import { useElementBounding, useElementVisibility } from "@vueuse/core";
 
-const { theme, setTemporaryTheme, restoreTheme } = useTheme();
+const { theme, setTheme } = useTheme();
 
 const props = defineProps({
   title: {
@@ -95,20 +92,16 @@ const props = defineProps({
 
 // Process the theme prop to return the appropriate theme
 const processedTheme = computed(() => {
-  if (!props.theme) return defaultThemes.light; // Default to light theme
-  if (props.theme.theme === "light") return defaultThemes.light; // Use default light theme
-  if (props.theme.theme === "dark") return defaultThemes.dark; // Use default dark theme
+  if (!props.theme || props.theme.theme === "light") return defaultThemes.light;
+  if (props.theme.theme === "dark") return defaultThemes.dark;
   if (props.theme.theme === "custom") {
-    // Merge custom theme properties with defaults for missing fields
     return {
-      background:
-        props.theme.backgroundPrimary?.hex || defaultThemes.light.background,
-      foreground:
-        props.theme.foregroundPrimary?.hex || defaultThemes.light.foreground,
+      background: props.theme.backgroundPrimary?.hex || defaultThemes.light.background,
+      foreground: props.theme.foregroundPrimary?.hex || defaultThemes.light.foreground,
       accent: props.theme.accentPrimary?.hex || defaultThemes.light.accent,
     };
   }
-  return defaultThemes.light; // Fallback to light theme if nothing matches
+  return defaultThemes.light;
 });
 
 // Reference the component's root element
@@ -117,34 +110,30 @@ const spotlightRef = ref(null);
 const isVisible = useElementVisibility(spotlightRef);
 const { top } = useElementBounding(spotlightRef);
 
-const lastPosTop = ref(0);
-const scrollPercent = ref(0);
 const direction = ref(1);
-
-const startColors = ref(null);
 
 const handleScroll = () => {
   if (!isVisible.value) return;
 
   direction.value = top.value > lastPosTop.value ? 1 : -1;
-  const percentScrolled = (direction.value * (top.value / (window.innerHeight / 2))) + .5;
+  // const percentScrolled = (direction.value * (top.value / (window.innerHeight / 2))) + .5;
 
-  if (percentScrolled >= 0 && percentScrolled <= 1 && !startColors.value) {
-    const startBackground = getComputedStyle(document.documentElement).getPropertyValue('--background-primary').trim();
-    const startForeground = getComputedStyle(document.documentElement).getPropertyValue('--foreground-primary').trim();
-    const startAccent = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim();
-    console.log('setting start colors', startBackground, startForeground, startAccent)
-    startColors.value = {
-      background: startBackground,
-      foreground: startForeground,
-      accent: startAccent,
-    }
-  }
+  // if (percentScrolled >= 0 && percentScrolled <= 1 && !startColors.value) {
+  //   const startBackground = getComputedStyle(document.documentElement).getPropertyValue('--background-primary').trim();
+  //   const startForeground = getComputedStyle(document.documentElement).getPropertyValue('--foreground-primary').trim();
+  //   const startAccent = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim();
+  //   console.log('setting start colors', startBackground, startForeground, startAccent)
+  //   startColors.value = {
+  //     background: startBackground,
+  //     foreground: startForeground,
+  //     accent: startAccent,
+  //   }
+  // }
 
-  if ((percentScrolled > 1 || percentScrolled < 0) && startColors.value) {
-    startColors.value = null;
-    console.log('resetting start colors', startColors.value)
-  }
+  // if ((percentScrolled > 1 || percentScrolled < 0) && startColors.value) {
+  //   startColors.value = null;
+  //   console.log('resetting start colors', startColors.value)
+  // }
 
   if (percentScrolled > 0 && isVisible.value && startColors.value) {
     console.log(scrollPercent.value)
