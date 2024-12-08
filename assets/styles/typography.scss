@@ -41,7 +41,8 @@
   @include fluidScale(16px, 20px, $ultrawide);
 }
 
-.text-body-2 {
+.text-body-2,
+.text-normal {
   display: block;
   font-size: 20px;
   line-height: 24px;
