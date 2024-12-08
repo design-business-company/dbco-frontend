@@ -1,11 +1,13 @@
 <template>
   <div class="content" :class="[{ '--indented': indent }, 'content']">
-    <SanityContent :blocks="blocks" :serializers="serializers" />
+    <PortableText :value="blocks" :components="serializers" />
   </div>
 </template>
 
 <script setup>
+import { PortableText } from "@portabletext/vue";
 import { h } from "vue";
+
 import BlockCopyLinkExternal from "~/components/Block/CopyLinkExternal.vue";
 import BlockCopyLinkInternal from "~/components/Block/CopyLinkInternal.vue";
 import BlockCopyCode from "~/components/Block/CopyCode.vue";
@@ -14,12 +16,13 @@ import BlockCopyHighlight from "~/components/Block/CopyHighlight.vue";
 import BlockCopyStrike from "~/components/Block/CopyStrike.vue";
 import BlockCopyParagraph from "~/components/Block/CopyParagraph.vue";
 import BlockCopyList from "~/components/Block/CopyList.vue";
-import BlockCopyListItem from "~/components/Block/CopyListItem.vue";
+import BlockTextHeading from "~/components/Block/TextHeading.vue";
 import BlockRule from "~/components/Block/Rule.vue";
+import BlockMedia from "~/components/Block/Media.vue";
 
 defineProps({
   blocks: {
-    type: Array,
+    type: Object,
     required: true,
   },
   indent: {
@@ -35,16 +38,17 @@ defineProps({
 const serializers = {
   types: {
     rule: BlockRule,
+    media: BlockMedia,
+    textHeading: BlockTextHeading,
   },
-  // listItem: BlockCopyListItem,
-  // listItem: (props) => {
-  //   console.log("BlockCopyListItem props:", props);
-  //   return h(BlockCopyListItem, props);
-  // },
-  styles: {
-    // h2, h3, h4, etc
-    h1: BlockCopyParagraph,
-    h2: BlockCopyParagraph,
+  list: {
+    bullet: BlockCopyList,
+    number: BlockCopyList,
+  },
+  block: {
+    normal: BlockCopyParagraph,
+    "body-1": BlockCopyParagraph,
+    "body-2": BlockCopyParagraph,
     h3: BlockCopyParagraph,
     h4: BlockCopyParagraph,
     h5: BlockCopyParagraph,
@@ -64,61 +68,3 @@ const serializers = {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-// @import "~/assets/styles/grid";
-
-.content {
-  &.--indented {
-    text-indent: var(--text-indent);
-  }
-}
-
-.content:deep(ol) {
-  list-style-position: outside;
-  list-style-type: decimal-leading-zero;
-  padding-left: 2em;
-
-  li {
-    margin-bottom: 1em;
-    display: list-item;
-
-    &::marker {
-      color: color-mix(
-        in srgb,
-        var(--foreground-primary) 50%,
-        var(--background-primary) 50%
-      );
-    }
-  }
-}
-
-.content:deep(ul) {
-  list-style-position: outside;
-  list-style-type: disc;
-  padding-left: 2em;
-
-  li {
-    margin-bottom: 1em;
-    display: list-item;
-
-    &::marker {
-      color: color-mix(
-        in srgb,
-        var(--foreground-primary) 50%,
-        var(--background-primary) 50%
-      );
-    }
-  }
-}
-
-.content:deep(p) {
-  + p {
-    margin-top: 1em;
-  }
-
-  > span {
-    display: contents;
-  }
-}
-</style>

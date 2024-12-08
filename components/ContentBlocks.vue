@@ -48,7 +48,7 @@
     <Grid v-if="block._type === 'textBlock'">
       <Space />
       <Column>
-        <BlockTextBlock :blocks="block.text" />
+        <BlockTextBlock :blocks="block.textBody.text" />
       </Column>
       <Space />
     </Grid>

@@ -1,29 +1,31 @@
 <template>
   <div class="media">
-    <div v-if="media._type === 'video'" class="media__video">
+    <!-- Video Media -->
+    <div v-if="normalizedMedia._type === 'video'" class="media__video">
       <BlockVid
-        :playback-id="media.playbackId"
-        :alt="media.alt"
-        :settings="media.settings"
-        :poster="media.poster?.asset?._ref"
-        :aspect-ratio="media.aspectRatio"
+        :playback-id="normalizedMedia.playbackId"
+        :alt="normalizedMedia.alt"
+        :settings="normalizedMedia.settings"
+        :poster="normalizedMedia.poster?.asset?._ref"
+        :aspect-ratio="normalizedMedia.aspectRatio"
       />
       <BlockCaption
-        v-if="media.caption"
-        :caption="media.caption"
+        v-if="normalizedMedia.caption"
+        :caption="normalizedMedia.caption"
         class="media__caption"
       />
     </div>
 
-    <div v-if="media._type === 'picture'" class="media__picture">
+    <!-- Picture Media -->
+    <div v-if="normalizedMedia._type === 'picture'" class="media__picture">
       <BlockPic
-        :src="media.asset._ref"
-        :alt="media.alt"
-        :aspect-ratio="media.aspectRatio"
+        :src="normalizedMedia.asset._ref"
+        :alt="normalizedMedia.alt"
+        :aspect-ratio="normalizedMedia.aspectRatio"
       />
       <BlockCaption
-        v-if="media.caption"
-        :caption="media.caption"
+        v-if="normalizedMedia.caption"
+        :caption="normalizedMedia.caption"
         class="media__caption"
       />
     </div>
@@ -34,8 +36,27 @@
 const props = defineProps({
   media: {
     type: Object,
-    required: true,
+    required: false,
+    default: null,
   },
+  value: {
+    type: Object,
+    required: false,
+    default: null,
+  },
+});
+
+// Normalize input to always use `media`
+const normalizedMedia = computed(() => {
+  // Use `media` if provided, otherwise extract from `value`
+  if (props.media) {
+    return props.media;
+  }
+
+  if (props.value && props.value.media && props.value.media.length > 0) {
+    return props.value.media[0]; // Assuming we want the first media item
+  }
+  return null; // Fallback if no media is provided
 });
 </script>
 

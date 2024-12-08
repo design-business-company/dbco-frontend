@@ -21,7 +21,7 @@ const routeMap = {
 // Resolve the link
 const resolveLink = (attrs) => {
   const ref = attrs.reference?._ref;
-  return routeMap[ref] || attrs.slug || "/"; // Fallback to slug or homepage
+  return routeMap[ref] || attrs.slug || attrs.value.slug || "/"; // Fallback to slug or homepage
 };
 </script>
 

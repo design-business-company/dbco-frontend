@@ -49,7 +49,6 @@ _type == "snackGrid" => {
 
 export const mediaBlockQuery = groq`
 _type == "media" => {
-
     media[] {
       "aspectRatio": asset->metadata.dimensions.aspectRatio,
       ${pictureFields},
@@ -92,14 +91,17 @@ _type == "richText" => {
 const textBlockQuery = groq`
 _type == "textBlock" => {
   ...,
-  text[]{
-    ...,
-    markDefs[]{
+  textBody {
+    text[]{
       ...,
-      _type == "internalLink" => {
-          "slug": coalesce(reference->slug.current, "/"),
-        }
-    }
+      markDefs[]{
+        ...,
+        _type == "internalLink" => {
+            "slug": coalesce(reference->slug.current, "/"),
+          }
+      },
+      ${mediaBlockQuery},
+    },
   }
 }
 `;
