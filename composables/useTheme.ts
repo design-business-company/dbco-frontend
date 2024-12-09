@@ -1,5 +1,12 @@
 import { useDeviceStore } from "~/stores/device";
 
+export interface ColorTheme {
+  theme?: "light" | "dark" | "custom";
+  background: string;
+  foreground: string;
+  accent: string;
+}
+
 // Define default themes outside the composable
 export const defaultThemes = {
   light: {
@@ -17,7 +24,20 @@ export const defaultThemes = {
 export const useTheme = () => {
   const deviceStore = useDeviceStore();
 
-  const updateCssVariables = (theme) => {
+  const getProcessedTheme = (props: ColorTheme) => {
+    if (!props.theme || props.theme === "light") return defaultThemes.light;
+    if (props.theme === "dark") return defaultThemes.dark;
+    if (props.theme === "custom") {
+      return {
+        background: props.backgroundPrimary?.hex || defaultThemes.light.background,
+        foreground: props.foregroundPrimary?.hex || defaultThemes.light.foreground,
+        accent: props.accentPrimary?.hex || defaultThemes.light.accent,
+      };
+    }
+    return defaultThemes.light;
+  }
+
+  const updateCssVariables = (theme: ColorTheme) => {
     document.documentElement.style.setProperty(
       "--background-primary",
       theme.background
@@ -42,7 +62,7 @@ export const useTheme = () => {
   );
 
   // Provide methods to update theme
-  const setTheme = (newTheme) => {
+  const setTheme = (newTheme: ColorTheme) => {
     if (newTheme.theme === "light" || newTheme.theme === "dark") {
       deviceStore.updateTheme(defaultThemes[newTheme.theme]);
     } else if (typeof newTheme === "object") {
@@ -56,6 +76,7 @@ export const useTheme = () => {
 
   return {
     setTheme,
+    getProcessedTheme,
     theme: deviceStore.theme,
   };
 };

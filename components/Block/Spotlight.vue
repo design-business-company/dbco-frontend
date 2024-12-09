@@ -50,10 +50,12 @@
 </template>
 
 <script setup>
+import { useIntersectionObserver } from "@vueuse/core";
 import { defaultThemes, useTheme } from "~/composables/useTheme";
-import { useElementBounding, useElementVisibility } from "@vueuse/core";
 
-const { theme, setTheme } = useTheme();
+const { getProcessedTheme, setTheme } = useTheme();
+
+const spotlightRef = ref(null);
 
 const props = defineProps({
   title: {
@@ -90,74 +92,20 @@ const props = defineProps({
   },
 });
 
-// Process the theme prop to return the appropriate theme
-const processedTheme = computed(() => {
-  if (!props.theme || props.theme.theme === "light") return defaultThemes.light;
-  if (props.theme.theme === "dark") return defaultThemes.dark;
-  if (props.theme.theme === "custom") {
-    return {
-      background: props.theme.backgroundPrimary?.hex || defaultThemes.light.background,
-      foreground: props.theme.foregroundPrimary?.hex || defaultThemes.light.foreground,
-      accent: props.theme.accentPrimary?.hex || defaultThemes.light.accent,
-    };
+const scrollPercent = computed(() => props.theme?.settings?.percent ?? 50);
+const processedTheme = computed(() => getProcessedTheme(props.theme));
+
+const { stop } = useIntersectionObserver(spotlightRef, ([entry]) => {
+  if (entry.isIntersecting) {
+    setTheme(processedTheme.value);
   }
-  return defaultThemes.light;
-});
-
-// Reference the component's root element
-const spotlightRef = ref(null);
-
-const isVisible = useElementVisibility(spotlightRef);
-const { top } = useElementBounding(spotlightRef);
-
-const direction = ref(1);
-
-const handleScroll = () => {
-  if (!isVisible.value) return;
-
-  direction.value = top.value > lastPosTop.value ? 1 : -1;
-  // const percentScrolled = (direction.value * (top.value / (window.innerHeight / 2))) + .5;
-
-  // if (percentScrolled >= 0 && percentScrolled <= 1 && !startColors.value) {
-  //   const startBackground = getComputedStyle(document.documentElement).getPropertyValue('--background-primary').trim();
-  //   const startForeground = getComputedStyle(document.documentElement).getPropertyValue('--foreground-primary').trim();
-  //   const startAccent = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim();
-  //   console.log('setting start colors', startBackground, startForeground, startAccent)
-  //   startColors.value = {
-  //     background: startBackground,
-  //     foreground: startForeground,
-  //     accent: startAccent,
-  //   }
-  // }
-
-  // if ((percentScrolled > 1 || percentScrolled < 0) && startColors.value) {
-  //   startColors.value = null;
-  //   console.log('resetting start colors', startColors.value)
-  // }
-
-  if (percentScrolled > 0 && isVisible.value && startColors.value) {
-    console.log(scrollPercent.value)
-    scrollPercent.value = percentScrolled;
-    const background = tinycolor.mix(startColors.value.background, processedTheme.value.background, scrollPercent.value * 100).toHexString()
-    const foreground = tinycolor.mix(startColors.value.foreground, processedTheme.value.foreground, scrollPercent.value * 100).toHexString()
-    const accent = tinycolor.mix(startColors.value.accent, processedTheme.value.accent, scrollPercent.value * 100).toHexString()
-
-    setTemporaryTheme({
-      background,
-      foreground,
-      accent,
-    })
-  }
-
-  lastPosTop.value = top.value;
-}
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
+}, {
+  threshold: 0.01,
+  rootMargin: `0px 0px -${scrollPercent.value}% 0px`,
 })
-
+  
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll)
+  stop();
 })
 
 // Override root-level variables locally within the component
@@ -197,11 +145,6 @@ watchEffect(() => {
       "--accent-secondary",
       `color-mix(in srgb, var(--accent-primary) 50%, var(--background-primary) 50%)`
     );
-  }
-
-  console.log('isVisible', isVisible.value)
-  if (!isVisible.value) {
-    restoreTheme();
   }
 });
 </script>

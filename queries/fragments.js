@@ -19,3 +19,16 @@ seo {
   "image": image.asset->url
 }
 `
+
+export const themePickerFields = groq`
+  theme,
+  backgroundPrimary,
+  foregroundPrimary,
+  accentPrimary,
+`
+export const themeSwitcherFields = groq`
+  ${themePickerFields}
+  settings {
+    percent
+  }
+`

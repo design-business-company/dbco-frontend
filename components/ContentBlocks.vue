@@ -6,15 +6,20 @@
   >
     <Space v-if="block._type === 'spacer'" :size="block.size" />
 
-    <ModuleSpotlight
+    <BlockThemeSwitcher
+      v-if="block._type === 'themeSwitcher'"
+      v-bind="block"
+    ></BlockThemeSwitcher>
+
+    <BlockSpotlight
       v-if="block._type === 'spotlight'"
       v-bind="block"
-    ></ModuleSpotlight>
+    ></BlockSpotlight>
 
-    <ModuleSnackGrid
+    <BlockSnackGrid
       v-if="block._type === 'snackGrid'"
       v-bind="block"
-    ></ModuleSnackGrid>
+    ></BlockSnackGrid>
 
     <Grid v-if="block._type === 'richText'">
       <Space />
@@ -71,7 +76,7 @@ const props = defineProps({
   content: {
     type: Array,
     required: true,
-  },
+  }
 });
 </script>
 
