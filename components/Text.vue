@@ -3,10 +3,9 @@
     :is="element"
     ref="container"
     :class="[`text-${size}`, { '--indent': indent }]"
+    v-bind="$attrs"
   >
-    <!-- <Observer :onEnter="handleEnter" :once="true"> -->
     <slot></slot>
-    <!-- </Observer> -->
   </component>
 </template>
 
@@ -36,6 +35,7 @@ const props = defineProps({
         "caption-2",
         "body-1",
         "body-2",
+        "normal",
         "headline-1",
         "headline-2",
         "headline-3",
@@ -43,6 +43,7 @@ const props = defineProps({
   },
   element: {
     type: String as PropType<string>,
+    required: false,
     default: "p",
   },
   indent: {

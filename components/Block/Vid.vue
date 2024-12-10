@@ -80,12 +80,10 @@ const handleEnter = () => {
 };
 
 const handleLeave = () => {
-  if (props.settings.autoplay) {
-    if (vid.value) {
-      vid.value.pause();
-    } else {
-      console.warn("Video element is not available in handleLeave.");
-    }
+  if (props.settings.autoplay && vid.value) {
+    vid.value.pause();
+  } else {
+    console.warn("Video element is not available in handleLeave.");
   }
 };
 </script>

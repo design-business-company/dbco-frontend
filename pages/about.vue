@@ -1,10 +1,10 @@
 <template>
-  <section :class="['page']">
+  <section :class="['page', 'about']">
     <template v-if="pending">
       <p>pending</p>
     </template>
     <template v-else>
-      <AboutClients />
+      <!-- <AboutClients /> -->
       <ContentBlocks :content="data.content" />
     </template>
   </section>

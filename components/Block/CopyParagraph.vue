@@ -1,5 +1,5 @@
 <template>
-  <Text>
+  <Text :size="$attrs.node ? $attrs.node.style : null">
     <slot></slot>
   </Text>
 </template>
