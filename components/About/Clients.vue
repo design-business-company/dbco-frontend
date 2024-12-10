@@ -1,7 +1,7 @@
 <template>
   <Grid class="clients grid--full">
     <Column>
-      <Observer :onEnter="onEnter">
+      <Observer :onEnter="onEnter" :onLeave="onExit">
         <div
           class="clients__container"
           ref="emblaRef"
@@ -33,6 +33,13 @@
 <style lang="scss">
 .clients {
   cursor: grab;
+  margin-top: var(--bigger);
+  margin-bottom: var(--bigger);
+
+  @include tablet {
+    margin-top: var(--biggest);
+    margin-bottom: var(--biggest);
+  }
 
   &:hover {
     .client__name {
@@ -59,21 +66,22 @@
 
   &__slide {
     --client-columns: 2.25;
-    @include tablet {
-      --client-columns: 3;
-    }
-    @include laptop {
-      --client-columns: 5;
-    }
-    @include desktop {
-      --client-columns: 6;
-    }
     flex: 0 0
       calc(
         calc(100vw - calc(var(--grid-margin) * var(--client-columns))) /
           var(--client-columns)
       );
     margin-right: var(--grid-gap);
+
+    @include tablet {
+      --client-columns: 3;
+    }
+    @include laptop {
+      --client-columns: 4;
+    }
+    @include desktop {
+      --client-columns: 5;
+    }
   }
 }
 
@@ -115,12 +123,18 @@ svg {
 import emblaCarouselVue from "embla-carousel-vue";
 import AutoScroll from "embla-carousel-auto-scroll";
 import { onKeyStroke } from "@vueuse/core";
-
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import gsap from "gsap";
 
 const query = groq`*[_type=="client"]`;
 const { data } = useSanityQuery(query);
+
+const autoScrollInstance = AutoScroll({
+  speed: 0.55,
+  startDelay: 0,
+  stopOnInteraction: false,
+  stopOnMouseEnter: true,
+});
 
 const [emblaRef, emblaApi] = emblaCarouselVue(
   {
@@ -131,31 +145,17 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
     containScroll: false,
     inViewThreshold: 0.01,
   },
-  [
-    AutoScroll({
-      speed: 0.55,
-      startDelay: 0,
-      stopOnInteraction: false,
-      stopOnMouseEnter: true,
-    }),
-  ]
+  [autoScrollInstance]
 );
 
 const componentHasFadedIntoView = ref(false);
 
-const isFocused = ref(false); // Track if this carousel is focused
-
-const handleFocus = () => {
-  isFocused.value = true;
-};
-
-const handleBlur = () => {
-  isFocused.value = false;
-};
-
 const onEnter = () => {
-  const els = emblaRef.value.querySelectorAll(".clients__slide");
+  if (autoScrollInstance) {
+    autoScrollInstance.play(); // Start autoscrolling
+  }
 
+  const els = emblaRef.value.querySelectorAll(".clients__slide");
   if (!els?.length) return;
 
   if (!componentHasFadedIntoView.value) {
@@ -174,6 +174,22 @@ const onEnter = () => {
   }
 };
 
+const onExit = () => {
+  if (autoScrollInstance) {
+    autoScrollInstance.stop(); // Stop autoscrolling
+  }
+};
+
+const isFocused = ref(false); // Track if this carousel is focused
+
+const handleFocus = () => {
+  isFocused.value = true;
+};
+
+const handleBlur = () => {
+  isFocused.value = false;
+};
+
 onKeyStroke("ArrowRight", (e) => {
   if (!isFocused.value) return; // Only respond if this carousel is focused
   e.preventDefault();
@@ -186,15 +202,9 @@ onKeyStroke("ArrowLeft", (e) => {
   emblaApi.value.scrollPrev();
 });
 
-const destroy = () => {
-  emblaApi.value.destroy();
-};
-
-onMounted(() => {
-  onEnter();
-});
-
 onUnmounted(() => {
-  destroy();
+  if (emblaApi.value) {
+    emblaApi.value.destroy(); // Cleanup resources
+  }
 });
 </script>

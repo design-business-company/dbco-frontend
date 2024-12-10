@@ -1,15 +1,7 @@
 <template>
-  <Grid :class="['content', { '--indented': settings.indent }]" ref="root">
-    <Column
-      v-if="settings.alignment === 'center'"
-      span-laptop="8"
-      start-laptop="3"
-      span-desktop="6"
-      start-desktop="4"
-    >
-      <PortableText :value="blocks" :components="serializers" />
-    </Column>
-  </Grid>
+  <div :class="['content']">
+    <PortableText :value="blocks" :components="serializers" />
+  </div>
 </template>
 
 <script setup>
@@ -28,63 +20,15 @@ import BlockTextHeading from "~/components/Block/TextHeading.vue";
 import BlockTextColumns from "~/components/Block/TextColumns.vue";
 import BlockRule from "~/components/Block/Rule.vue";
 import BlockMedia from "~/components/Block/Media.vue";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Space from "~/components/Space.vue";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const props = defineProps({
   blocks: {
     type: Object,
     required: true,
   },
-  settings: {
-    type: Object,
-    required: false,
-    default: () => ({
-      indent: false,
-      alignment: "center",
-      animation: "enterFade",
-    }),
-  },
 });
 
-const root = ref(null);
-defineExpose({
-  root,
-});
-
-onMounted(() => {
-  if (!process.client) return;
-
-  const domParent = root.value?.$el || null;
-  const domNodesToAnimate = domParent?.children[0]?.children;
-
-  if (props.settings.animation === "scrollHighlight") {
-    if (domNodesToAnimate) {
-      Array.from(domNodesToAnimate).forEach((node) => {
-        gsap.fromTo(
-          node,
-          { opacity: 0.2 }, // Starting state
-          {
-            opacity: 1,
-            duration: 1.5,
-            scrollTrigger: {
-              trigger: node,
-              start: "bottom 80%",
-              end: "bottom 50%",
-              once: true, // Animation happens only once
-              toggleActions: "play",
-              // scrub: true, // Smooth animation synced with scroll
-              // toggleActions: "play pause reverse pause",
-            },
-          }
-        );
-      });
-    }
-  }
-});
 const serializers = {
   types: {
     rule: BlockRule,

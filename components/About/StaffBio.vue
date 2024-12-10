@@ -5,7 +5,7 @@
       <header>
         <Text element="h1" size="caption-2">{{ name }}</Text>
       </header>
-      <BlockTextBlock :blocks="bio.text" />
+      <BlockTextBody :blocks="bio.text" />
     </div>
   </article>
 </template>
@@ -37,6 +37,20 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .staff-bio {
+  margin-bottom: var(--grid-gap);
+
+  .bio {
+    padding-bottom: var(--small);
+
+    > * {
+      padding-right: var(--smallest);
+    }
+
+    > *:last-child {
+      color: var(--foreground-secondary);
+    }
+  }
+
   @include phablet {
     display: flex;
     gap: var(--grid-gap);
@@ -55,9 +69,19 @@ const props = defineProps({
     flex-direction: column;
 
     > * {
+      margin-top: var(--tinier);
       &:first-child {
         order: 0;
       }
+    }
+  }
+
+  @include desktop {
+    .bio {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-template-columns: 1fr 2fr;
+      gap: var(--grid-gap);
     }
   }
 }

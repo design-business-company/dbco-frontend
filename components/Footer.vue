@@ -1,5 +1,6 @@
 <template>
   <Grid element="footer" class="site-footer">
+    <Space size="huger" />
     <Column span="12" span-tablet="6" span-laptop="2" class="social">
       <Text size="caption-2" class="title">{{ data.links.title }}</Text>
       <div class="content">
