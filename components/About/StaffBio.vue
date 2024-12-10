@@ -1,6 +1,6 @@
 <template>
   <article class="staff-bio">
-    <BlockMedia :media="images[0].media[0]" />
+    <BlockMedia :media="images[0].media[0]" class="staff-bio__image" />
     <div class="bio">
       <header>
         <Text element="h1" size="caption-2">{{ name }}</Text>
@@ -39,11 +39,19 @@ const props = defineProps({
 .staff-bio {
   margin-bottom: var(--grid-gap);
 
+  &__image {
+    padding-bottom: var(--tiniest);
+  }
+
   .bio {
     padding-bottom: var(--small);
 
     > * {
       padding-right: var(--smallest);
+    }
+
+    > *:first-child {
+      margin-bottom: var(--tiniest);
     }
 
     > *:last-child {
@@ -69,7 +77,6 @@ const props = defineProps({
     flex-direction: column;
 
     > * {
-      margin-top: var(--tinier);
       &:first-child {
         order: 0;
       }
@@ -82,6 +89,10 @@ const props = defineProps({
       grid-template-columns: subgrid;
       grid-template-columns: 1fr 2fr;
       gap: var(--grid-gap);
+
+      > *:first-child {
+        margin-bottom: 0;
+      }
     }
   }
 }
