@@ -106,6 +106,22 @@ _type == "textBlock" => {
 }
 `;
 
+const staffGalleryQuery = groq`
+_type == "staffGallery" => {
+  ...,
+  staff[]-> {
+    ...,
+    images[] {
+      ...,
+      media[] {
+        ...,
+        "aspectRatio": asset->metadata.dimensions.aspectRatio,
+      }
+    }
+  }
+}
+`;
+
 export const contentBlocksQuery = groq`
 content[]{
   ...,
@@ -114,6 +130,7 @@ content[]{
   ${textBlockQuery},
   ${mediaBlockQuery},
   ${carouselQuery},
-  ${snackGridQuery}
+  ${snackGridQuery},
+  ${staffGalleryQuery}
 }
 `;

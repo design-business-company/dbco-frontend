@@ -2,7 +2,13 @@
   <Grid class="clients grid--full">
     <Column>
       <Observer :onEnter="onEnter">
-        <div class="clients__container" ref="emblaRef">
+        <div
+          class="clients__container"
+          ref="emblaRef"
+          tabindex="0"
+          @focus="handleFocus"
+          @blur="handleBlur"
+        >
           <div class="clients__wrapper">
             <div class="clients__slide" v-for="client in data">
               <figure class="client">
@@ -42,7 +48,9 @@
   &__container {
     width: 100%;
     overflow: hidden;
-    padding-inline: $grid-margin;
+    padding-inline: var(--grid-margin);
+    outline: none;
+    user-select: none;
   }
 
   &__wrapper {
@@ -50,13 +58,22 @@
   }
 
   &__slide {
-    --client-columns: 6;
+    --client-columns: 2.25;
+    @include tablet {
+      --client-columns: 3;
+    }
+    @include laptop {
+      --client-columns: 5;
+    }
+    @include desktop {
+      --client-columns: 6;
+    }
     flex: 0 0
       calc(
         calc(100vw - calc(var(--grid-margin) * var(--client-columns))) /
           var(--client-columns)
       );
-    margin-right: var(--tiny);
+    margin-right: var(--grid-gap);
   }
 }
 
@@ -97,6 +114,7 @@ svg {
 <script setup>
 import emblaCarouselVue from "embla-carousel-vue";
 import AutoScroll from "embla-carousel-auto-scroll";
+import { onKeyStroke } from "@vueuse/core";
 
 import { onMounted, ref } from "vue";
 import gsap from "gsap";
@@ -125,6 +143,16 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
 
 const componentHasFadedIntoView = ref(false);
 
+const isFocused = ref(false); // Track if this carousel is focused
+
+const handleFocus = () => {
+  isFocused.value = true;
+};
+
+const handleBlur = () => {
+  isFocused.value = false;
+};
+
 const onEnter = () => {
   const els = emblaRef.value.querySelectorAll(".clients__slide");
 
@@ -145,6 +173,18 @@ const onEnter = () => {
     componentHasFadedIntoView.value = true;
   }
 };
+
+onKeyStroke("ArrowRight", (e) => {
+  if (!isFocused.value) return; // Only respond if this carousel is focused
+  e.preventDefault();
+  emblaApi.value.scrollNext();
+});
+
+onKeyStroke("ArrowLeft", (e) => {
+  if (!isFocused.value) return; // Only respond if this carousel is focused
+  e.preventDefault();
+  emblaApi.value.scrollPrev();
+});
 
 const destroy = () => {
   emblaApi.value.destroy();

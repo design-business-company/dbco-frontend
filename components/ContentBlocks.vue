@@ -63,6 +63,10 @@
     <div v-if="block._type === 'carousel'">
       <BlockCarousel :items="block.items" :settings="block.settings" />
     </div>
+
+    <AboutClients v-if="block._type === 'carouselClients'" />
+
+    <AboutStaffGallery v-if="block._type === 'staffGallery'" v-bind="block" />
   </div>
 </template>
 
