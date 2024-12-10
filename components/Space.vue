@@ -3,13 +3,13 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, toRefs } from "vue";
 
 // Define props
 const props = defineProps({
   size: {
     type: String,
-    default: "small",
+    default: "small", // Default size
   },
   sizeMobile: String,
   sizePhablet: String,
@@ -19,7 +19,22 @@ const props = defineProps({
   sizeUltrawide: String,
 });
 
-// Define the breakpoint hierarchy with proper typing
+// Add type for attrs
+const attrs = useAttrs() as { value: { size?: string } };
+
+// Determine the effective size by prioritizing props and falling back to $attrs.value.size
+const effectiveSize = computed(() => {
+  let size = props.size;
+
+  // portable text passes 'size' as an attribute
+  if (attrs.value && attrs.value.size) {
+    size = attrs.value.size;
+  }
+
+  return size;
+});
+
+// Define the breakpoint hierarchy
 const breakpointHierarchy = [
   { name: "mobile", prop: "sizeMobile" },
   { name: "phablet", prop: "sizePhablet" },
@@ -32,10 +47,10 @@ const breakpointHierarchy = [
 // Compute spaceStyle with cascading sizes
 const spaceStyle = computed(() => {
   const style: Record<string, string> = {
-    "--margin-top": `var(--${props.size})`, // Default size
+    "--margin-top": `var(--${effectiveSize.value})`, // Default size
   };
 
-  let previousValue = props.size; // Start with the default size
+  let previousValue = effectiveSize.value; // Start with the default size
 
   breakpointHierarchy.forEach(({ name, prop }) => {
     const value = props[prop as keyof typeof props] || previousValue;
