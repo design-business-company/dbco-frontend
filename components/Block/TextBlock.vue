@@ -72,7 +72,7 @@ onMounted(() => {
             duration: 1.5,
             scrollTrigger: {
               trigger: node,
-              start: "top 80%",
+              start: "top 50%",
               toggleActions: "play",
               once: true, // Animation happens only once
               // end: "top 50%",

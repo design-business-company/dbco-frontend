@@ -192,6 +192,7 @@
   @media (min-width: $laptop) {
     --grid-margin: var(--grid-laptop-margin);
     --grid-gap: var(--grid-laptop-gutter);
+    --text-indent: var(--biggest);
   }
 
   @media (min-width: $desktop) {
