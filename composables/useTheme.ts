@@ -52,6 +52,10 @@ export const useTheme = () => {
     );
   };
 
+  const resetTheme = () => {
+    deviceStore.updateTheme(deviceStore.pageTheme);
+  }
+
   // Watch for changes in theme
   watch(
     () => deviceStore.theme,
@@ -60,6 +64,19 @@ export const useTheme = () => {
     },
     { deep: true }
   );
+
+  // Set the global page theme that we can reset to when needed
+  const setPageTheme = (theme: ColorTheme) => {
+    if (theme.theme === "light" || theme.theme === "dark") {
+      deviceStore.setPageTheme(defaultThemes[theme.theme]);
+    } else if (typeof theme === "object") {
+      deviceStore.setPageTheme({
+        background: theme.background || theme.backgroundPrimary.hex,
+        foreground: theme.foreground || theme.foregroundPrimary.hex,
+        accent: theme.accent || theme.accentPrimary.hex,
+      });
+    }
+  };
 
   // Provide methods to update theme
   const setTheme = (newTheme: ColorTheme) => {
@@ -76,6 +93,8 @@ export const useTheme = () => {
 
   return {
     setTheme,
+    setPageTheme,
+    resetTheme,
     getProcessedTheme,
     theme: deviceStore.theme,
   };

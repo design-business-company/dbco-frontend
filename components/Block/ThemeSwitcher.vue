@@ -45,7 +45,7 @@ const { stop } = useIntersectionObserver(themePickerRef, ([entry]) => {
   }
 }, {
   threshold: 0.01,
-  rootMargin: `0px 0px -${props.settings.percent}% 0px`,
+  rootMargin: `-${props.settings.percent}% 0px -${props.settings.percent}% 0px`,
 })
   
 onBeforeUnmount(() => {

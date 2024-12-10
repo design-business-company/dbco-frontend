@@ -35,10 +35,10 @@ watch(
   (sanityData) => {
     if (!process.client || !sanityData || sanityData.length === 0) return;
 
-    const { setTheme } = useTheme();
+    const { setPageTheme } = useTheme();
 
     if (sanityData?.pageTheme?.theme) {
-      setTheme(sanityData.pageTheme);
+      setPageTheme(sanityData.pageTheme);
     }
   },
   { immediate: true }

@@ -100,8 +100,8 @@ const { stop } = useIntersectionObserver(spotlightRef, ([entry]) => {
     setTheme(processedTheme.value);
   }
 }, {
-  threshold: 0.01,
-  rootMargin: `0px 0px -${scrollPercent.value}% 0px`,
+  threshold: 0,
+  rootMargin: `-${scrollPercent.value}% 0px -${scrollPercent.value}% 0px`,
 })
   
 onBeforeUnmount(() => {

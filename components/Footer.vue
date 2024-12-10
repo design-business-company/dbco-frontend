@@ -83,6 +83,21 @@
 <script setup>
 import { settingsFooter } from "~/queries/settingsFooter";
 import BlockCopyLinkExternal from "~/components/Block/CopyLinkExternal.vue";
+import { useIntersectionObserver } from "@vueuse/core";
+import { useTheme } from "~/composables/useTheme";
+
+const { resetTheme } = useTheme();
+
+const footerRef = ref(null);
+
+const { stop } = useIntersectionObserver(footerRef, ([entry]) => {
+  if (entry.isIntersecting) {
+    resetTheme();
+  }
+}, {
+  threshold: 0,
+  rootMargin: `0px 0px 0px 0px`,
+})
 
 const customSerializers = {
   marks: {
@@ -93,6 +108,10 @@ const customSerializers = {
 const { data, error, pending, refresh } = useSanityQuery(settingsFooter);
 
 const date = new Date().getFullYear();
+
+onBeforeUnmount(() => {
+  stop();
+})
 </script>
 
 <style lang="scss" scoped>
