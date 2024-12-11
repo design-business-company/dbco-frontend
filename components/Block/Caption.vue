@@ -31,7 +31,7 @@ const serializers = {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .caption {
   max-width: 60ch;
   text-indent: 0;

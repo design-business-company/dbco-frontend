@@ -1,10 +1,5 @@
 <template>
-  <Observer
-    v-for="row in $attrs.value.row"
-    :onEnter="onEnter"
-    once
-    class="text-columns"
-  >
+  <div v-for="row in $attrs.value.row" class="text-columns">
     <!-- BlockTextBody -->
     <!-- <pre>{{ row.leftColumn.text }}</pre> -->
     <BlockTextBody
@@ -15,7 +10,7 @@
       class="text-column col-right"
       :blocks="row.rightColumn.text[0]"
     />
-  </Observer>
+  </div>
 </template>
 
 <script setup>
@@ -43,10 +38,12 @@ const onEnter = (ev) => {
   width: 100%;
   margin-top: var(--big);
   text-indent: 0 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
 
   > * {
     width: 100%;
-    opacity: 0;
 
     &:first-child {
       color: var(--foreground-secondary);
@@ -56,6 +53,7 @@ const onEnter = (ev) => {
   @include tablet {
     gap: var(--grid-gap);
     display: flex;
+    flex-direction: row;
   }
 }
 </style>

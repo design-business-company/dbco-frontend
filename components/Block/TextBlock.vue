@@ -1,21 +1,31 @@
 <template>
-  <Grid :class="['content', { '--indented': settings.indent }]" ref="root">
+  <Grid :class="['content', { '--indented': settings.indent }]">
+    <Space size="small" />
     <Column
       v-if="settings.alignment === 'center'"
       span-laptop="8"
       start-laptop="3"
       span-desktop="6"
       start-desktop="4"
+      ref="animateElements"
     >
-      <PortableText :value="blocks" :components="serializers" />
+      <Observer
+        :onEnter="onEnter"
+        :onLeave="onLeave"
+        :once="settings.animation === 'none'"
+      >
+        <PortableText :value="blocks" :components="serializers" />
+      </Observer>
     </Column>
+    <Space size="small" />
   </Grid>
 </template>
 
 <script setup>
+import { scrollHighlightAnimation } from "~/assets/scripts/utils/animateScrollHighlight.js";
+import { scrollFadeOnEnter } from "~/assets/scripts/utils/animateFadeOnEnter.js";
 import { PortableText } from "@portabletext/vue";
 import { h, ref } from "vue";
-
 import BlockCopyLinkExternal from "~/components/Block/CopyLinkExternal.vue";
 import BlockCopyLinkInternal from "~/components/Block/CopyLinkInternal.vue";
 import BlockCopyCode from "~/components/Block/CopyCode.vue";
@@ -28,11 +38,8 @@ import BlockTextHeading from "~/components/Block/TextHeading.vue";
 import BlockTextColumns from "~/components/Block/TextColumns.vue";
 import BlockRule from "~/components/Block/Rule.vue";
 import BlockMedia from "~/components/Block/Media.vue";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Space from "~/components/Space.vue";
-
-gsap.registerPlugin(ScrollTrigger);
+import gsap from "gsap";
 
 const props = defineProps({
   blocks: {
@@ -50,41 +57,8 @@ const props = defineProps({
   },
 });
 
-const root = ref(null);
-defineExpose({
-  root,
-});
+const animateElements = ref(null);
 
-onMounted(() => {
-  if (!process.client) return;
-
-  const domParent = root.value?.$el || null;
-  const domNodesToAnimate = domParent?.children[0]?.children;
-
-  if (props.settings.animation === "scrollHighlight") {
-    if (domNodesToAnimate) {
-      Array.from(domNodesToAnimate).forEach((node) => {
-        gsap.fromTo(
-          node,
-          { opacity: 0.2 }, // Starting state
-          {
-            opacity: 1,
-            duration: 1.5,
-            scrollTrigger: {
-              trigger: node,
-              start: "top 50%",
-              toggleActions: "play",
-              once: true, // Animation happens only once
-              // end: "top 50%",
-              // scrub: true, // Smooth animation synced with scroll
-              // toggleActions: "play pause reverse pause",
-            },
-          }
-        );
-      });
-    }
-  }
-});
 const serializers = {
   types: {
     rule: BlockRule,
@@ -116,13 +90,137 @@ const serializers = {
     },
   },
 };
+
+const onEnter = (ev) => {
+  const domElements = ev.children;
+
+  if (!domElements) return;
+
+  switch (props.settings.animation) {
+    case "enterFade":
+      scrollFadeOnEnter(domElements);
+      break;
+
+    case "scrollHighlight":
+      scrollHighlightAnimation(domElements);
+      break;
+
+    // none
+    default:
+      break;
+  }
+};
+
+const onLeave = (ev) => {
+  const domElements = ev.children;
+
+  if (!domElements) return;
+
+  switch (props.settings.animation) {
+    case "enterFade":
+      Array.from(domElements).forEach((node) => {
+        gsap.set(node, {
+          opacity: 0.2,
+        });
+      });
+      break;
+
+    case "scrollHighlight":
+      Array.from(domElements).forEach((node) => {
+        gsap.set(node, {
+          opacity: 0.2,
+        });
+      });
+      break;
+
+    // none
+    default:
+      break;
+  }
+};
+
+// onMounted(() => {
+//   const portableTextComponent = animateElements.value;
+//   const domElements = portableTextComponent?.$el.children;
+
+//   if (!process.client) return;
+//   if (!domElements) return;
+
+//   switch (props.settings.animation) {
+//     case "enterFade":
+//       // scrollFadeOnEnter(domElements);
+//       break;
+
+//     case "scrollHighlight":
+//       scrollHighlightAnimation(domElements);
+//       break;
+
+//     default:
+//       break;
+//   }
+// });
 </script>
 
 <style lang="scss" scoped>
 .content {
+  :deep(.text-headline-1),
+  :deep(.text-headline-2),
+  :deep(.text-headline-3) {
+    margin-top: var(--small);
+  }
+
+  :deep(.text-body-2),
+  :deep(.text-body-1),
+  :deep(.text-normal),
+  :deep(.text-caption-2),
+  :deep(.text-caption-1) {
+    margin-top: var(--smallest);
+  }
+
+  // Headlines: add space between bodies and headlines
+  :deep(.text-body-1) + [class*="text-headline-"],
+  :deep(.text-normal) + [class*="text-headline-"],
+  :deep(.text-body-2) + [class*="text-headline-"] {
+    margin-top: var(--biggest);
+  }
+
+  :deep(.media) {
+    margin-top: var(--big);
+    margin-bottom: var(--big);
+  }
+
   :deep(.text-body-1) {
     max-width: 40ch;
-    margin-bottom: var(--smallest);
+  }
+
+  :deep(.text-body-2),
+  :deep(.text-normal) {
+    max-width: 60ch;
+
+    li + li {
+      margin-top: 0.25ch;
+    }
+  }
+
+  :deep(.text-caption-1) {
+    max-width: 60ch;
+  }
+
+  :deep(.text-caption-2) {
+    max-width: 60ch;
+  }
+
+  :deep(ul),
+  :deep(ol) {
+    margin-top: 2ch;
+    margin-bottom: 2ch;
+  }
+
+  // most lists have text-size as parent, some don't
+  :deep(li) {
+    * {
+      margin-top: 0 !important;
+    }
   }
 
   &.--indented {

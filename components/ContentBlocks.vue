@@ -45,13 +45,11 @@
       <Space />
     </div>
 
-    <Grid v-if="block._type === 'textBlock'">
-      <Space />
-      <Column>
-        <BlockTextBlock :blocks="block.textBody.text" />
-      </Column>
-      <Space />
-    </Grid>
+    <BlockTextBlock
+      v-if="block._type === 'textBlock'"
+      :blocks="block.textBody.text"
+      :settings="block.settings"
+    />
 
     <div v-if="block._type === 'rule'">
       <BlockRule

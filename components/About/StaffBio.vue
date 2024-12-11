@@ -39,15 +39,25 @@ const props = defineProps({
 .staff-bio {
   margin-bottom: var(--grid-gap);
 
-  &__image {
-    padding-bottom: var(--tiniest);
-  }
-
   .bio {
-    padding-bottom: var(--small);
+    padding-top: var(--smallest);
+    padding-bottom: var(--big);
+
+    @include phablet {
+      padding-top: 0;
+    }
+
+    @include tablet {
+      padding-top: var(--tinier);
+    }
+
+    @include laptop {
+      padding-top: var(--tiny);
+    }
 
     > * {
       padding-right: var(--smallest);
+      max-width: 45ch;
     }
 
     > *:first-child {

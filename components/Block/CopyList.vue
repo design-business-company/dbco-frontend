@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$attrs.value.listItem">
+  <div v-if="$attrs.value.listItem" class="text-body-2">
     <component :is="listType">
       <slot />
     </component>
