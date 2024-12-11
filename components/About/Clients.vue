@@ -59,6 +59,13 @@
 
   &__slide {
     --client-columns: 2.25;
+    flex: 0 0
+      calc(
+        calc(100vw - calc(var(--grid-margin) * var(--client-columns))) /
+          var(--client-columns)
+      );
+    margin-right: var(--grid-gap);
+
     @include tablet {
       --client-columns: 3;
     }
@@ -68,12 +75,6 @@
     @include desktop {
       --client-columns: 6;
     }
-    flex: 0 0
-      calc(
-        calc(100vw - calc(var(--grid-margin) * var(--client-columns))) /
-          var(--client-columns)
-      );
-    margin-right: var(--grid-gap);
   }
 }
 

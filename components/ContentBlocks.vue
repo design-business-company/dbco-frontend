@@ -80,7 +80,7 @@ const props = defineProps({
   content: {
     type: Array,
     required: true,
-  }
+  },
 });
 </script>
 

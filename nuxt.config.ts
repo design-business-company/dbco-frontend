@@ -7,7 +7,6 @@ export default defineNuxtConfig({
     "~/assets/styles/reset.scss",
     "~/assets/styles/grid.scss",
     "~/assets/styles/typography.scss",
-    "~/assets/styles/color-theme.scss",
   ],
 
   modules: ["@pinia/nuxt", "@nuxtjs/sanity", "@nuxtjs/plausible"],

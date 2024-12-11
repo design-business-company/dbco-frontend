@@ -1,13 +1,21 @@
 <template>
-  <div aria-hidden="true" class="theme-switcher" ref="themePickerRef"></div>
+  <div class="theme-switcher" ref="themePickerRef">
+    <slot></slot>
+  </div>
 </template>
 
 <script setup>
-import { defaultThemes } from "~/composables/useTheme";
+import { ref, nextTick } from "vue";
 import { useTheme } from "~/composables/useTheme";
-import { useIntersectionObserver } from "@vueuse/core";
+import { gsap } from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
 
-const { setTheme, getProcessedTheme } = useTheme();
+gsap.registerPlugin(ScrollTrigger);
+
+const { setTheme } = useTheme();
+
+// Global theme stack to track the current and previous themes
+const themeStack = ref([]);
 
 const props = defineProps({
   theme: {
@@ -37,23 +45,60 @@ const props = defineProps({
 
 const themePickerRef = ref(null);
 
-const processedTheme = computed(() => getProcessedTheme(props));
+let scrollTriggerInstance; // Reference to the ScrollTrigger instance for cleanup
 
-const { stop } = useIntersectionObserver(themePickerRef, ([entry]) => {
-  if (entry.isIntersecting) {
-    setTheme(processedTheme.value);
-  }
-}, {
-  threshold: 0.01,
-  rootMargin: `-${props.settings.percent}% 0px -${props.settings.percent}% 0px`,
-})
-  
-onBeforeUnmount(() => {
-  stop();
-})
+onMounted(() => {
+  const processedTheme = {
+    theme: props.theme,
+    backgroundPrimary: props.backgroundPrimary,
+    foregroundPrimary: props.foregroundPrimary,
+    accentPrimary: props.accentPrimary,
+  };
+
+  console.log(themePickerRef.value);
+  nextTick(() => {
+    // Create the GSAP animation with ScrollTrigger
+    scrollTriggerInstance = gsap.from(themePickerRef.value, {
+      scrollTrigger: {
+        trigger: themePickerRef.value,
+        start: `top ${props.settings.percent}%`, // Start when the top of the element is at 20% of the viewport height
+        end: `bottom ${props.settings.percent}%`,
+        toggleActions: "play none none none",
+        markers: true, // Enable markers for debugging
+        onEnter: () => {
+          themeStack.value.push(processedTheme);
+          setTheme(processedTheme);
+          console.log("onenter");
+        },
+        onLeave: () => {
+          themeStack.value.pop();
+          if (themeStack.value.length > 0) {
+            setTheme(themeStack.value[themeStack.value.length - 1]);
+            console.log("onleave");
+          }
+        },
+        onEnterBack: () => {
+          themeStack.value.push(processedTheme);
+          setTheme(processedTheme);
+        },
+        onLeaveBack: () => {
+          themeStack.value.pop();
+          if (themeStack.value.length > 0) {
+            setTheme(themeStack.value[themeStack.value.length - 1]);
+          }
+        },
+      },
+    });
+  });
+});
+
+onUnmounted(() => {
+  // Kill the ScrollTrigger instance to clean up
+  scrollTriggerInstance.scrollTrigger?.kill();
+});
 </script>
 
-<style lang="scss">
+<!-- <style lang="scss">
 .theme-switcher {
   top: 0;
   width: 1px;
@@ -61,4 +106,4 @@ onBeforeUnmount(() => {
   padding: 0;
   margin-top: -1px;
 }
-</style>
+</style> -->

@@ -29,13 +29,15 @@ export const useTheme = () => {
     if (props.theme === "dark") return defaultThemes.dark;
     if (props.theme === "custom") {
       return {
-        background: props.backgroundPrimary?.hex || defaultThemes.light.background,
-        foreground: props.foregroundPrimary?.hex || defaultThemes.light.foreground,
+        background:
+          props.backgroundPrimary?.hex || defaultThemes.light.background,
+        foreground:
+          props.foregroundPrimary?.hex || defaultThemes.light.foreground,
         accent: props.accentPrimary?.hex || defaultThemes.light.accent,
       };
     }
     return defaultThemes.light;
-  }
+  };
 
   const updateCssVariables = (theme: ColorTheme) => {
     document.documentElement.style.setProperty(
@@ -54,7 +56,7 @@ export const useTheme = () => {
 
   const resetTheme = () => {
     deviceStore.updateTheme(deviceStore.pageTheme);
-  }
+  };
 
   // Watch for changes in theme
   watch(
@@ -80,6 +82,8 @@ export const useTheme = () => {
 
   // Provide methods to update theme
   const setTheme = (newTheme: ColorTheme) => {
+    // console.log(newTheme);
+
     if (newTheme.theme === "light" || newTheme.theme === "dark") {
       deviceStore.updateTheme(defaultThemes[newTheme.theme]);
     } else if (typeof newTheme === "object") {
