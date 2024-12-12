@@ -130,19 +130,21 @@ onKeyStroke("ArrowLeft", (e) => {
 
   &.variable-width {
     .spotlight-media-carousel__slide {
-      --maxWidth: calc(100vw - calc(var(--grid-margin) * 3));
+      --maxHeight: calc(100vw - calc(var(--grid-margin) * 3));
 
       width: auto;
-      height: clamp(350px, 40vmax, var(--maxWidth));
+      height: clamp(350px, 40vmax, var(--maxHeight));
       aspect-ratio: var(--slide-aspect-ratio);
       flex: unset;
 
-      @include tablet {
-        height: clamp(350px, 50vmax, 600px);
+      @include laptop {
+        --maxHeight: calc(40vw - calc(var(--grid-margin) * 3));
+        min-height: 450px;
       }
 
-      @include laptop {
-        height: clamp(350px, 50vmax, 800px);
+      @include desktop {
+        // max-height: 800px;
+        min-height: 500px;
       }
     }
   }

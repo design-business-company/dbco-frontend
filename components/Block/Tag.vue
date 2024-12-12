@@ -19,5 +19,6 @@ const props = defineProps({
   border-radius: var(--border-radius);
   background-color: var(--background-tertiary);
   color: var(--foreground-secondary);
+  transition: color var(--transition), background-color var(--transition);
 }
 </style>
