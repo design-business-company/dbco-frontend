@@ -1,5 +1,5 @@
 <template>
-  <Grid>
+  <Grid class="staff-gallery">
     <Column span="12" span-tablet="4" v-for="person in staff">
       <AboutStaffBio
         :name="person.name"
@@ -20,4 +20,19 @@ const props = defineProps({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.staff-gallery {
+  margin-top: var(--bigger);
+  margin-bottom: var(--bigger);
+
+  @include tablet {
+    margin-top: var(--biggest);
+    margin-bottom: var(--biggest);
+  }
+
+  @include laptop {
+    margin-top: var(--huge);
+    margin-bottom: var(--hugest);
+  }
+}
+</style>

@@ -44,21 +44,21 @@
 .text-body-2,
 .text-normal {
   display: block;
-  font-size: 20px;
+  font-size: 19px;
   line-height: 24px;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   max-width: 80ch;
 
-  @include fluidScale(20px, 24px, $ultrawide);
+  @include fluidScale(19px, 24px, $ultrawide);
 }
 
 .text-body-1 {
   display: block;
-  font-size: 30px;
+  font-size: 28px;
   line-height: 32px;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
 
-  @include fluidScale(30px, 32px, $ultrawide);
+  @include fluidScale(28px, 32px, $ultrawide);
 }
 
 .text-headline-3 {

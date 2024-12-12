@@ -1,11 +1,11 @@
 <template>
   <article class="staff-bio">
-    <BlockMedia :media="images[0].media[0]" />
+    <BlockMedia :media="images[0].media[0]" class="staff-bio__image" />
     <div class="bio">
       <header>
         <Text element="h1" size="caption-2">{{ name }}</Text>
       </header>
-      <BlockTextBlock :blocks="bio.text" />
+      <BlockTextBody :blocks="bio.text" />
     </div>
   </article>
 </template>
@@ -37,6 +37,38 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .staff-bio {
+  margin-bottom: var(--grid-gap);
+
+  .bio {
+    padding-top: var(--smallest);
+    padding-bottom: var(--big);
+
+    @include phablet {
+      padding-top: 0;
+    }
+
+    @include tablet {
+      padding-top: var(--tinier);
+    }
+
+    @include laptop {
+      padding-top: var(--tiny);
+    }
+
+    > * {
+      padding-right: var(--smallest);
+      max-width: 45ch;
+    }
+
+    > *:first-child {
+      margin-bottom: var(--tiniest);
+    }
+
+    > *:last-child {
+      color: var(--foreground-secondary);
+    }
+  }
+
   @include phablet {
     display: flex;
     gap: var(--grid-gap);
@@ -57,6 +89,19 @@ const props = defineProps({
     > * {
       &:first-child {
         order: 0;
+      }
+    }
+  }
+
+  @include desktop {
+    .bio {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-template-columns: 1fr 2fr;
+      gap: var(--grid-gap);
+
+      > *:first-child {
+        margin-bottom: 0;
       }
     }
   }

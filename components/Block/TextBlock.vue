@@ -1,13 +1,31 @@
 <template>
-  <div class="content" :class="[{ '--indented': indent }, 'content']">
-    <PortableText :value="blocks" :components="serializers" />
-  </div>
+  <Grid :class="['content', { '--indented': settings.indent }]">
+    <Space size="small" />
+    <Column
+      v-if="settings.alignment === 'center'"
+      span-laptop="8"
+      start-laptop="3"
+      span-desktop="6"
+      start-desktop="4"
+      ref="animateElements"
+    >
+      <Observer
+        :onEnter="onEnter"
+        :onLeave="onLeave"
+        :once="settings.animation === 'none'"
+      >
+        <PortableText :value="blocks" :components="serializers" />
+      </Observer>
+    </Column>
+    <Space size="small" />
+  </Grid>
 </template>
 
 <script setup>
+import { scrollHighlightAnimation } from "~/assets/scripts/utils/animateScrollHighlight.js";
+import { scrollFadeOnEnter } from "~/assets/scripts/utils/animateFadeOnEnter.js";
 import { PortableText } from "@portabletext/vue";
-import { h } from "vue";
-
+import { h, ref } from "vue";
 import BlockCopyLinkExternal from "~/components/Block/CopyLinkExternal.vue";
 import BlockCopyLinkInternal from "~/components/Block/CopyLinkInternal.vue";
 import BlockCopyCode from "~/components/Block/CopyCode.vue";
@@ -20,26 +38,32 @@ import BlockTextHeading from "~/components/Block/TextHeading.vue";
 import BlockTextColumns from "~/components/Block/TextColumns.vue";
 import BlockRule from "~/components/Block/Rule.vue";
 import BlockMedia from "~/components/Block/Media.vue";
+import Space from "~/components/Space.vue";
+import gsap from "gsap";
 
-defineProps({
+const props = defineProps({
   blocks: {
     type: Object,
     required: true,
   },
-  indent: {
-    type: Boolean,
+  settings: {
+    type: Object,
     required: false,
-  },
-  alignment: {
-    type: String,
-    default: "center",
+    default: () => ({
+      indent: false,
+      alignment: "center",
+      animation: "enterFade",
+    }),
   },
 });
+
+const animateElements = ref(null);
 
 const serializers = {
   types: {
     rule: BlockRule,
     media: BlockMedia,
+    spacer: Space,
     textHeading: BlockTextHeading,
     textColumns: BlockTextColumns,
   },
@@ -66,4 +90,147 @@ const serializers = {
     },
   },
 };
+
+const onEnter = (ev) => {
+  const domElements = ev.children;
+
+  if (!domElements) return;
+
+  switch (props.settings.animation) {
+    case "enterFade":
+      scrollFadeOnEnter(domElements);
+      break;
+
+    case "scrollHighlight":
+      scrollHighlightAnimation(domElements);
+      break;
+
+    // none
+    default:
+      break;
+  }
+};
+
+const onLeave = (ev) => {
+  const domElements = ev.children;
+
+  if (!domElements) return;
+
+  switch (props.settings.animation) {
+    case "enterFade":
+      Array.from(domElements).forEach((node) => {
+        gsap.set(node, {
+          opacity: 0.2,
+        });
+      });
+      break;
+
+    case "scrollHighlight":
+      Array.from(domElements).forEach((node) => {
+        gsap.set(node, {
+          opacity: 0.2,
+        });
+      });
+      break;
+
+    // none
+    default:
+      break;
+  }
+};
+
+// onMounted(() => {
+//   const portableTextComponent = animateElements.value;
+//   const domElements = portableTextComponent?.$el.children;
+
+//   if (!process.client) return;
+//   if (!domElements) return;
+
+//   switch (props.settings.animation) {
+//     case "enterFade":
+//       // scrollFadeOnEnter(domElements);
+//       break;
+
+//     case "scrollHighlight":
+//       scrollHighlightAnimation(domElements);
+//       break;
+
+//     default:
+//       break;
+//   }
+// });
 </script>
+
+<style lang="scss" scoped>
+.content {
+  :deep(.text-headline-1),
+  :deep(.text-headline-2),
+  :deep(.text-headline-3) {
+    margin-top: var(--small);
+  }
+
+  :deep(.text-body-2),
+  :deep(.text-body-1),
+  :deep(.text-normal),
+  :deep(.text-caption-2),
+  :deep(.text-caption-1) {
+    margin-top: var(--smallest);
+  }
+
+  // Headlines: add space between bodies and headlines
+  :deep(.text-body-1) + [class*="text-headline-"],
+  :deep(.text-normal) + [class*="text-headline-"],
+  :deep(.text-body-2) + [class*="text-headline-"] {
+    margin-top: var(--biggest);
+  }
+
+  :deep(.media) {
+    margin-top: var(--big);
+    margin-bottom: var(--big);
+  }
+
+  :deep(.text-body-1) {
+    max-width: 40ch;
+  }
+
+  :deep(.text-body-2),
+  :deep(.text-normal) {
+    max-width: 60ch;
+
+    li + li {
+      margin-top: 0.25ch;
+    }
+  }
+
+  :deep(.text-caption-1) {
+    max-width: 60ch;
+  }
+
+  :deep(.text-caption-2) {
+    max-width: 60ch;
+  }
+
+  :deep(ul),
+  :deep(ol) {
+    margin-top: 2ch;
+    margin-bottom: 2ch;
+  }
+
+  // most lists have text-size as parent, some don't
+  :deep(li) {
+    * {
+      margin-top: 0 !important;
+    }
+  }
+
+  &.--indented {
+    text-indent: var(--text-indent);
+  }
+
+  @include laptop {
+    :deep(.text-body-1) {
+      max-width: 60ch;
+    }
+  }
+}
+</style>

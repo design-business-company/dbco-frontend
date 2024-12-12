@@ -1,66 +1,20 @@
 <template>
-  <Observer
-    v-for="row in $attrs.value.row"
-    :onEnter="onEnter"
-    once
-    class="text-columns"
-  >
-    <PortableText
+  <div v-for="row in $attrs.value.row" class="text-columns">
+    <!-- BlockTextBody -->
+    <!-- <pre>{{ row.leftColumn.text }}</pre> -->
+    <BlockTextBody
       class="text-column col-left"
-      :value="row.leftColumn.text[0].text || row.leftColumn.text"
-      :components="serializers"
+      :blocks="row.leftColumn.text[0]"
     />
-    <PortableText
+    <BlockTextBody
       class="text-column col-right"
-      :value="row.rightColumn.text[0].text || row.rightColumn.text"
-      :components="serializers"
+      :blocks="row.rightColumn.text[0]"
     />
-  </Observer>
+  </div>
 </template>
 
 <script setup>
-import { PortableText } from "@portabletext/vue";
-import BlockCopyLinkExternal from "~/components/Block/CopyLinkExternal.vue";
-import BlockCopyLinkInternal from "~/components/Block/CopyLinkInternal.vue";
-import BlockCopyCode from "~/components/Block/CopyCode.vue";
-import BlockCopyUnderline from "~/components/Block/CopyUnderline.vue";
-import BlockCopyHighlight from "~/components/Block/CopyHighlight.vue";
-import BlockCopyStrike from "~/components/Block/CopyStrike.vue";
-import BlockCopyParagraph from "~/components/Block/CopyParagraph.vue";
-import BlockCopyList from "~/components/Block/CopyList.vue";
-import BlockTextHeading from "~/components/Block/TextHeading.vue";
-import BlockTextColumns from "~/components/Block/TextColumns.vue";
-import BlockRule from "~/components/Block/Rule.vue";
-import BlockMedia from "~/components/Block/Media.vue";
 import gsap from "gsap";
-
-const serializers = {
-  types: {
-    rule: BlockRule,
-    media: BlockMedia,
-    textHeading: BlockTextHeading,
-    textColumns: BlockTextColumns,
-  },
-  list: {
-    bullet: BlockCopyList,
-    number: BlockCopyList,
-  },
-  block: {
-    normal: BlockCopyParagraph,
-    "body-1": BlockCopyParagraph,
-    "body-2": BlockCopyParagraph,
-    "caption-1": BlockCopyParagraph,
-    "caption-2": BlockCopyParagraph,
-  },
-  marks: {
-    link: BlockCopyLinkExternal,
-    internalLink: BlockCopyLinkInternal,
-    code: BlockCopyCode,
-    underline: BlockCopyUnderline,
-    highlight: BlockCopyHighlight,
-    "strike-through": BlockCopyStrike,
-  },
-};
 
 const onEnter = (ev) => {
   const nodes = ev.children;
@@ -83,10 +37,13 @@ const onEnter = (ev) => {
 .text-columns {
   width: 100%;
   margin-top: var(--big);
+  text-indent: 0 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
 
   > * {
     width: 100%;
-    opacity: 0;
 
     &:first-child {
       color: var(--foreground-secondary);
@@ -96,6 +53,7 @@ const onEnter = (ev) => {
   @include tablet {
     gap: var(--grid-gap);
     display: flex;
+    flex-direction: row;
   }
 }
 </style>

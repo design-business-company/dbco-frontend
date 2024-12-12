@@ -4,8 +4,7 @@
       <p>pending</p>
     </template>
     <template v-else>
-      <!-- <AboutClients /> -->
-      <ContentBlocks :content="data.content" />
+      <AboutContentBlocks :content="data.content" />
     </template>
   </section>
 </template>
