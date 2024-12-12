@@ -7,7 +7,6 @@ export interface ColorTheme {
   accent: string;
 }
 
-// Define default themes outside the composable
 export const defaultThemes = {
   light: {
     background: "#ffffff",
@@ -24,76 +23,47 @@ export const defaultThemes = {
 export const useTheme = () => {
   const deviceStore = useDeviceStore();
 
-  const getProcessedTheme = (props: ColorTheme) => {
+  const getProcessedTheme = (props: ColorTheme): Omit<ColorTheme, 'theme'> => {
     if (!props.theme || props.theme === "light") return defaultThemes.light;
     if (props.theme === "dark") return defaultThemes.dark;
     if (props.theme === "custom") {
       return {
-        background:
-          props.backgroundPrimary?.hex || defaultThemes.light.background,
-        foreground:
-          props.foregroundPrimary?.hex || defaultThemes.light.foreground,
-        accent: props.accentPrimary?.hex || defaultThemes.light.accent,
+        background: props.background ?? defaultThemes.light.background,
+        foreground: props.foreground ?? defaultThemes.light.foreground,
+        accent: props.accent ?? defaultThemes.light.accent,
       };
     }
     return defaultThemes.light;
+  }
+
+  const updateCssVariables = (theme: Omit<ColorTheme, 'theme'>) => {
+    const cssVars = {
+      '--background-primary': theme.background,
+      '--foreground-primary': theme.foreground,
+      '--accent-primary': theme.accent,
+    };
+
+    Object.entries(cssVars).forEach(([property, value]) => {
+      document.documentElement.style.setProperty(property, value);
+    });
   };
 
-  const updateCssVariables = (theme: ColorTheme) => {
-    document.documentElement.style.setProperty(
-      "--background-primary",
-      theme.background
-    );
-    document.documentElement.style.setProperty(
-      "--foreground-primary",
-      theme.foreground
-    );
-    document.documentElement.style.setProperty(
-      "--accent-primary",
-      theme.accent
-    );
+  const setPageTheme = (theme: ColorTheme) => {
+    const newTheme = getProcessedTheme(theme);
+    deviceStore.setPageTheme(newTheme);
+    updateCssVariables(newTheme);
+  };
+
+  const setTheme = (theme: ColorTheme) => {
+    const newTheme = getProcessedTheme(theme);
+    deviceStore.updateTheme(newTheme);
+    updateCssVariables(newTheme);
   };
 
   const resetTheme = () => {
     deviceStore.updateTheme(deviceStore.pageTheme);
-  };
-
-  // Watch for changes in theme
-  watch(
-    () => deviceStore.theme,
-    (newTheme) => {
-      updateCssVariables(newTheme);
-    },
-    { deep: true }
-  );
-
-  // Set the global page theme that we can reset to when needed
-  const setPageTheme = (theme: ColorTheme) => {
-    if (theme.theme === "light" || theme.theme === "dark") {
-      deviceStore.setPageTheme(defaultThemes[theme.theme]);
-    } else if (typeof theme === "object") {
-      deviceStore.setPageTheme({
-        background: theme.background || theme.backgroundPrimary.hex,
-        foreground: theme.foreground || theme.foregroundPrimary.hex,
-        accent: theme.accent || theme.accentPrimary.hex,
-      });
-    }
-  };
-
-  // Provide methods to update theme
-  const setTheme = (newTheme: ColorTheme) => {
-    // console.log(newTheme);
-
-    if (newTheme.theme === "light" || newTheme.theme === "dark") {
-      deviceStore.updateTheme(defaultThemes[newTheme.theme]);
-    } else if (typeof newTheme === "object") {
-      deviceStore.updateTheme({
-        background: newTheme.background || newTheme.backgroundPrimary.hex,
-        foreground: newTheme.foreground || newTheme.foregroundPrimary.hex,
-        accent: newTheme.accent || newTheme.accentPrimary.hex,
-      });
-    }
-  };
+    updateCssVariables(deviceStore.pageTheme);
+  }
 
   return {
     setTheme,
