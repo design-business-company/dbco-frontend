@@ -130,15 +130,19 @@ onKeyStroke("ArrowLeft", (e) => {
 
   &.variable-width {
     .spotlight-media-carousel__slide {
+      --maxWidth: calc(100vw - calc(var(--grid-margin) * 3));
+
       width: auto;
-      height: 40vh;
+      height: clamp(350px, 40vmax, var(--maxWidth));
       aspect-ratio: var(--slide-aspect-ratio);
       flex: unset;
 
       @include tablet {
-        flex: unset;
-        height: clamp(350px, 60vh, 800px);
-        aspect-ratio: var(--slide-aspect-ratio);
+        height: clamp(350px, 50vmax, 600px);
+      }
+
+      @include laptop {
+        height: clamp(350px, 50vmax, 800px);
       }
     }
   }

@@ -59,11 +59,14 @@ const processedTheme = computed(() => {
   };
 });
 
-watch(() => routeIsTransitioning.value, (newVal) => {
-  if (!newVal) {
-    setupScrollTrigger();
+watch(
+  () => routeIsTransitioning.value,
+  (newVal) => {
+    if (!newVal) {
+      setupScrollTrigger();
+    }
   }
-});
+);
 
 onMounted(() => {
   setupScrollTrigger();
@@ -71,14 +74,14 @@ onMounted(() => {
 
 const setupScrollTrigger = () => {
   scrollTriggerRef.value?.scrollTrigger?.kill();
-  
+
   scrollTriggerRef.value = gsap.from(themePickerRef.value, {
     scrollTrigger: {
       trigger: themePickerRef.value,
       start: `top ${props.settings.percent}%`,
       end: `bottom ${props.settings.percent}%`,
       toggleActions: "play none none none",
-      markers: true,
+      // markers: true,
       onEnter: () => {
         themeStack.value.push(processedTheme.value);
         setTheme(processedTheme.value);
@@ -101,8 +104,7 @@ const setupScrollTrigger = () => {
       },
     },
   });
-}
-
+};
 
 onUnmounted(() => {
   // Kill the ScrollTrigger instance to clean up
