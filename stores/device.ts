@@ -43,6 +43,12 @@ export const useDeviceStore = defineStore("device", {
       foreground: "#000000", // Default black foreground
       accent: "#ff0000", // Default red accent
     } as Theme,
+    // page theme
+    pageTheme: {
+      background: "#ffffff",
+      foreground: "#000000",
+      accent: "#ff0000",
+    } as Theme,
   }),
   actions: {
     setTouch(val: boolean) {
@@ -101,6 +107,20 @@ export const useDeviceStore = defineStore("device", {
     },
     setResizing(val: boolean) {
       this.isResizing = val;
+    },
+    setPageTheme(newTheme: Partial<Theme>) {
+      if (newTheme.background !== undefined) {
+        this.pageTheme.background = newTheme.background;
+        this.theme.background = newTheme.background;
+      }
+      if (newTheme.foreground !== undefined) {
+        this.pageTheme.foreground = newTheme.foreground;
+        this.theme.foreground = newTheme.foreground;
+      }
+      if (newTheme.accent !== undefined) {
+        this.pageTheme.accent = newTheme.accent;
+        this.theme.accent = newTheme.accent;
+      }
     },
     updateTheme(newTheme: Partial<Theme>) {
       // Update each theme property if provided

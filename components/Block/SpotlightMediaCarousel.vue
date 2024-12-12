@@ -33,6 +33,7 @@
 import emblaCarouselVue from "embla-carousel-vue";
 import AutoScroll from "embla-carousel-auto-scroll";
 import { onKeyStroke } from "@vueuse/core";
+import { clamp } from "@/utils/clamp";
 
 const props = defineProps({
   items: {
@@ -44,10 +45,6 @@ const props = defineProps({
     required: false,
   },
 });
-
-const clamp = (value, min, max) => {
-  return Math.min(Math.max(value, min), max);
-};
 
 const emblaPlugins = computed(() => {
   if (props.settings && props.settings.autoplay) {

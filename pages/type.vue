@@ -158,10 +158,10 @@
 <script setup>
 import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
-const { setTheme } = useTheme();
+const { setPageTheme } = useTheme();
 
 onBeforeMount(() => {
-  setTheme({
+  setPageTheme({
     background: "#00ff00",
     foreground: "#000000",
     accent: "#0000ff",

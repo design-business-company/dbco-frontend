@@ -42,6 +42,9 @@
 
 <script setup>
 import { useAppStore } from "~/stores/app";
+import { useTheme } from "~/composables/useTheme";
+
+const { resetTheme } = useTheme();
 
 const app = useAppStore();
 
@@ -60,6 +63,7 @@ const inertAttribute = computed(() => {
 });
 
 function onEnter() {
+  resetTheme();
   // disable sticky nav when header in view
   // app.setMobileNavVisibility(false);
   // console.log("hide", app.headerIsVisible);

@@ -36,7 +36,7 @@ const props = defineProps({
   padding-block: var(--biggest);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--grid-gap);
+  column-gap: var(--grid-gap);
   row-gap: var(--smaller);
 
   @include tablet {

@@ -1,4 +1,11 @@
-import { pictureFields, videoFields } from "./fragments";
+import { pictureFields, videoFields, themeSwitcherFields } from "./fragments";
+
+
+export const themeSwitcherQuery = groq`
+_type == "themeSwitcher" => {
+  ${themeSwitcherFields}
+}
+`;
 
 export const spotlightQuery = groq`
   _type == "spotlight" => {
@@ -19,6 +26,9 @@ export const spotlightQuery = groq`
       _type == "video" => {
         ${videoFields}
       }
+    },
+    theme {
+      ${themeSwitcherFields}
     },
     settings {
       autoplay,
@@ -125,6 +135,7 @@ _type == "staffGallery" => {
 export const contentBlocksQuery = groq`
 content[]{
   ...,
+  ${themeSwitcherQuery},
   ${spotlightQuery},
   ${richTextQuery},
   ${textBlockQuery},
