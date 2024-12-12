@@ -12,6 +12,11 @@
       <Space />
     </Grid>
 
+    <BlockThemeSwitcher
+      v-if="block._type === 'themeSwitcher'"
+      v-bind="block"
+    ></BlockThemeSwitcher>
+
     <BlockTextBlock
       v-if="block._type === 'textBlock'"
       :blocks="block.textBody.text"

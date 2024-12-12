@@ -17,6 +17,22 @@
         <PortableText :value="blocks" :components="serializers" />
       </Observer>
     </Column>
+
+    <Column
+      v-else-if="settings.alignment === 'left'"
+      span-tablet="10"
+      span-laptop="8"
+      span-desktop="6"
+      ref="animateElements"
+    >
+      <Observer
+        :onEnter="onEnter"
+        :onLeave="onLeave"
+        :once="settings.animation === 'none'"
+      >
+        <PortableText :value="blocks" :components="serializers" />
+      </Observer>
+    </Column>
     <Space size="small" />
   </Grid>
 </template>

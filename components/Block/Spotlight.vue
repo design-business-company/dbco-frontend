@@ -1,5 +1,5 @@
 <template>
-  <div class="spotlight" ref="spotlightRef">
+  <div class="spotlight">
     <BlockThemeSwitcher
       :theme="theme.theme"
       :background-primary="theme.backgroundPrimary"
@@ -11,7 +11,7 @@
         <Space size="bigger" sizeTablet="big" />
 
         <Column>
-          <BlockRule />
+          <BlockRule space-below="small" ref="rule" />
         </Column>
 
         <Column
@@ -20,42 +20,59 @@
           spanLaptop="5"
           class="spotlight__heading"
         >
-          <Text element="div" size="body-2">
-            <h2 class="spotlight__title">{{ title }}</h2>
-            <span v-if="shortDescription" class="spotlight__separator">
-              —
-            </span>
-            <span class="spotlight__short-description">
-              <SanityContent
-                v-if="shortDescription"
-                :blocks="shortDescription.text"
-              />
-            </span>
+          <Text element="div" size="body-2" ref="name">
+            <Observer :onEnter="onEnter" :onLeave="onLeave">
+              <h2 class="spotlight__title">{{ title }}</h2>
+              <span v-if="shortDescription" class="spotlight__separator">
+                —
+              </span>
+              <span class="spotlight__short-description">
+                <SanityContent
+                  v-if="shortDescription"
+                  :blocks="shortDescription.text"
+                />
+              </span>
+            </Observer>
           </Text>
-          <div class="spotlight__tags">
+          <Observer
+            class="spotlight__tags"
+            ref="role"
+            :onEnter="onEnter"
+            :onLeave="onLeave"
+          >
             <BlockTag v-for="tag in tags" :text="tag.title" :key="tag._key" />
-          </div>
+          </Observer>
         </Column>
 
-        <Column
-          spanMobile="12"
-          spanLaptop="6"
-          startMobile="1"
-          startLaptop="7"
-          class="spotlight__details"
-        >
-          <Text element="div" size="caption-2" class="spotlight__description">
-            <SanityContent
-              v-if="description?.text"
-              :blocks="description.text"
-            />
-          </Text>
-          <Text element="div" size="caption-2" class="spotlight__credits">
-            <SanityContent v-if="credits?.text" :blocks="credits.text" />
-          </Text>
+        <Column spanMobile="12" spanLaptop="6" startMobile="1" startLaptop="7">
+          <Observer
+            :onEnter="onEnter"
+            :onLeave="onLeave"
+            class="spotlight__details"
+          >
+            <Text
+              element="div"
+              size="caption-2"
+              class="spotlight__description"
+              ref="info"
+            >
+              <SanityContent
+                v-if="description?.text"
+                :blocks="description.text"
+              />
+            </Text>
+            <Text
+              element="div"
+              size="caption-2"
+              class="spotlight__credits"
+              ref="cred"
+            >
+              <SanityContent v-if="credits?.text" :blocks="credits.text" />
+            </Text>
+          </Observer>
         </Column>
 
-        <Space size="small" sizeTablet="big" sizeLaptop="huge" />
+        <Space size="small" sizeTablet="big" />
       </Grid>
 
       <div class="spotlight__media">
@@ -72,7 +89,60 @@
 </template>
 
 <script setup>
-const spotlightRef = ref(null);
+import { ref, onMounted } from "vue";
+import gsap from "gsap";
+
+const name = ref(null);
+const role = ref(null);
+const rule = ref(null);
+const info = ref(null);
+const cred = ref(null);
+const { createSplitText, clearSplitText } = useSplitText();
+
+let textTitle;
+
+onMounted(() => {
+  // const els = getEls();
+  textTitle = createSplitText(name.value.$el, "words");
+});
+
+// const getEls = () => {
+//   return [
+//     rule.value.$el,
+//     name.value.$el,
+//     ...role.value.children,
+//     ...info.value.$el.children,
+//     cred.value.$el,
+//   ];
+// };
+
+const onEnter = (el) => {
+  const els = el.children;
+
+  Array.from(els).forEach((el) => {
+    gsap.fromTo(
+      el,
+      {
+        opacity: 0,
+      },
+      {
+        opacity: 1,
+        duration: 1,
+        delay: 0.2,
+      }
+    );
+  });
+};
+
+const onLeave = (el) => {
+  const els = el.children;
+
+  Array.from(els).forEach((el) => {
+    gsap.set(el, {
+      opacity: 0,
+    });
+  });
+};
 
 const props = defineProps({
   title: {

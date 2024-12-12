@@ -23,7 +23,7 @@ const props = defineProps({
 
 <style lang="scss">
 .rule {
-  border-color: var(--background-tertiary);
+  border-color: var(--background-secondary);
   transition: border-color var(--transition);
   // transition-delay: var(--transition-page-delay);
 }

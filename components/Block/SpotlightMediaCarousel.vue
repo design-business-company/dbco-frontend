@@ -139,12 +139,12 @@ onKeyStroke("ArrowLeft", (e) => {
 
       @include laptop {
         --maxHeight: calc(40vw - calc(var(--grid-margin) * 3));
-        min-height: 450px;
+        min-height: 500px;
       }
 
       @include desktop {
         // max-height: 800px;
-        min-height: 500px;
+        min-height: 600px;
       }
     }
   }

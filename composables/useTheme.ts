@@ -23,7 +23,7 @@ export const defaultThemes = {
 export const useTheme = () => {
   const deviceStore = useDeviceStore();
 
-  const getProcessedTheme = (props: ColorTheme): Omit<ColorTheme, 'theme'> => {
+  const getProcessedTheme = (props: ColorTheme): Omit<ColorTheme, "theme"> => {
     if (!props.theme || props.theme === "light") return defaultThemes.light;
     if (props.theme === "dark") return defaultThemes.dark;
     if (props.theme === "custom") {
@@ -34,13 +34,13 @@ export const useTheme = () => {
       };
     }
     return defaultThemes.light;
-  }
+  };
 
-  const updateCssVariables = (theme: Omit<ColorTheme, 'theme'>) => {
+  const updateCssVariables = (theme: Omit<ColorTheme, "theme">) => {
     const cssVars = {
-      '--background-primary': theme.background,
-      '--foreground-primary': theme.foreground,
-      '--accent-primary': theme.accent,
+      "--background-primary": theme.background,
+      "--foreground-primary": theme.foreground,
+      "--accent-primary": theme.accent,
     };
 
     Object.entries(cssVars).forEach(([property, value]) => {
@@ -63,7 +63,7 @@ export const useTheme = () => {
   const resetTheme = () => {
     deviceStore.updateTheme(deviceStore.pageTheme);
     updateCssVariables(deviceStore.pageTheme);
-  }
+  };
 
   return {
     setTheme,

@@ -32,7 +32,7 @@ const props = defineProps({
 
   @include laptop {
     margin-top: var(--huge);
-    margin-bottom: var(--hugest);
+    margin-bottom: var(--big);
   }
 }
 </style>

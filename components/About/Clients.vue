@@ -87,7 +87,7 @@
 
 .client {
   &__logo {
-    background-color: var(--background-secondary);
+    background-color: var(--background-tertiary);
     border-radius: var(--border-radius);
     overflow: hidden;
     transition: background-color var(--transition);

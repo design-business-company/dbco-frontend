@@ -11,6 +11,7 @@ import { useAppStore } from "~/stores/app";
 import { useTheme } from "~/composables/useTheme";
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { useDeviceStore } from "~/stores/device";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,6 +46,8 @@ const props = defineProps({
     }),
   },
 });
+
+const deviceStore = useDeviceStore();
 
 const themePickerRef = ref(null);
 
