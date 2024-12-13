@@ -23,9 +23,9 @@ import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
  * --------------------------------------------------------------------------*/
 const route = useRoute();
 const pageId = route.params.id;
-const { data, error, status, refresh } = useSanityQuery(homeQuery);
+const { data, error, status } = await useSanityQuery(homeQuery);
 
-// if (error.value) await navigateTo("/error");
+if (error.value) await navigateTo("/error");
 
 /* ----------------------------------------------------------------------------
  * Set page theme

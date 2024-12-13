@@ -5,18 +5,14 @@
 </template>
 
 <script setup>
-import { ref, nextTick, watch } from "vue";
-import { storeToRefs } from "pinia";
-import { useAppStore } from "~/stores/app";
+import { ref } from "vue";
 import { useTheme } from "~/composables/useTheme";
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { useEventBus } from "~/composables/useEventBus";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const { setTheme } = useTheme();
-const { routeIsTransitioning } = storeToRefs(useAppStore());
 
 // Global theme stack to track the current and previous themes
 const themeStack = ref([]);
@@ -60,21 +56,9 @@ const processedTheme = computed(() => {
   };
 });
 
-// wait for  page mounts...
-// in nuxt, children mount before parents (pages)
-const { on } = useEventBus();
-const pageHasMounted = ref(false);
-
-on("page::mounted", () => (pageHasMounted.value = true));
-
-watch(
-  () => pageHasMounted.value,
-  (newValue) => {
-    if (newValue) {
-      setupScrollTrigger();
-    }
-  }
-);
+onMounted(() => {
+  setupScrollTrigger();
+});
 
 const setupScrollTrigger = () => {
   destroyScrollTrigger();

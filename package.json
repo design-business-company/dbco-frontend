@@ -20,7 +20,7 @@
     "@mux/mux-player": "^3.1.0",
     "@nuxtjs/plausible": "^1.0.0",
     "@nuxtjs/sanity": "^1.11.3",
-    "@pinia/nuxt": "^0.5.1",
+    "@pinia/nuxt": "^0.9.0",
     "@portabletext/vue": "^1.0.11",
     "@sanity/image-url": "^1.0.2",
     "@vueuse/core": "^10.11.1",
@@ -28,10 +28,10 @@
     "embla-carousel-auto-scroll": "^8.4.0",
     "embla-carousel-vue": "^8.4.0",
     "gsap": "file:gsap-bonus.tgz",
-    "nuxt": "^3.14.159",
+    "nuxt": "^3.14.1592",
     "pinia": "^2.1.7",
     "swiper": "^11.1.1",
     "three": "^0.158.0",
-    "vue": "^3.4.18"
+    "vue": "^3.5.13"
   }
 }
