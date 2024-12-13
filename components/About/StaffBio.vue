@@ -39,6 +39,10 @@ const props = defineProps({
 .staff-bio {
   margin-bottom: var(--grid-gap);
 
+  header {
+    font-variation-settings: "wght" 650;
+  }
+
   .bio {
     padding-top: var(--smallest);
     padding-bottom: var(--big);

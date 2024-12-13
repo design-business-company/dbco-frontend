@@ -150,7 +150,17 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
 
 const componentHasFadedIntoView = ref(false);
 
-const onEnter = () => {
+const onEnter = (node) => {
+  gsap.fromTo(
+    node,
+    {
+      opacity: 0.2,
+    },
+    {
+      opacity: 1,
+    }
+  );
+
   if (autoScrollInstance) {
     autoScrollInstance.play(); // Start autoscrolling
   }
@@ -174,7 +184,11 @@ const onEnter = () => {
   }
 };
 
-const onExit = () => {
+const onExit = (node) => {
+  gsap.set(node, {
+    opacity: 0.2,
+  });
+
   if (autoScrollInstance) {
     autoScrollInstance.stop(); // Stop autoscrolling
   }

@@ -24,6 +24,7 @@
     "@portabletext/vue": "^1.0.11",
     "@sanity/image-url": "^1.0.2",
     "@vueuse/core": "^10.11.1",
+    "d3": "^7.9.0",
     "embla-carousel-auto-scroll": "^8.4.0",
     "embla-carousel-vue": "^8.4.0",
     "gsap": "file:gsap-bonus.tgz",
