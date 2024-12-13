@@ -14,6 +14,7 @@ import { watch } from "vue";
 import { useRoute } from "vue-router";
 import { useTheme } from "~/composables/useTheme";
 import { homeQuery } from "~/queries/pages/home";
+import { useEventBus } from "~/composables/useEventBus";
 import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 
@@ -43,6 +44,16 @@ watch(
   },
   { immediate: true }
 );
+
+const { emit } = useEventBus();
+
+onMounted(() => {
+  // tell the app that the page has successfully mounted
+  const { emit } = useEventBus();
+  emit("page::mounted");
+
+  console.log("contact mounted");
+});
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit

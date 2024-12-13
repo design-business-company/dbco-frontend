@@ -16,6 +16,7 @@ import { useTheme } from "~/composables/useTheme";
 import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 import { contactQuery } from "~/queries/pages/contact";
+import { useEventBus } from "~/composables/useEventBus";
 
 /* ----------------------------------------------------------------------------
  * Fetch data from sanity
@@ -42,6 +43,14 @@ watch(
   },
   { immediate: true }
 );
+
+onMounted(() => {
+  // tell the app that the page has successfully mounted
+  const { emit } = useEventBus();
+  emit("page::mounted");
+
+  console.log("contact mounted");
+});
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit

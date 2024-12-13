@@ -135,7 +135,7 @@ const onEnter = (el) => {
 };
 
 const onLeave = (el) => {
-  const els = el.children;
+  const els = el?.children;
 
   Array.from(els).forEach((el) => {
     gsap.set(el, {

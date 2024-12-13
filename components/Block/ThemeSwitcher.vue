@@ -11,7 +11,7 @@ import { useAppStore } from "~/stores/app";
 import { useTheme } from "~/composables/useTheme";
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { useDeviceStore } from "~/stores/device";
+import { useEventBus } from "~/composables/useEventBus";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -47,8 +47,6 @@ const props = defineProps({
   },
 });
 
-const deviceStore = useDeviceStore();
-
 const themePickerRef = ref(null);
 
 const scrollTriggerRef = ref(null);
@@ -66,17 +64,29 @@ watch(
   () => routeIsTransitioning.value,
   (newVal) => {
     if (!newVal) {
+      // setupScrollTrigger();
+    }
+  }
+);
+
+// wait for  page mounts...
+// in nuxt, children mount before parents (pages)
+const { on } = useEventBus();
+const pageHasMounted = ref(false);
+
+on("page::mounted", () => (pageHasMounted.value = true));
+
+watch(
+  () => pageHasMounted.value,
+  (newValue) => {
+    if (newValue) {
       setupScrollTrigger();
     }
   }
 );
 
-onMounted(() => {
-  setupScrollTrigger();
-});
-
 const setupScrollTrigger = () => {
-  scrollTriggerRef.value?.scrollTrigger?.kill();
+  destroyScrollTrigger();
 
   scrollTriggerRef.value = gsap.from(themePickerRef.value, {
     scrollTrigger: {
@@ -110,9 +120,14 @@ const setupScrollTrigger = () => {
 };
 
 onUnmounted(() => {
-  // Kill the ScrollTrigger instance to clean up
-  scrollTriggerRef.value?.scrollTrigger?.kill();
+  destroyScrollTrigger();
 });
+
+const destroyScrollTrigger = () => {
+  if (!scrollTriggerRef.value) return;
+  scrollTriggerRef.value.scrollTrigger?.kill();
+  scrollTriggerRef.value = null;
+};
 </script>
 
 <!-- <style lang="scss">
