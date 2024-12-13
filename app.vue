@@ -11,7 +11,7 @@ import { settingsSeoQuery } from "~/queries/settingsSeo";
 import pageSEO from "~/assets/scripts/pages/seo";
 const { $urlFor } = useNuxtApp();
 
-const { data, error, pending, refresh } = useSanityQuery(settingsSeoQuery);
+const { data, error, status, refresh } = await useSanityQuery(settingsSeoQuery);
 
 const title = computed(() => data.value?.title);
 const description = computed(() => data.value?.description);
