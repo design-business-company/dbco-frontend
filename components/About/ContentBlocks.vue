@@ -12,6 +12,8 @@
       <Space />
     </Grid>
 
+    <AboutChart v-if="block._type === 'collaboratorChart'" />
+
     <BlockThemeSwitcher
       v-if="block._type === 'themeSwitcher'"
       v-bind="block"

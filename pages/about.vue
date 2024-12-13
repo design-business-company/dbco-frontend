@@ -4,7 +4,6 @@
       <p>pending</p>
     </template>
     <template v-else>
-      <AboutChart />
       <AboutContentBlocks :content="data.content" />
     </template>
   </section>
