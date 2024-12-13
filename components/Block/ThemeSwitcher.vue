@@ -60,15 +60,6 @@ const processedTheme = computed(() => {
   };
 });
 
-watch(
-  () => routeIsTransitioning.value,
-  (newVal) => {
-    if (!newVal) {
-      // setupScrollTrigger();
-    }
-  }
-);
-
 // wait for  page mounts...
 // in nuxt, children mount before parents (pages)
 const { on } = useEventBus();
