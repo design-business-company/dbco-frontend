@@ -1,6 +1,6 @@
 <template>
   <section :class="['page']">
-    <template v-if="pending">
+    <template v-if="status === 'pending'">
       <p>pending</p>
     </template>
     <template v-else>
@@ -25,7 +25,7 @@ import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 const route = useRoute();
 const pageId = route.params.id;
 
-const { data, error, pending, refresh } = useSanityQuery(pageQuery, {
+const { data, error, status, refresh } = await useSanityQuery(pageQuery, {
   slug: pageId,
 });
 

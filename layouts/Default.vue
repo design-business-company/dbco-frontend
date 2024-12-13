@@ -4,7 +4,7 @@
     <HeaderSticky :links="data.links" />
     <main :class="['site-content', { 'nav-is-open': app.mobileNavIsVisible }]">
       <Scrim />
-      <NuxtPage />
+      <slot />
     </main>
     <Footer />
   </div>
@@ -17,7 +17,7 @@ import { settingsHeader } from "~/queries/settingsHeader";
 
 const app = useAppStore();
 const route = useRoute();
-const { data, error, pending, refresh } = useSanityQuery(settingsHeader);
+const { data, error, status, refresh } = await useSanityQuery(settingsHeader);
 
 onMounted(() => {
   app.setAppHasLoaded(true);

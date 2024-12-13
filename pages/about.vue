@@ -1,6 +1,6 @@
 <template>
   <section :class="['page', 'about']">
-    <template v-if="pending">
+    <template v-if="status === 'pending'">
       <p>pending</p>
     </template>
     <template v-else>
@@ -22,7 +22,7 @@ import { useEventBus } from "~/composables/useEventBus";
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
 const route = useRoute();
-const { data, error, pending, refresh } = useSanityQuery(aboutQuery);
+const { data, error, status, refresh } = await useSanityQuery(aboutQuery);
 
 // if (error.value) await navigateTo("/error");
 
