@@ -53,8 +53,6 @@ onMounted(() => {
   // tell the app that the page has successfully mounted
   const { emit } = useEventBus();
   emit("page::mounted");
-
-  console.log("contact mounted");
 });
 
 /* ----------------------------------------------------------------------------
