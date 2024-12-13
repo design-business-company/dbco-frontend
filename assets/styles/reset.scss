@@ -157,10 +157,11 @@ html {
   overflow-x: hidden;
   overflow-y: scroll;
   position: relative;
-  scroll-behavior: smooth;
   min-width: 320px;
   font-family: "DBC Metaphor", sans-serif;
   font-variation-settings: "wght" 500;
+  // this causes issues on route
+  // scroll-behavior: smooth;
 
   background-color: var(--background-primary);
   color: var(--foreground-primary);
