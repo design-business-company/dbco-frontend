@@ -66,7 +66,7 @@ definePageMeta({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 svg {
   display: flex;
   width: 100%;

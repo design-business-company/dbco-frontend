@@ -12,7 +12,9 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "sass": "^1.77.0",
-    "vue-router": "^4.2.5"
+    "typescript": "^5.7.2",
+    "vue-router": "^4.2.5",
+    "vue-tsc": "^2.1.10"
   },
   "dependencies": {
     "@egstad/detect-scroll": "^1.0.11",

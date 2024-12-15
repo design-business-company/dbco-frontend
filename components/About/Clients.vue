@@ -30,7 +30,7 @@
   </Grid>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .clients {
   cursor: grab;
   margin-top: var(--bigger);

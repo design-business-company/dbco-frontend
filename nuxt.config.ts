@@ -45,6 +45,11 @@ export default defineNuxtConfig({
     apiVersion: "2022-03-07",
   },
 
+  typescript: {
+    typeCheck: true,
+    strict: false,
+  },
+
   vue: {
     compilerOptions: {
       isCustomElement: (tag) => tag.startsWith("mux-player"),

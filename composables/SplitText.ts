@@ -10,7 +10,7 @@ export function useSplitText() {
   const splitInstance = ref<SplitText | null>(null);
 
   const createSplitText = (
-    element: Element,
+    element: Element | Element[],
     type: "lines" | "words" | "chars" = "chars"
   ) => {
     // Cleanup previous instance if it exists

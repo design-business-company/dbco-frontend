@@ -41,7 +41,9 @@ onMounted(() => {
 function scaleUp() {
   if (device.winWidth <= 700) return;
 
-  const words = heading.value.querySelectorAll(".hide div");
+  const words = heading.value?.querySelectorAll(".hide div");
+  if (!words) return;
+  
   gsap.to(words, {
     scaleX: 1,
     width: "auto",
@@ -56,7 +58,9 @@ function scaleUp() {
 function scaleDown() {
   if (device.winWidth <= 700) return;
 
-  const chars = heading.value.querySelectorAll(".hide div");
+  const chars = heading.value?.querySelectorAll(".hide div");
+  if (!chars) return;
+
   gsap.to(chars, {
     scaleX: 0,
     width: 0,
