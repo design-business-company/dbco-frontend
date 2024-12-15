@@ -1,16 +1,32 @@
 import { defineStore } from 'pinia';
+import { gatedPagesQuery } from '~/queries/pages/page';
 
 interface AuthPayloadInterface {
   slug: string;
   password: string;
 }
 
+interface AuthState {
+  routes: string[];
+  authenticated: boolean;
+  loading: boolean;
+}
+
 export const useAuthStore = defineStore('auth', {
-  state: () => ({
+  state: (): AuthState => ({
+    routes: [],
     authenticated: false,
     loading: false,
   }),
   actions: {
+    async fetchGatedPageRoutes() {
+      const { data } = await useSanityQuery(gatedPagesQuery);
+
+      if (data.value && Array.isArray(data.value)) {
+        const routes = data.value.map((page: any) => page.slug) as string[];
+        this.routes = routes;
+      }
+    },
     async authenticateUser({ slug, password }: AuthPayloadInterface) {
       const env = process.env.NODE_ENV;
       this.loading = true;

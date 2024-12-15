@@ -7,7 +7,13 @@
 </template>
 
 <script setup>
+import pageTransitionDefault from '~/assets/scripts/pages/transitionDefault';
+
 const slug = useRoute().query.slug;
+
+definePageMeta({
+  pageTransition: pageTransitionDefault(),
+});
 </script>
 
 <style>

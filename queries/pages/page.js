@@ -11,3 +11,7 @@ export const pageQuery = groq`*[_type=="page" && slug.current==$slug][0] {
   ${contentBlocksQuery},
   ${seoQuery},
 }`
+
+export const gatedPagesQuery = groq`*[_type=="page" && password.enabled==true] {
+  "slug": slug.current
+}`
