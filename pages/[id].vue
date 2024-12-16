@@ -74,10 +74,11 @@ PageSetup({
  * --------------------------------------------------------------------------*/
 definePageMeta({
   pageTransition: pageTransitionDefault(),
+  middleware: 'auth',
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 svg {
   display: flex;
   width: 100%;

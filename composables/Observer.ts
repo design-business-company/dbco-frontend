@@ -1,4 +1,4 @@
-import { ref, onUnmounted, watch, onMounted, Ref } from "vue";
+import { ref, onUnmounted, watch, onMounted, type Ref } from "vue";
 
 /*--------------------------------------------------------
   Usage

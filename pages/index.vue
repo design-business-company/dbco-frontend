@@ -25,6 +25,9 @@ const route = useRoute();
 const pageId = route.params.id;
 const { data, error, status } = await useSanityQuery(homeQuery);
 
+const { data: helloData } = await useFetch("/api/encrypt");
+console.log(helloData?.value);
+
 if (error.value) await navigateTo("/error");
 
 /* ----------------------------------------------------------------------------
@@ -72,7 +75,7 @@ definePageMeta({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 svg {
   display: flex;
   width: 100%;

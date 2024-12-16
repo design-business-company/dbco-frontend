@@ -1,9 +1,9 @@
 <template>
   <span class="link">
     <a
-      v-if="$attrs.value"
-      :href="$attrs.value.href"
-      :target="$attrs.value.blank ? '_blank' : undefined"
+      v-if="$attrs"
+      v-bind="$attrs"
+      :target="$attrs.blank ? '_blank' : undefined"
     >
       <slot />
     </a>

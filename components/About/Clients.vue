@@ -30,7 +30,7 @@
   </Grid>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .clients {
   cursor: grab;
   margin-top: var(--bigger);
@@ -107,7 +107,7 @@
   }
 }
 
-svg {
+:deep(svg) {
   display: flex;
   width: 100%;
   height: auto;
