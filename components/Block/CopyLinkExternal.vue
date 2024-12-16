@@ -3,6 +3,7 @@
     <a
       v-if="$attrs"
       v-bind="$attrs"
+      :target="$attrs.blank ? '_blank' : undefined"
     >
       <slot />
     </a>
