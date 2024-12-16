@@ -9,20 +9,14 @@ export default defineNuxtRouteMiddleware((to) => {
     return;
   }
 
-  const cookie = useCookie(`dbco-${slug}`);
-
-  if (!cookie?.value) {
-    authStore.authenticated = false;
-    
+  if (!authStore.authenticated) {
     return navigateTo({
       path: '/password',
       query: {
         slug
       }
     });
-  }
-
-  if (cookie?.value) {
-    authStore.authenticated = true;
+  } else {
+    authStore.authenticated = false;
   }
 })
