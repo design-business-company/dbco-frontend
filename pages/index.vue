@@ -22,11 +22,7 @@ import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
 const route = useRoute();
-const pageId = route.params.id;
 const { data, error, status } = await useSanityQuery(homeQuery);
-
-const { data: helloData } = await useFetch("/api/encrypt");
-console.log(helloData?.value);
 
 if (error.value) await navigateTo("/error");
 
