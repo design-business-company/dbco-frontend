@@ -32,7 +32,6 @@
         <HeaderMobileNav />
       </Column>
     </Grid>
-    <Debug v-if="isDev" />
   </nav>
 </template>
 
@@ -50,13 +49,12 @@ const props = defineProps({
   },
 });
 
-const isDev = process.dev;
 const isHydrated = ref(false);
 
 const app = useAppStore();
 const device = useDeviceStore();
 
-const scrollUpThreshold = 5;
+const scrollUpThreshold = 10;
 const previousScrollY = ref(0);
 
 const inertAttribute = computed(() => {
@@ -84,12 +82,12 @@ const handleScroll = () => {
   ) {
     app.setHeaderIsVisible(true);
   } else if (
-    // currentScrollY < previousScrollY.value - scrollUpThreshold &&
+    currentScrollY < previousScrollY.value - scrollUpThreshold &&
     device.scrollDirection === "up"
   ) {
     app.setHeaderIsVisible(true);
   } else if (
-    // currentScrollY > previousScrollY.value + scrollUpThreshold &&
+    currentScrollY > previousScrollY.value + scrollUpThreshold &&
     device.scrollDirection === "down"
   ) {
     app.setHeaderIsVisible(false);

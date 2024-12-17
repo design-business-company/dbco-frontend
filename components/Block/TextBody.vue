@@ -21,6 +21,7 @@ import BlockTextColumns from "~/components/Block/TextColumns.vue";
 import BlockRule from "~/components/Block/Rule.vue";
 import BlockMedia from "~/components/Block/Media.vue";
 import Space from "~/components/Space.vue";
+import BlockButtonGroup from "~/components/ButtonGroup.vue";
 
 const props = defineProps({
   blocks: {
@@ -36,6 +37,7 @@ const serializers = {
     spacer: Space,
     textHeading: BlockTextHeading,
     textColumns: BlockTextColumns,
+    buttonGroup: BlockButtonGroup,
   },
   list: {
     bullet: BlockCopyList,

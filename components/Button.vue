@@ -13,7 +13,10 @@
     :is="tag"
     :to="to"
   >
-    <Text class="button__wrap" size="caption-1">
+    <Text
+      class="button__wrap"
+      :size="size === 'small' ? 'caption-2' : 'caption-1'"
+    >
       <span
         v-if="$slots.default"
         :class="{
@@ -113,6 +116,7 @@ const { size, icon, iconOnly } = toRefs(props);
     gap: var(--tiniest);
     align-items: center;
     margin-top: 0 !important;
+    text-indent: 0;
   }
 
   &__icon {
@@ -123,7 +127,7 @@ const { size, icon, iconOnly } = toRefs(props);
   }
 
   &--small {
-    padding-inline: var(--tinier);
+    padding: var(--tinier) var(--tiny);
   }
 
   &--default {

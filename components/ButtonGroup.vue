@@ -3,6 +3,7 @@
     <Button
       v-for="button in $attrs.value.buttons"
       as="link"
+      :size="button.buttonSize"
       :style="button.buttonStyle"
       :icon="button.iconStyle"
       :to="button.link.slug"
@@ -19,6 +20,22 @@ export default {};
 <style lang="scss" scoped>
 .button-group {
   display: flex;
+  flex-direction: column;
   gap: var(--grid-gap);
+  margin: var(--smaller) 0;
+
+  @include phablet {
+    flex-direction: row;
+
+    > * {
+      flex: 1;
+    }
+  }
+
+  @include tablet {
+    > * {
+      flex: none;
+    }
+  }
 }
 </style>
