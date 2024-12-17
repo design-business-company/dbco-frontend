@@ -35,11 +35,15 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: 'netlify_edge'
+    preset: "netlify_edge",
   },
 
   plausible: {
     ignoredHostnames: ["localhost"],
+  },
+
+  runtimeConfig: {
+    encryptionKey: process.env.ENCRYPTION_KEY,
   },
 
   // Details on warning in console: https://github.com/nuxt-modules/sanity/issues/1059
