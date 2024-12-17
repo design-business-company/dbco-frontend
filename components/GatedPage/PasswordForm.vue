@@ -1,7 +1,7 @@
 <template>
   <form class="password-form" @submit.prevent="submit">
-    <Text element="h2" size="body-2" class="password-form__title">
-      Enter password for /{{ slug }}
+    <Text element="h2" size="body-1" class="password-form__title">
+      Enter password
     </Text>
 
     <div class="password-form__input">
@@ -23,29 +23,33 @@
           </button>
         </template>
       </Input>
-      <Button icon="ArrowRight" as="button" type="submit" :disabled="loading">
-        {{ loading ? 'Submitting' : 'Submit' }}
+      <Button icon="arrowRight" as="button" type="submit" :disabled="loading">
+        {{ loading ? "Submitting" : "Submit" }}
       </Button>
     </div>
 
     <div class="password-form__messages">
-      <Text v-if="error" size="caption-2" class="password-form__error">{{ error }}</Text>
-      <Text v-if="success" size="caption-2" class="password-form__success">Success! Redirecting...</Text>
+      <Text v-if="error" size="caption-2" class="password-form__error">{{
+        error
+      }}</Text>
+      <Text v-if="success" size="caption-2" class="password-form__success"
+        >Success! Redirecting...</Text
+      >
     </div>
   </form>
 </template>
 
 <script setup>
-import { useAuthStore } from '~/stores/auth';
-import { storeToRefs } from 'pinia';
+import { useAuthStore } from "~/stores/auth";
+import { storeToRefs } from "pinia";
 
-const password = ref('');
+const password = ref("");
 const passwordVisible = ref(false);
 const error = ref(null);
 const success = ref(false);
 
 const props = defineProps({
-  slug: String
+  slug: String,
 });
 
 const updatePassword = (value) => {
@@ -75,7 +79,7 @@ const submit = async () => {
   loading.value = false;
 
   if (!result || !result.ok) {
-    error.value = result?.message || 'Invalid password';
+    error.value = result?.message || "Invalid password";
   }
 
   if (result?.ok) {
@@ -91,21 +95,13 @@ const submit = async () => {
 <style lang="scss" scoped>
 .password-form {
   width: 100%;
-  max-width: 400px;
-  margin-inline: auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--smallest);
   position: relative;
-
-  &__title {
-    text-align: center;
-  }
 
   &__input {
     width: 100%;
     display: flex;
     gap: var(--tinier);
+    margin-top: var(--smallest);
 
     input {
       flex: 1;

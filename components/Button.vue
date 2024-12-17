@@ -4,64 +4,66 @@
     class="button"
     :class="[
       `button--${size}`,
+      `button--${style}`,
+      { 'button--icon': icon !== 'none' },
       {
-        'button--icon-only': iconOnly
-      }
+        'button--icon-only': iconOnly,
+      },
     ]"
     :is="tag"
+    :to="to"
   >
-    <Icon class="button__icon" v-if="icon && iconPosition === 'start'" :name="icon" />
-    <span
-      v-if="$slots.default"
-      :class="{
-        'text-caption-1': size === 'large',
-        'text-micro': size === 'small',
-        'sr-only': iconOnly
-      }"
-    >
-      <slot></slot>
-    </span>
-    <Icon class="button__icon" v-if="icon && iconPosition === 'end'" :name="icon" />
+    <Text class="button__wrap" size="caption-1">
+      <span
+        v-if="$slots.default"
+        :class="{
+          'sr-only': iconOnly,
+        }"
+      >
+        <slot></slot>
+      </span>
+      <Icon class="button__icon" v-if="icon !== 'none'" :name="icon" />
+    </Text>
   </component>
 </template>
 
 <script setup lang="ts">
-import { type NuxtLinkProps } from '#app'
+import { type NuxtLinkProps } from "#app";
 
-import Icon from './Icon.vue'
-import { NuxtLink } from '#components'
+import Icon from "./Icon.vue";
+import { NuxtLink } from "#components";
 
 const tag = computed(() => {
-  if (props.as === 'link') {
-    return NuxtLink
+  if (props.as === "link") {
+    return NuxtLink;
   }
-  return 'button'
-})
+  return "button";
+});
 
 interface ButtonBaseProps {
-  size?: 'small' | 'large'
-  iconPosition?: 'start' | 'end'
-  icon?: InstanceType<typeof Icon>['name']
-  iconOnly?: boolean
+  size?: "small" | "default";
+  icon?: InstanceType<typeof Icon>["name"];
+  iconOnly?: boolean;
+  style?: string;
 }
 
 interface ButtonAsButtonProps extends ButtonBaseProps {
-  as: 'button'
+  as: "button";
 }
 
 interface ButtonAsLinkProps extends ButtonBaseProps, NuxtLinkProps {
-  as: 'link'
+  as: "link";
 }
 
-type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps
+type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
 const props = withDefaults(defineProps<ButtonProps>(), {
-  size: 'large',
-  iconPosition: 'end',
-  as: 'button',
-})
+  size: "default",
+  as: "button",
+  style: "primary",
+});
 
-const { size, iconPosition, icon, iconOnly } = toRefs(props)
+const { size, icon, iconOnly } = toRefs(props);
 </script>
 
 <style lang="scss" scoped>
@@ -70,35 +72,63 @@ const { size, iconPosition, icon, iconOnly } = toRefs(props)
   align-items: center;
   justify-content: center;
   border: none;
-  background: var(--gray-950);
-  color: var(--indigo-50);
+  border-radius: var(--tiniest);
   cursor: pointer;
+  text-decoration: none;
+  transition: background-color var(--transition), color var(--transition);
+
+  &:hover {
+    transition-duration: 200ms;
+  }
+
+  &--primary {
+    background: var(--foreground-primary);
+    background: var(--foreground-primary);
+    color: var(--background-primary);
+
+    &:hover {
+      background: var(--foreground-secondary);
+    }
+  }
+
+  &--secondary {
+    background: var(--background-tertiary);
+    color: var(--foreground-primary);
+
+    &:hover {
+      background: var(--background-secondary);
+    }
+  }
+
+  &--icon {
+    &:hover {
+      .button__icon {
+        translate: 0.2em 0 0;
+      }
+    }
+  }
+
+  &__wrap {
+    display: flex;
+    gap: var(--tiniest);
+    align-items: center;
+    margin-top: 0 !important;
+  }
 
   &__icon {
-    width: var(--icon-size);
-    height: var(--icon-size);
+    transition: translate var(--transition);
+    transition-duration: 200ms;
+    width: 1em;
+    height: 1em;
   }
 
   &--small {
-    gap: var(--tiniest);
-    height: 24px;
     padding-inline: var(--tinier);
-    border-radius: var(--tiniest);
-
-    .button__icon {
-      --icon-size: var(--tiny);
-    }
   }
 
-  &--large {
-    height: 44px;
-    gap: var(--tinier);
-    padding-inline: var(--smallest);
-    border-radius: var(--tinier);
-
-    .button__icon {
-      --icon-size: var(--smallest);
-    }
+  &--default {
+    border-radius: var(--tiniest);
+    padding: var(--tiny) var(--smallest);
   }
 
   .sr-only {
@@ -107,16 +137,14 @@ const { size, iconPosition, icon, iconOnly } = toRefs(props)
 
   &--icon-only {
     padding-inline: 0;
-    
+
     &.button--small {
-      width: 24px;
       .button__icon {
         --icon-size: var(--smallest);
       }
     }
 
-    &.button--large {
-      width: 44px;
+    &.button--default {
       .button__icon {
         --icon-size: 20px;
       }

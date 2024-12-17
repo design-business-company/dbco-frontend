@@ -78,8 +78,6 @@ function init() {
 }
 
 function teardown() {
-  console.log("tear");
-
   if (intervalId) clearInterval(intervalId);
 
   d3.select(svgContainer.value).select("svg").remove();
