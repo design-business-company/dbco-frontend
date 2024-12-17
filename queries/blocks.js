@@ -1,5 +1,9 @@
-import { pictureFields, videoFields, themeSwitcherFields } from "./fragments";
-
+import {
+  pictureFields,
+  videoFields,
+  themeSwitcherFields,
+  buttonGroup,
+} from "./fragments";
 
 export const themeSwitcherQuery = groq`
 _type == "themeSwitcher" => {
@@ -111,6 +115,7 @@ _type == "textBlock" => {
           }
       },
       ${mediaBlockQuery},
+      ${buttonGroup}
     },
   }
 }

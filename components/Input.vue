@@ -1,10 +1,14 @@
 <template>
-  <div class="input" :class="{ 'input--invalid': props.invalid, 'input--valid': props.valid }">
-    <input class="input__field text-caption-1" v-bind="$attrs" @input="updateValue" />
+  <Text
+    size="caption-1"
+    class="input"
+    :class="{ 'input--invalid': props.invalid, 'input--valid': props.valid }"
+  >
+    <input class="input__field" v-bind="$attrs" @input="updateValue" />
     <div class="input__icon" v-if="$slots.icon">
       <slot name="icon" />
     </div>
-  </div>
+  </Text>
 </template>
 
 <script setup lang="ts">
@@ -13,11 +17,11 @@ const props = defineProps<{
   valid?: boolean;
 }>();
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(["update:modelValue"]);
 
 const updateValue = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
-  emit('update:modelValue', value);
+  emit("update:modelValue", value);
 };
 </script>
 
@@ -30,11 +34,11 @@ const updateValue = (event: Event) => {
     width: 100%;
     border: 1px solid var(--gray-150);
     border-radius: var(--tiniest);
-    height: 44px;
-    padding-inline: var(--smallest);
-    padding-block: 0;
+    padding: var(--tiny) var(--smallest);
     color: var(--foreground-primary);
     transition: border-color var(--transition);
+    font-size: inherit;
+    line-height: inherit;
 
     &:focus {
       outline: none;
@@ -49,7 +53,6 @@ const updateValue = (event: Event) => {
     top: 50%;
     right: var(--smallest);
     transform: translateY(-50%);
-
 
     svg {
       width: 100%;
