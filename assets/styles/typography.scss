@@ -24,7 +24,7 @@
   display: block;
   font-size: 13px;
   line-height: 16px;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.0125em;
   // max-width: 75ch;
 
   // @include fluidScale(13px, 16px, $ultrawide);
@@ -33,10 +33,16 @@
 
 .text-caption-1 {
   display: block;
-  font-size: 16px;
-  line-height: 20px;
-  letter-spacing: 0.01em;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.0125em;
   max-width: 80ch;
+
+  @include laptop() {
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.01em;
+  }
 
   @include fluidScale(16px, 20px, $ultrawide);
 }
@@ -44,45 +50,85 @@
 .text-body-2,
 .text-normal {
   display: block;
-  font-size: 19px;
-  line-height: 24px;
-  letter-spacing: 0;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.01em;
   max-width: 80ch;
+
+  @include laptop() {
+    font-size: 19px;
+    line-height: 24px;
+    letter-spacing: -0.007em;
+  }
 
   @include fluidScale(19px, 24px, $ultrawide);
 }
 
 .text-body-1 {
   display: block;
-  font-size: 28px;
-  line-height: 32px;
-  letter-spacing: -0.02em;
+  font-size: 19px;
+  line-height: 24px;
+  letter-spacing: -0.007em;
+
+  @include tablet() {
+    font-size: 23px;
+    line-height: 28px;
+    letter-spacing: -0.0125em;
+  }
+
+  @include laptop() {
+    font-size: 28px;
+    line-height: 32px;
+    letter-spacing: -0.025em;
+  }
 
   @include fluidScale(28px, 32px, $ultrawide);
+  @include ultrawide() {
+    letter-spacing: calc(-0.03em);
+  }
 }
 
 .text-headline-3 {
   display: block;
-  font-size: 36px;
-  line-height: 40px;
+  font-size: 28px;
+  line-height: 32px;
   letter-spacing: -0.025em;
+
+  @include laptop() {
+    font-size: 36px;
+    line-height: 40px;
+    letter-spacing: -0.03em;
+  }
 
   @include fluidScale(36px, 40px, $ultrawide);
 }
 
 .text-headline-2 {
   display: block;
-  font-size: 54px;
-  line-height: 56px;
-  letter-spacing: -0.025em;
+  font-size: 36px;
+  line-height: 40px;
+  letter-spacing: -0.03em;
+
+  @include laptop() {
+    font-size: 44px;
+    line-height: 48px;
+    letter-spacing: -0.04em;
+  }
+
   @include fluidScale(54px, 56px, $ultrawide);
 }
 
 .text-headline-1 {
   display: block;
-  font-size: 76px;
-  line-height: 80px;
-  letter-spacing: -0.04em;
+  font-size: 60px;
+  line-height: 64px;
+  letter-spacing: -0.05em;
+
+  @include laptop() {
+    font-size: 76px;
+    line-height: 80px;
+  }
+
   @include fluidScale(76px, 80px, $ultrawide);
 }
 

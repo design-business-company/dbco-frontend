@@ -60,9 +60,6 @@
   $baselineInPixels,
   $breakpointInPixels: $desktop
 ) {
-  font-size: $sizeInPixels;
-  line-height: $baselineInPixels;
-
   @media (min-width: $breakpointInPixels) {
     font-size: calc-vw($sizeInPixels, $breakpointInPixels);
     line-height: calc-leading($baselineInPixels, $sizeInPixels);

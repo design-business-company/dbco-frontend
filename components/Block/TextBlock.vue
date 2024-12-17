@@ -188,18 +188,25 @@ const onLeave = (ev) => {
   }
 
   :deep(.text-body-2),
-  :deep(.text-body-1),
-  :deep(.text-normal),
-  :deep(.text-caption-2),
-  :deep(.text-caption-1) {
+  :deep(.text-body-1) {
     margin-top: var(--smallest);
   }
 
+  :deep(.text-normal),
+  :deep(.text-caption-2),
+  :deep(.text-caption-1) {
+    margin-top: var(--smaller);
+  }
+
   // Headlines: add space between bodies and headlines
-  :deep(.text-body-1) + [class*="text-headline-"],
-  :deep(.text-normal) + [class*="text-headline-"],
-  :deep(.text-body-2) + [class*="text-headline-"] {
+  :deep([class*="text-body-"]) + [class*="text-headline-"],
+  :deep(.text-normal) + [class*="text-headline-"] {
     margin-top: var(--biggest);
+  }
+
+  // Body text that follws headlines
+  :deep([class*="text-headline-"]) + [class*="text-body-"] {
+    margin-top: var(--small);
   }
 
   :deep(.media) {
@@ -208,7 +215,7 @@ const onLeave = (ev) => {
   }
 
   :deep(.text-body-1) {
-    max-width: 40ch;
+    max-width: 50ch;
   }
 
   :deep(.text-body-2),
