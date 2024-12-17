@@ -210,8 +210,12 @@ const onLeave = (ev) => {
   }
 
   :deep(.media) {
-    margin-top: var(--big);
-    margin-bottom: var(--big);
+    margin-top: var(--small);
+    margin-bottom: var(--bigger);
+
+    & + [class*="text-"] {
+      margin-top: var(--bigger);
+    }
   }
 
   :deep(.text-body-1) {
