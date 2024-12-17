@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-const key = process.env.ENCRYPTION_KEY;
+const key = useRuntimeConfig().encryptionKey;
 
 export const encryptPassword = (plaintext: string) => {
   if (!key) {
