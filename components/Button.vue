@@ -110,13 +110,14 @@ const { size, icon, iconOnly } = toRefs(props);
 
   &__wrap {
     display: flex;
-    gap: var(--tinier);
+    gap: var(--tiniest);
     align-items: center;
     margin-top: 0 !important;
   }
 
   &__icon {
-    transition: translate 100ms ease-in-out;
+    transition: translate var(--transition);
+    transition-duration: 200ms;
     width: 1em;
     height: 1em;
   }
