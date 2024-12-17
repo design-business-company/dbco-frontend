@@ -1,7 +1,7 @@
 <template>
-  <div class="site-wrapper" v-if="data.links">
-    <HeaderStatic :links="data.links" />
-    <HeaderSticky :links="data.links" />
+  <div class="site-wrapper" v-if="data?.links">
+    <HeaderStatic :links="data?.links" />
+    <HeaderSticky :links="data?.links" />
     <main :class="['site-content', { 'nav-is-open': app.mobileNavIsVisible }]">
       <Scrim />
       <slot />

@@ -1,7 +1,7 @@
 <template>
-  <Grid element="footer" class="site-footer">
+  <Grid v-if="data" element="footer" class="site-footer">
     <Space size="huger" />
-    <Column span="12" span-tablet="6" span-laptop="2" class="social">
+    <Column v-if="data.links" span="12" span-tablet="6" span-laptop="2" class="social">
       <Text size="caption-2" class="title">{{ data.links.title }}</Text>
       <div class="content">
         <div v-for="link in data.links.content">
@@ -15,6 +15,7 @@
     </Column>
 
     <Column
+      v-if="data.privacy"
       span="12"
       span-tablet="6"
       start-tablet="7"
@@ -32,6 +33,7 @@
     </Column>
 
     <Column
+      v-if="data.colophon"
       span="12"
       span-tablet="6"
       start-tablet="7"
@@ -49,6 +51,7 @@
     </Column>
 
     <Column
+      v-if="data.thankYou"
       span="12"
       span-tablet="6"
       start-tablet="7"
@@ -66,6 +69,7 @@
     </Column>
 
     <Column
+      v-if="data.copyright"
       span="12"
       span-tablet="6"
       start-tablet="7"

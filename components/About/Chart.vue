@@ -169,7 +169,7 @@ function addNode() {
   }
 
   simulation.nodes(nodes);
-  simulation.force("link").links(links);
+  simulation.force("link")?.links(links);
   simulation.alpha(0.5).restart();
 }
 
