@@ -34,6 +34,10 @@ export default defineNuxtConfig({
     },
   },
 
+  nitro: {
+    preset: 'netlify_edge'
+  },
+
   plausible: {
     ignoredHostnames: ["localhost"],
   },
