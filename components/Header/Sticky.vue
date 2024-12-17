@@ -82,12 +82,12 @@ const handleScroll = () => {
   ) {
     app.setHeaderIsVisible(true);
   } else if (
-    currentScrollY < previousScrollY.value - scrollUpThreshold &&
+    // currentScrollY < previousScrollY.value - scrollUpThreshold &&
     device.scrollDirection === "up"
   ) {
     app.setHeaderIsVisible(true);
   } else if (
-    currentScrollY > previousScrollY.value + scrollUpThreshold &&
+    // currentScrollY > previousScrollY.value + scrollUpThreshold &&
     device.scrollDirection === "down"
   ) {
     app.setHeaderIsVisible(false);

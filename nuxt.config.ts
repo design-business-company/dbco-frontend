@@ -9,7 +9,12 @@ export default defineNuxtConfig({
     "~/assets/styles/typography.scss",
   ],
 
-  modules: ["@pinia/nuxt", "@nuxtjs/sanity", "@nuxtjs/plausible"],
+  modules: [
+    "@pinia/nuxt",
+    "@nuxtjs/sanity",
+    "@nuxtjs/plausible",
+    "nuxt3-lenis",
+  ],
 
   plugins: [
     { src: "~/plugins/device/deviceInfo.ts", mode: "client" },
