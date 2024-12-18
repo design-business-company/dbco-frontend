@@ -39,8 +39,9 @@ function onLeave(el, done) {
     onComplete: done,
   });
 
-  const root = document.documentElement;
-  root.style["transition"] = "var(--transition), color var(--transition)";
+  // const root = document.documentElement;
+  // root.style["transition"] =
+  //   "background-color var(--transition), color var(--transition)";
   // root.style["transition-delay"] = "var(--transition-page-delay)";
 }
 </script>
