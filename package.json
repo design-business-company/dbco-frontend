@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@types/crypto-js": "^4.2.2",
     "sass": "^1.77.0",
     "typescript": "^5.7.2",
     "vue-router": "^4.2.5",
@@ -26,6 +27,7 @@
     "@portabletext/vue": "^1.0.11",
     "@sanity/image-url": "^1.0.2",
     "@vueuse/core": "^10.11.1",
+    "crypto-js": "^4.2.0",
     "d3": "^7.9.0",
     "embla-carousel-auto-scroll": "^8.4.0",
     "embla-carousel-vue": "^8.4.0",

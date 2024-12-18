@@ -1,37 +1,26 @@
-import {
-  createCipheriv,
-  createDecipheriv,
-  randomBytes,
-} from 'node:crypto';
+import CryptoJS from 'crypto-js';
 
 const key = useRuntimeConfig().encryptionKey;
+const parsedKey = CryptoJS.enc.Utf8.parse(key);
 
 export const encryptPassword = (plaintext: string) => {
   if (!key) {
     throw new Error('Encryption key is not set');
   }
 
-  const keyBuffer = Buffer.from(key, 'hex');
-  const iv = randomBytes(16);
-  const cipher = createCipheriv('aes-256-cbc', keyBuffer, iv);
-  let encrypted = cipher.update(plaintext, 'utf8', 'hex');
-  encrypted += cipher.final('hex');
-  return `${iv.toString('hex')}:${encrypted}`;
+  const encrypted = CryptoJS.AES.encrypt(`${plaintext}`, key)
+  
+  return encrypted.toString()
 }
-
 
 export const decryptPassword = (ciphertext: string) => {
   if (!key) {
     throw new Error('Encryption key is not set');
   }
 
-  const keyBuffer = Buffer.from(key, 'hex');
-  const [ivHex, encrypted] = ciphertext.split(':');
-  const iv = Buffer.from(ivHex, 'hex');
-  const decipher = createDecipheriv('aes-256-cbc', keyBuffer, iv);
-  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-  decrypted += decipher.final('utf8');
-  return decrypted;
+  const decrypted = CryptoJS.AES.decrypt(ciphertext, key)
+
+  return decrypted.toString(CryptoJS.enc.Utf8)
 }
 
 export const comparePasswords = ({ password, encryptedPassword }: { password: string, encryptedPassword: string }) => {

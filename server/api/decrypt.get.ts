@@ -3,7 +3,7 @@ import { decryptPassword } from "~/server/helpers";
 export default defineEventHandler(async (event) => {
   setResponseHeaders(event, {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET',
+    'Access-Control-Allow-Methods': 'GET, POST',
   });
 
   const query = getQuery(event)
