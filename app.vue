@@ -1,9 +1,11 @@
 <template>
-  <div>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </div>
+  <Lenis :options="lenisOptions" root>
+    <div>
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </div>
+  </Lenis>
 </template>
 
 <script setup>
@@ -17,21 +19,29 @@ const title = computed(() => data.value?.title);
 const description = computed(() => data.value?.description);
 
 const icons = computed(() => {
-  if (!data.value?.favicon) return []
+  if (!data.value?.favicon) return [];
 
   return [
     {
       rel: "icon",
       type: "image/png",
-      href: $urlFor(data.value.favicon).format('png').width(96).height(96).url(),
+      href: $urlFor(data.value.favicon)
+        .format("png")
+        .width(96)
+        .height(96)
+        .url(),
     },
     {
       rel: "apple-touch-icon",
-      href: $urlFor(data.value.image).format('png').width(180).height(180).url(),
+      href: $urlFor(data.value.image)
+        .format("png")
+        .width(180)
+        .height(180)
+        .url(),
       sizes: "180x180",
-    }
-  ]
-})
+    },
+  ];
+});
 
 const ogImage = computed(() => {
   if (data.value?.image) {
@@ -40,6 +50,20 @@ const ogImage = computed(() => {
 
   return "";
 });
+
+useLenis();
+
+const lenisOptions = {
+  duration: 0.7,
+  easing: function (t) {
+    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  },
+  direction: "vertical",
+  gestureDirection: "vertical",
+  smooth: true,
+  smoothTouch: false,
+  touchMultiplier: 2,
+};
 
 useHead({
   titleTemplate: (pageTitle) =>
