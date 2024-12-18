@@ -1,5 +1,5 @@
 {
   "imports": {
-    "crypto-js": "https://esm.sh/crypto-js@^4.2.0"
+    "cryptr": "https://esm.sh/cryptr@^6.3.0"
   }
 }
