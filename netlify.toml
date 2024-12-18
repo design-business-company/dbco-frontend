@@ -1,2 +1,5 @@
-[functions]
-  deno_import_map = "./server/import-map.json"
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/server/api/:splat"
+  status = 200
+  force = true
