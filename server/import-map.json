@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "crypto-js": "https://esm.sh/crypto-js@^4.2.0"
+  }
+}
