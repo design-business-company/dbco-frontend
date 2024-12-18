@@ -1,29 +1,28 @@
-import CryptoJS from 'crypto-js';
-import AES from 'crypto-js/aes';
+import Cryptr from 'cryptr';
 
 const key = useRuntimeConfig().encryptionKey;
-const parsedKey = CryptoJS.enc.Utf8.parse(key);
+const cryptr = new Cryptr(key);
 
 export const encryptPassword = (plaintext: string) => {
-  console.log('encrypting: ', plaintext, CryptoJS)
+  console.log('encrypting: ', plaintext, cryptr)
   if (!key) {
     throw new Error('Encryption key is not set');
   }
 
-  const encrypted = AES.encrypt(`${plaintext}`, key)
+  const encrypted = cryptr.encrypt(plaintext);
   
-  return encrypted.toString()
+  return encrypted
 }
 
 export const decryptPassword = (ciphertext: string) => {
-  console.log('decrypting: ', ciphertext, CryptoJS)
+  console.log('decrypting: ', ciphertext, cryptr)
   if (!key) {
     throw new Error('Encryption key is not set');
   }
 
-  const decrypted = AES.decrypt(ciphertext, key)
+  const decrypted = cryptr.decrypt(ciphertext);
 
-  return decrypted.toString(CryptoJS.enc.Utf8)
+  return decrypted
 }
 
 export const comparePasswords = ({ password, encryptedPassword }: { password: string, encryptedPassword: string }) => {
