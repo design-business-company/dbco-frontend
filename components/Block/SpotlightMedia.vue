@@ -10,7 +10,12 @@
       class="spotlight-media__container"
       :class="[{ 'full-width': items.length <= 1 }]"
     >
-      <BlockMedia v-for="item in items" :key="item._key" :media="item" />
+      <BlockMedia
+        v-for="item in items"
+        :key="item._key"
+        :media="item"
+        :sizes="sizes"
+      />
     </div>
   </div>
 </template>
@@ -22,6 +27,12 @@ const props = defineProps({
     required: true,
   },
 });
+
+const { items } = toRefs(props);
+
+const sizes = computed(() => {
+  return `(max-width: 1024px) 100vw, ${100 / (items.value?.length ?? 1)}vw`
+})
 </script>
 
 <style lang="scss" scoped>

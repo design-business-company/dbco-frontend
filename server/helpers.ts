@@ -4,7 +4,6 @@ const key = useRuntimeConfig().encryptionKey;
 const cryptr = new Cryptr(key);
 
 export const encryptPassword = (plaintext: string) => {
-  console.log('encrypting: ', plaintext, cryptr)
   if (!key) {
     throw new Error('Encryption key is not set');
   }
@@ -15,7 +14,6 @@ export const encryptPassword = (plaintext: string) => {
 }
 
 export const decryptPassword = (ciphertext: string) => {
-  console.log('decrypting: ', ciphertext, cryptr)
   if (!key) {
     throw new Error('Encryption key is not set');
   }

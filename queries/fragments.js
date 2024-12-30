@@ -11,6 +11,9 @@ export const videoFields = groq`
   settings,
   "playbackId": file.asset->playbackId,
   "aspectRatio": file.asset->data.aspect_ratio,
+  poster {
+    ${pictureFields}
+  }
 `;
 
 export const seoQuery = groq`

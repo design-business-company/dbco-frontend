@@ -1,53 +1,19 @@
 <template>
-  <picture ref="pic" :style="{ '--pic-aspect-ratio': aspectRatio }">
-    <source
-      :srcset="`
-        ${$urlFor(src).width(320).url()} 320w,
-        ${$urlFor(src).width(640).url()} 640w,
-        ${$urlFor(src).width(1024).url()} 1024w,
-        ${$urlFor(src).width(1280).url()} 1280w,
-        ${$urlFor(src).width(1600).url()} 1600w,
-        ${$urlFor(src).width(2048).url()} 2048w,
-        ${$urlFor(src).width(3072).url()} 3072w,
-        ${$urlFor(src).width(4096).url()} 4096w
-      `"
-      :sizes="`
-        (max-width: 320px) 280px,
-        (max-width: 640px) 600px,
-        (max-width: 1024px) 960px,
-        (max-width: 1280px) 1200px,
-        (max-width: 1600px) 1500px,
-        100vw
-      `"
-    />
-    <img
-      :alt="alt"
-      loading="lazy"
-      class="pic"
-      :srcset="`
-        ${$urlFor(src).width(320).url()} 320w,
-        ${$urlFor(src).width(640).url()} 640w,
-        ${$urlFor(src).width(1024).url()} 1024w,
-        ${$urlFor(src).width(1280).url()} 1280w,
-        ${$urlFor(src).width(1600).url()} 1600w,
-        ${$urlFor(src).width(2048).url()} 2048w,
-        ${$urlFor(src).width(3072).url()} 3072w,
-        ${$urlFor(src).width(4096).url()} 4096w
-      `"
-      :sizes="`
-        (max-width: 320px) 280px,
-        (max-width: 640px) 600px,
-        (max-width: 1024px) 960px,
-        (max-width: 1280px) 1200px,
-        (max-width: 1600px) 1500px,
-        100vw
-      `"
-    />
-  </picture>
+  <img
+    ref="pic"
+    :alt="alt"
+    loading="lazy"
+    class="pic"
+    :style="{ '--pic-aspect-ratio': aspectRatio }"
+    :src="initialSrc"
+    :srcset="srcSet"
+    :sizes="sizes"
+  />
 </template>
 
 <script setup>
 import gsap from "gsap";
+const { $urlFor } = useNuxtApp();
 
 const props = defineProps({
   src: {
@@ -62,6 +28,28 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
+  sizes: {
+    type: String,
+    required: false,
+    default: `
+      (max-width: 320px) 280px,
+      (max-width: 640px) 600px,
+      (max-width: 1024px) 960px,
+      (max-width: 1280px) 1200px,
+      (max-width: 1600px) 1500px,
+      100vw
+    `
+  }
+});
+
+const deviceSizes = ref([320, 640, 750, 828, 1080, 1200, 1920, 2048, 3840]);
+
+const initialSrc = computed(() => {
+  return $urlFor(props.src).width(640).url();
+})
+
+const srcSet = computed(() => {
+  return deviceSizes.value.map((size) => `${$urlFor(props.src).width(size).url()} ${size}w`).join(', ');
 });
 </script>
 

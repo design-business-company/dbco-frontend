@@ -22,6 +22,7 @@
         :src="normalizedMedia.asset._ref"
         :alt="normalizedMedia.alt"
         :aspect-ratio="normalizedMedia.aspectRatio"
+        :sizes="sizes"
       />
       <BlockCaption
         v-if="normalizedMedia.caption"
@@ -44,6 +45,10 @@ const props = defineProps({
     required: false,
     default: null,
   },
+  sizes: {
+    type: String,
+    required: false,
+  }
 });
 
 // Normalize input to always use `media`
