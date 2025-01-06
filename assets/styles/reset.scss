@@ -168,6 +168,7 @@ html {
   // this code gets added after Scrim.vue animates
   // this is done to solve a race condition where the theme updates a few moments after client renders, causing a flicker
   transition: background-color var(--transition), color var(--transition);
+  will-change: background-color, color;
   // transition-delay: var(--transition-page-delay);
 
   ::selection {

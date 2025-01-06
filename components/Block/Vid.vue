@@ -17,9 +17,12 @@
       :loop="settings.loop"
       :metadata-video-title="alt"
       :playsinline="settings.playsinline"
+      :env-key="envKey"
       ref="vid"
       accent-color="#ff0000"
       class="vid mux-player"
+      :poster="poster"
+      min-resolution="1080p"
       :class="{
         'mux-player--controls-hidden': !settings.controls,
       }"
@@ -30,6 +33,8 @@
 <script setup>
 import "@mux/mux-player";
 import { createBlurUp } from "@mux/blurup";
+
+const { $urlFor } = useNuxtApp();
 
 const props = defineProps({
   playbackId: {
@@ -60,8 +65,20 @@ const props = defineProps({
   },
 });
 
+const config = useRuntimeConfig();
+
+const envKey = computed(() => config.public.muxEnvKey);
+
 const vid = ref(null);
 const placeholder = ref(null);
+
+const poster = computed(() => {
+  if (!props.poster) return null;
+
+  const width = vid.value ? vid.value.clientWidth : 1080;
+
+  return $urlFor(props.poster).width(width).auto('format').quality(80).url();
+})
 
 if (props.playbackId) {
   createBlurUp(props.playbackId, {}).then((res) => {

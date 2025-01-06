@@ -9,7 +9,10 @@
         item.title
       }}</Text>
       <div class="snack-grid__media">
-        <BlockMedia :media="item.media?.[0]" />
+        <BlockMedia
+          :media="item.media?.[0]"
+          sizes="(min-width: 1024px) 16vw, (min-width: 600px) 25vw, 50vw"
+        />
       </div>
       <div class="snack-grid__description text-caption-2">
         <SanityContent

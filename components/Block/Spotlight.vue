@@ -34,18 +34,18 @@
               </span>
             </Observer>
           </Text>
-          <Observer
+          <!-- <Observer
             class="spotlight__tags"
             ref="role"
             :onEnter="onEnter"
             :onLeave="onLeave"
           >
             <BlockTag v-for="tag in tags" :text="tag.title" :key="tag._key" />
-          </Observer>
+          </Observer> -->
         </Column>
 
         <Column spanMobile="12" spanLaptop="6" startMobile="1" startLaptop="7">
-          <Observer
+          <!-- <Observer
             :onEnter="onEnter"
             :onLeave="onLeave"
             class="spotlight__details"
@@ -69,7 +69,7 @@
             >
               <SanityContent v-if="credits?.text" :blocks="credits.text" />
             </Text>
-          </Observer>
+          </Observer> -->
         </Column>
 
         <Space size="small" sizeTablet="big" />
