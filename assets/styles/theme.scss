@@ -151,8 +151,8 @@
 
   --foreground-secondary: color-mix(
     in srgb,
-    var(--foreground-primary) 70%,
-    var(--background-primary) 30%
+    var(--foreground-primary) 60%,
+    var(--background-primary) 40%
   );
 
   --foreground-tertiary: color-mix(
