@@ -29,8 +29,6 @@ export const useTheme = () => {
   const getProcessedTheme = (props: ColorTheme): Omit<ColorTheme, "theme"> => {
     let theme;
 
-    console.log(props);
-
     switch (props.theme) {
       case "custom":
         // Check for undefined optional properties
@@ -45,7 +43,6 @@ export const useTheme = () => {
             accent: props.accentPrimary.hex,
           };
         } else {
-          console.log("errored theme: ", props);
           // Provide fallback or throw an error if these are mandatory
           throw new Error("Missing required properties for custom theme.");
         }

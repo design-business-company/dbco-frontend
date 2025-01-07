@@ -1,5 +1,5 @@
 <template>
-  <section :class="['page']">
+  <section :class="['page', 'contact']">
     <ContactTextOnPath />
     <ContentBlocks :content="data.content" />
   </section>

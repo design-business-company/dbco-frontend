@@ -5,9 +5,10 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import * as d3 from "d3";
+import { gsap } from "gsap";
 
 const svgContainer = ref(null);
-const text = ref("We design, you business.");
+const text = ref("“We design, you business.”");
 let svg, path, textPath, textElement, width, height, isTransitioning;
 let typingTimeouts = [];
 let currentOffset = 0; // Initial offset starts at 0%
@@ -18,25 +19,31 @@ const line = d3.line().curve(d3.curveBasis);
 
 function fadeInText() {
   const fullText = text.value; // Get the full text value
-  const totalDuration = 2000; // Total typing duration in milliseconds
-  const stepDuration = totalDuration / fullText.length; // Time per character
+  const totalDuration = 2; // Total typing duration in seconds
+  const charDuration = totalDuration / fullText.length; // Time per character
 
-  // Clear any existing timeouts to prevent scrambling
-  typingTimeouts.forEach((timeout) => clearTimeout(timeout));
-  typingTimeouts = []; // Reset the timeout array
+  // Clear existing animations
+  gsap.killTweensOf(textElement);
 
   // Clear the text content initially
   textElement.text("");
 
-  // Add characters one by one with a delay
-  fullText.split("").forEach((char, index) => {
-    const timeout = setTimeout(() => {
-      const currentText = textElement.text(); // Get the current text content
-      textElement.text(currentText + char); // Append the next character
-    }, index * stepDuration);
+  // Create a GSAP timeline
+  const tl = gsap.timeline();
 
-    // Store the timeout so we can clear it later
-    typingTimeouts.push(timeout);
+  // Add characters one by one
+  fullText.split("").forEach((char, index) => {
+    tl.to(
+      {},
+      {
+        duration: charDuration, // Delay for each character
+        onUpdate: () => {
+          // Update text to include characters up to the current index
+          textElement.text(fullText.slice(0, index + 1));
+        },
+      },
+      index * charDuration // Start time for each character
+    );
   });
 }
 
@@ -92,6 +99,7 @@ function generatePath(numPoints = 3) {
 function updatePath() {
   if (isTransitioning) return;
 
+  // updateOffset();
   isTransitioning = true;
   currentPoints = generatePath();
   const newPath = line(currentPoints);
@@ -103,8 +111,7 @@ function updatePath() {
     .selectAll("path")
     .attr("d", newPath);
 
-  let randomOffset =
-    window.innerWidth < 800 ? Math.random() * 5 + 10 : Math.random() * 25 + 10;
+  let randomOffset = window.innerWidth < 800 ? 0 : Math.random() * 25 + 10;
 
   textElement
     .transition()
@@ -187,8 +194,16 @@ onUnmounted(() => {
     font-family: serif;
     letter-spacing: -0.04em;
     fill: var(--foreground-primary);
-    font-size: clamp(54px, 8vw, 188px);
     cursor: pointer;
+    font-size: 40px;
+
+    @media (min-height: 600px) {
+      font-size: 44px;
+    }
+
+    @include tablet {
+      font-size: clamp(54px, 8vw, 128px);
+    }
   }
 }
 </style>
