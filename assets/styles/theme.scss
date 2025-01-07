@@ -121,11 +121,11 @@
   --gray-950: #0f0e0e;
 
   /* backgrounds */
-  --background-primary: var(--white);
-  --foreground-primary: var(--gray-950);
+  --background-primary: var(--black);
+  --foreground-primary: var(--gray-50);
 
   /* accent */
-  --accent-primary: var(--gray-950);
+  --accent-primary: var(--gray-50);
   --accent-primary-text: var(--indigo-50);
   --accent-error: var(--red-500);
   --accent-valid: var(--green-500);

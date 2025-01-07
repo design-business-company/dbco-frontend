@@ -50,9 +50,9 @@ const scrollTriggerRef = ref(null);
 const processedTheme = computed(() => {
   return {
     theme: props.theme,
-    background: props.backgroundPrimary?.hex,
-    foreground: props.foregroundPrimary?.hex,
-    accent: props.accentPrimary?.hex,
+    backgroundPrimary: props.backgroundPrimary,
+    foregroundPrimary: props.foregroundPrimary,
+    accentPrimary: props.accentPrimary,
   };
 });
 

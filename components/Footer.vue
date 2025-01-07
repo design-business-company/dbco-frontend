@@ -1,7 +1,13 @@
 <template>
   <Grid v-if="data" element="footer" class="site-footer">
     <Space size="huger" />
-    <Column v-if="data.links" span="12" span-tablet="6" span-laptop="2" class="social">
+    <Column
+      v-if="data.links"
+      span="12"
+      span-tablet="6"
+      span-laptop="2"
+      class="social"
+    >
       <Text size="caption-2" class="title">{{ data.links.title }}</Text>
       <div class="content">
         <div v-for="link in data.links.content">
@@ -95,14 +101,18 @@ const { resetTheme } = useTheme();
 
 const footerRef = ref(null);
 
-const { stop } = useIntersectionObserver(footerRef, ([entry]) => {
-  if (entry.isIntersecting) {
-    resetTheme();
+const { stop } = useIntersectionObserver(
+  footerRef,
+  ([entry]) => {
+    if (entry.isIntersecting) {
+      resetTheme();
+    }
+  },
+  {
+    threshold: 0,
+    rootMargin: `0px 0px 0px 0px`,
   }
-}, {
-  threshold: 0,
-  rootMargin: `0px 0px 0px 0px`,
-})
+);
 
 const customSerializers = {
   marks: {
@@ -116,7 +126,7 @@ const date = new Date().getFullYear();
 
 onBeforeUnmount(() => {
   stop();
-})
+});
 </script>
 
 <style lang="scss" scoped>
@@ -131,11 +141,11 @@ onBeforeUnmount(() => {
 }
 
 .title {
-  color: var(--foreground-primary);
+  color: var(--foreground-secondary);
 }
 
 .content {
-  color: var(--foreground-secondary);
+  color: var(--foreground-primary);
 
   &:deep(a) {
     color: var(--foreground-primary);
