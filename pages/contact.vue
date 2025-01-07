@@ -1,11 +1,7 @@
 <template>
   <section :class="['page']">
-    <template v-if="status === 'pending'">
-      <p>pending</p>
-    </template>
-    <template v-else>
-      <ContentBlocks :content="data.content" />
-    </template>
+    <ContactTextOnPath />
+    <ContentBlocks :content="data.content" />
   </section>
 </template>
 

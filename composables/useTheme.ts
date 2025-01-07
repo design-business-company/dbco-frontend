@@ -5,6 +5,9 @@ export interface ColorTheme {
   background: string;
   foreground: string;
   accent: string;
+  backgroundPrimary?: { hex: string };
+  foregroundPrimary?: { hex: string };
+  accentPrimary?: { hex: string };
 }
 
 export const defaultThemes = {
@@ -24,16 +27,40 @@ export const useTheme = () => {
   const deviceStore = useDeviceStore();
 
   const getProcessedTheme = (props: ColorTheme): Omit<ColorTheme, "theme"> => {
-    if (!props.theme || props.theme === "light") return defaultThemes.light;
-    if (props.theme === "dark") return defaultThemes.dark;
-    if (props.theme === "custom") {
-      return {
-        background: props.background ?? defaultThemes.light.background,
-        foreground: props.foreground ?? defaultThemes.light.foreground,
-        accent: props.accent ?? defaultThemes.light.accent,
-      };
+    let theme;
+
+    console.log(props);
+
+    switch (props.theme) {
+      case "custom":
+        // Check for undefined optional properties
+        if (
+          props.backgroundPrimary?.hex &&
+          props.foregroundPrimary?.hex &&
+          props.accentPrimary?.hex
+        ) {
+          theme = {
+            background: props.backgroundPrimary.hex,
+            foreground: props.foregroundPrimary.hex,
+            accent: props.accentPrimary.hex,
+          };
+        } else {
+          console.log("errored theme: ", props);
+          // Provide fallback or throw an error if these are mandatory
+          throw new Error("Missing required properties for custom theme.");
+        }
+        break;
+
+      case "light":
+        theme = defaultThemes.light;
+        break;
+
+      default:
+        theme = defaultThemes.dark;
+        break;
     }
-    return defaultThemes.light;
+
+    return theme;
   };
 
   const updateCssVariables = (theme: Omit<ColorTheme, "theme">) => {
