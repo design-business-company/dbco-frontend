@@ -254,6 +254,14 @@ const onLeave = (ev) => {
 
   &.--indented {
     text-indent: var(--text-indent);
+
+    :deep(span) {
+      text-indent: 0;
+    }
+
+    :deep(.underline) {
+      text-decoration-color: var(--foreground-tertiary);
+    }
   }
 
   @include laptop {
