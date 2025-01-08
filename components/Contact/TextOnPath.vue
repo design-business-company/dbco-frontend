@@ -1,16 +1,18 @@
 <template>
   <Grid>
     <Column element="figure">
+      <!-- Hidden element for screen readers -->
+      <span id="accessibleTitle" class="sr-only">
+        An interactive string of text that reads, "We design, you business".
+        When clicked, the string of text animates to create a variety of
+        different shapes.
+      </span>
+
       <Observer :once="true" :onEnter="fadeInCharacters" class="text-on-path">
         <svg
           :viewBox="`0 0 ${svgBox.width} ${svgBox.height}`"
-          aria-labelledby="svgTitle"
+          aria-labelledby="accessibleTitle"
         >
-          <title id="svgTitle">
-            An interactive string of text that reads, "We design, you business".
-            When clicked, the string of text animates to create a variety of
-            different shapes.
-          </title>
           <path id="myPath" ref="path" />
           <text>
             <textPath
@@ -56,23 +58,28 @@ const characters = ref("“We design, you business.”".split(""));
 // Paths for different screen sizes
 const mobilePaths = [
   {
-    pathData: createSineWavePath(0, 0, 800, 250, 800),
+    pathData: createSineWavePath(-45, -40, 900, 250, 800),
     startOffset: "0%",
   },
-  { pathData: createSpiralPath(400, 400, 4, 500), startOffset: "10%" },
-  { pathData: createPolygonPath(400, 400, 4, 300), startOffset: "37%" },
+  { pathData: createSpiralPath(400, 400, 3, 750), startOffset: "1%" },
+  { pathData: createPolygonPath(400, 400, 4, 300), startOffset: "19%" },
   { pathData: createCirclePath(400, 100, 500), startOffset: "58%" },
-  { pathData: createPolygonPath(400, 400, 3, 300), startOffset: "0%" },
-  { pathData: createSineWavePath(0, 200, 400, 150, 800), startOffset: "0%" },
+  { pathData: createPolygonPath(400, 400, 3, 300), startOffset: "20%" },
+  {
+    pathData: createSineWavePath(0, 400, 400, 96 / 2, 800),
+    startOffset: "22%",
+  },
 ];
 
 const laptopPaths = [
-  { pathData: createSineWavePath(0, 50, 700, 150, 1600), startOffset: "0%" },
+  { pathData: createSineWavePath(-75, 50, 700, 150, 1600), startOffset: "0%" },
   { pathData: createSpiralPath(500, 550, 1, 600), startOffset: "20%" },
-  { pathData: createPolygonPath(600, 350, 3, 400), startOffset: "18.5%" },
+  { pathData: createSpiralPath(600, 350, 4, 600), startOffset: "10%" },
+  { pathData: createPolygonPath(600, 400, 3, 310), startOffset: "0%" },
+  { pathData: createPolygonPath(600, 400, 4, 310), startOffset: "0%" },
   { pathData: createCirclePath(600, -200, 800), startOffset: "59%" },
   { pathData: createSpiralPath(600, 400, 3, 550), startOffset: "5%" },
-  { pathData: createPolygonPath(600, 350, 8, 350), startOffset: "0%" },
+  { pathData: createPolygonPath(600, 400, 8, 300), startOffset: "0%" },
   { pathData: createSineWavePath(-100, 400, 150, 40, 1650), startOffset: "0%" },
 ];
 
@@ -187,7 +194,7 @@ function fadeInCharacters() {
 
 <style lang="scss" scoped>
 .text-on-path {
-  height: clamp(200px, 50vmax, 400px);
+  height: clamp(300px, 50vmax, 400px);
 
   @include tablet {
     height: clamp(300px, 40vmax, 800px);
@@ -213,7 +220,7 @@ function fadeInCharacters() {
     cursor: pointer;
     font-family: "Times";
     fill: var(--foreground-primary);
-    font-size: 96px;
+    font-size: 114px;
 
     @include tablet {
       font-size: 144px;

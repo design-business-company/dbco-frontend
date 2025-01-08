@@ -49,6 +49,10 @@ export const useDeviceStore = defineStore("device", {
       foreground: "#000000",
       accent: "#ff0000",
     } as Theme,
+    // inactivity
+    isInactive: false as boolean, // Tracks user inactivity
+    inactivityTimeout: null as ReturnType<typeof setTimeout> | null,
+    boundResetInactivity: null as ((e: Event) => void) | null,
   }),
   actions: {
     setTouch(val: boolean) {
@@ -129,6 +133,52 @@ export const useDeviceStore = defineStore("device", {
       if (newTheme.foreground !== undefined)
         this.theme.foreground = newTheme.foreground;
       if (newTheme.accent !== undefined) this.theme.accent = newTheme.accent;
+    },
+    setInactive(val: boolean) {
+      this.isInactive = val;
+    },
+
+    // Start tracking user activity
+    startTracking(duration: number = 2000) {
+      const resetInactivity = () => {
+        this.setInactive(false); // Mark user as active
+        if (this.inactivityTimeout) {
+          clearTimeout(this.inactivityTimeout);
+        }
+
+        this.inactivityTimeout = setTimeout(() => {
+          this.setInactive(true); // Mark user as inactive
+        }, duration);
+      };
+
+      // Bind `resetInactivity` to the store instance to ensure proper `this` context
+      const boundResetInactivity = resetInactivity.bind(this);
+
+      // Add event listeners for user activity
+      window.addEventListener("mousemove", boundResetInactivity);
+      window.addEventListener("scroll", boundResetInactivity);
+      window.addEventListener("keydown", boundResetInactivity);
+      window.addEventListener("touchstart", boundResetInactivity);
+
+      // Save the bound function to remove listeners later
+      this.boundResetInactivity = boundResetInactivity;
+    },
+
+    // Stop tracking user activity
+    stopTracking() {
+      // Ensure the function is bound and event listeners are removed
+      if (this.boundResetInactivity) {
+        window.removeEventListener("mousemove", this.boundResetInactivity);
+        window.removeEventListener("scroll", this.boundResetInactivity);
+        window.removeEventListener("keydown", this.boundResetInactivity);
+        window.removeEventListener("touchstart", this.boundResetInactivity);
+      }
+
+      // Clear the inactivity timeout
+      if (this.inactivityTimeout) {
+        clearTimeout(this.inactivityTimeout);
+        this.inactivityTimeout = null;
+      }
     },
   },
 });

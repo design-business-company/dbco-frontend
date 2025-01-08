@@ -18,7 +18,7 @@
 @use "~/assets/styles/mixins";
 
 .static-header-wrapper {
-  margin-top: var(--huge);
+  margin-top: var(--biggest);
 
   @include tablet {
     margin-top: 0;
