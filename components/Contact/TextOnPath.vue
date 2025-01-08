@@ -1,188 +1,207 @@
 <template>
-  <div class="d3-container" ref="svgContainer" @click="updatePath"></div>
+  <Grid>
+    <Column element="figure">
+      <Observer :once="true" :onEnter="fadeInCharacters" class="text-on-path">
+        <svg
+          :viewBox="`0 0 ${svgBox.width} ${svgBox.height}`"
+          aria-labelledby="svgTitle"
+        >
+          <title id="svgTitle">
+            An interactive string of text that reads, "We design, you business".
+            When clicked, the string of text animates to create a variety of
+            different shapes.
+          </title>
+          <path id="myPath" ref="path" />
+          <text>
+            <textPath
+              href="#myPath"
+              :startOffset="currentPaths[0].startOffset"
+              text-anchor="start"
+              ref="pathText"
+              @click="morphToNextPath"
+            >
+              <tspan v-for="(char, i) in characters" :key="i">
+                {{ char }}
+              </tspan>
+            </textPath>
+          </text>
+        </svg>
+      </Observer>
+    </Column>
+  </Grid>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
-import * as d3 from "d3";
-import { gsap } from "gsap";
+import { ref, onMounted, computed, watch } from "vue";
+import gsap from "gsap";
+import MorphSVGPlugin from "gsap/MorphSVGPlugin";
+import { useDeviceStore } from "~/stores/device";
 
-const svgContainer = ref(null);
-const text = ref("“We design, you business.”");
-let svg, path, textPath, textElement, width, height, isTransitioning;
-let typingTimeouts = [];
-let currentOffset = 0; // Initial offset starts at 0%
-let currentPoints = []; // Store the current path points
+import {
+  createSpiralPath,
+  createPolygonPath,
+  createSineWavePath,
+  createCirclePath,
+} from "@/assets/scripts/utils/createSvgShapes.js";
 
-const padding = 24; // Vertical padding
-const line = d3.line().curve(d3.curveBasis);
+gsap.registerPlugin(MorphSVGPlugin);
 
-function fadeInText() {
-  const fullText = text.value; // Get the full text value
-  const totalDuration = 2; // Total typing duration in seconds
-  const charDuration = totalDuration / fullText.length; // Time per character
+const device = useDeviceStore();
+const svgBox = ref({ width: 800, height: 800 }); // Reactive SVG dimensions
+const path = ref(null);
+const pathText = ref(null);
+const svgContainer = ref(null); // Reference for the SVG container
+const characters = ref("“We design, you business.”".split(""));
 
-  // Clear existing animations
-  gsap.killTweensOf(textElement);
+// Paths for different screen sizes
+const mobilePaths = [
+  {
+    pathData: createSineWavePath(0, 0, 800, 250, 800),
+    startOffset: "0%",
+  },
+  { pathData: createSpiralPath(400, 400, 4, 500), startOffset: "10%" },
+  { pathData: createPolygonPath(400, 400, 4, 300), startOffset: "37%" },
+  { pathData: createCirclePath(400, 100, 500), startOffset: "58%" },
+  { pathData: createPolygonPath(400, 400, 3, 300), startOffset: "0%" },
+  { pathData: createSineWavePath(0, 200, 400, 150, 800), startOffset: "0%" },
+];
 
-  // Clear the text content initially
-  textElement.text("");
+const laptopPaths = [
+  { pathData: createSineWavePath(0, 50, 700, 150, 1600), startOffset: "0%" },
+  { pathData: createSpiralPath(500, 550, 1, 600), startOffset: "20%" },
+  { pathData: createPolygonPath(600, 350, 3, 400), startOffset: "18.5%" },
+  { pathData: createCirclePath(600, -200, 800), startOffset: "59%" },
+  { pathData: createSpiralPath(600, 400, 3, 550), startOffset: "5%" },
+  { pathData: createPolygonPath(600, 350, 8, 350), startOffset: "0%" },
+  { pathData: createSineWavePath(-100, 400, 150, 40, 1650), startOffset: "0%" },
+];
 
-  // Create a GSAP timeline
-  const tl = gsap.timeline();
+const currentPaths = computed(() =>
+  svgBox.value.width === 800 ? mobilePaths : laptopPaths
+);
 
-  // Add characters one by one
-  fullText.split("").forEach((char, index) => {
-    tl.to(
-      {},
-      {
-        duration: charDuration, // Delay for each character
-        onUpdate: () => {
-          // Update text to include characters up to the current index
-          textElement.text(fullText.slice(0, index + 1));
-        },
-      },
-      index * charDuration // Start time for each character
+let index = 0;
+
+onMounted(() => {
+  updateSvgDimensions();
+
+  const tspans = pathText.value.querySelectorAll("tspan");
+  gsap.set(tspans, { opacity: 0 });
+
+  if (path.value && pathText.value) {
+    path.value.setAttribute("d", currentPaths.value[0].pathData);
+    pathText.value.setAttribute(
+      "startOffset",
+      currentPaths.value[0].startOffset || "0%"
     );
+  }
+});
+
+watch(
+  () => device.winWidth,
+  () => updateSvgDimensions()
+);
+
+function updateSvgDimensions() {
+  const wasMobile = svgBox.value.width === 800;
+
+  svgBox.value =
+    device.winWidth <= 600
+      ? { width: 800, height: 800 }
+      : { width: 1200, height: 800 };
+
+  const isMobile = svgBox.value.width === 800;
+
+  if (wasMobile !== isMobile) {
+    index = 0;
+    path.value.setAttribute("d", currentPaths.value[0].pathData);
+    pathText.value.setAttribute(
+      "startOffset",
+      currentPaths.value[0].startOffset || "0%"
+    );
+  }
+}
+
+function morphToNextPath() {
+  index = (index + 1) % currentPaths.value.length;
+
+  const { pathData, startOffset } = currentPaths.value[index];
+  const tspans = pathText.value.querySelectorAll("tspan");
+
+  const randomDuration = gsap.utils.random(1, 2);
+
+  // Array to define fill options
+  const fillOptions = [
+    "var(--foreground-primary)",
+    "#FE9D26", // yellow
+    "#69152A", // plum
+    "#72C3E3", // cyan
+    "#37B74A", // green
+    () => `hsl(${gsap.utils.random(0, 360)}, 85%, 60%)`,
+  ];
+
+  // Select the current fill style (cycle through the array)
+  const currentFill = getRandomItem(fillOptions);
+
+  // Morph the path
+  gsap.to(path.value, {
+    duration: randomDuration,
+    morphSVG: { shape: pathData, shapeIndex: 0 },
+    ease: "power4.out",
+  });
+
+  // Animate the startOffset of the text
+  gsap.to(pathText.value, {
+    duration: randomDuration / 2,
+    attr: {
+      startOffset: startOffset || "50%",
+    },
+    ease: "power4.out",
+  });
+
+  // Animate tspan fills with stagger
+  gsap.to(tspans, {
+    fill: () =>
+      typeof currentFill === "function" ? currentFill() : currentFill,
+    duration: 0.5,
+    stagger: 0.01,
+    ease: "power2.out",
   });
 }
 
-function updateDimensions() {
-  const rect = svgContainer.value.getBoundingClientRect();
-  width = rect.width;
-  height = rect.height;
-
-  if (svg) {
-    svg.attr("width", width).attr("height", height);
-
-    currentPoints = generatePath();
-    const resizedPath = line(currentPoints);
-
-    path.attr("d", resizedPath);
-    textPath.attr("d", resizedPath);
-
-    // Trigger the typing effect again
-    fadeInText();
-  }
+function getRandomItem(array) {
+  return array[Math.floor(Math.random() * array.length)];
 }
 
-function generatePath(numPoints = 3) {
-  if (window.innerWidth > 800) numPoints = 7;
+function fadeInCharacters() {
+  const tspans = pathText.value.querySelectorAll("tspan");
 
-  const points = [];
-
-  if (window.innerWidth < 800) {
-    points.push([padding, padding]);
-    for (let i = 1; i < numPoints - 1; i++) {
-      const x = padding + Math.random() * (width - 2 * padding);
-      const y = padding + Math.random() * (height - 2 * padding);
-      points.push([x, y]);
-    }
-    points.push([width - padding, height - padding]);
-  } else {
-    points.push([padding, padding + Math.random() * (height - 2 * padding)]);
-    for (let i = 1; i < numPoints - 1; i++) {
-      const x = padding + Math.random() * (width - 2 * padding);
-      const y = padding + Math.random() * (height - 2 * padding);
-      points.push([x, y]);
-    }
-    points.push([
-      width - padding,
-      padding + Math.random() * (height - 2 * padding),
-    ]);
-  }
-
-  points.sort((a, b) => a[0] - b[0]);
-  return points;
+  gsap.to(tspans, {
+    opacity: 1,
+    duration: 0.1,
+    stagger: 0.05,
+    ease: "power2.out",
+  });
 }
-
-function updatePath() {
-  if (isTransitioning) return;
-
-  // updateOffset();
-  isTransitioning = true;
-  currentPoints = generatePath();
-  const newPath = line(currentPoints);
-
-  svg
-    .transition()
-    .duration(1000)
-    .ease(d3.easeCubicInOut)
-    .selectAll("path")
-    .attr("d", newPath);
-
-  let randomOffset = window.innerWidth < 800 ? 0 : Math.random() * 25 + 10;
-
-  textElement
-    .transition()
-    .duration(1000)
-    .ease(d3.easeCubicInOut)
-    .attrTween("startOffset", () =>
-      d3.interpolate(`${currentOffset}%`, `${randomOffset}%`)
-    )
-    .on("end", () => {
-      currentOffset = randomOffset;
-      isTransitioning = false;
-    });
-}
-
-function initD3() {
-  const rect = svgContainer.value.getBoundingClientRect();
-  width = rect.width;
-  height = rect.height;
-
-  svg = d3
-    .select(svgContainer.value)
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-  currentPoints = generatePath();
-  const initialPath = line(currentPoints);
-
-  textPath = svg
-    .append("defs")
-    .append("path")
-    .attr("id", "textPath")
-    .attr("d", initialPath);
-
-  path = svg
-    .append("path")
-    .attr("d", initialPath)
-    .attr("stroke", "currentColor")
-    .attr("stroke-width", 2)
-    .attr("fill", "none");
-
-  textElement = svg
-    .append("text")
-    .append("textPath")
-    .attr("xlink:href", "#textPath")
-    .attr("startOffset", `${currentOffset}%`)
-    .attr("text-anchor", "start")
-    .text("");
-
-  // Trigger the typing effect
-  fadeInText();
-}
-
-onMounted(() => {
-  initD3();
-  window.addEventListener("windowResized", updateDimensions);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("windowResized", updateDimensions);
-});
 </script>
 
 <style lang="scss" scoped>
-.d3-container {
-  height: clamp(300px, 40vmax, 800px);
-  width: 100%;
+.text-on-path {
+  height: clamp(200px, 50vmax, 400px);
+
+  @include tablet {
+    height: clamp(300px, 40vmax, 800px);
+  }
+
+  @include laptop {
+    margin-top: -2%;
+    margin-bottom: -2%;
+  }
 
   :deep(svg) {
     width: 100%;
     height: 100%;
+    overflow: visible;
   }
 
   :deep(path) {
@@ -191,19 +210,19 @@ onUnmounted(() => {
   }
 
   :deep(text) {
-    font-family: serif;
-    letter-spacing: -0.04em;
-    fill: var(--foreground-primary);
     cursor: pointer;
-    font-size: 40px;
-
-    @media (min-height: 600px) {
-      font-size: 44px;
-    }
+    font-family: "Times";
+    fill: var(--foreground-primary);
+    font-size: 96px;
 
     @include tablet {
-      font-size: clamp(54px, 8vw, 128px);
+      font-size: 144px;
     }
   }
+}
+
+@font-face {
+  src: url("~/assets/fonts/DBC-TimesNow.otf");
+  font-family: "Times";
 }
 </style>
