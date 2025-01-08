@@ -22,8 +22,6 @@
     ></BlockSnackGrid>
 
     <Grid v-if="block._type === 'richText'">
-      <Space />
-
       <Column>
         <BlockRichText
           :blocks="block.text"
@@ -31,7 +29,6 @@
           :alignment="block.alignment"
         />
       </Column>
-      <Space />
     </Grid>
 
     <Grid v-if="block._type === 'media'">
@@ -43,11 +40,9 @@
     </Grid>
 
     <div v-if="block._type === 'hyperText'">
-      <Space />
       <Text size="body-1">
         <BlockHypertext :blocks="block.text" />
       </Text>
-      <Space />
     </div>
 
     <BlockTextBlock

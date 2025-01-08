@@ -1,5 +1,6 @@
 <template>
-  <section :class="['page']">
+  <section :class="['page', 'contact']">
+    <header class="sr-only"><h1>Contact Design Business Company</h1></header>
     <ContactTextOnPath />
     <ContentBlocks :content="data.content" />
   </section>
