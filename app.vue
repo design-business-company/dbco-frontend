@@ -11,6 +11,7 @@
 <script setup>
 import { settingsSeoQuery } from "~/queries/settingsSeo";
 import pageSEO from "~/assets/scripts/pages/seo";
+
 const { $urlFor } = useNuxtApp();
 
 const { data, error, status, refresh } = await useSanityQuery(settingsSeoQuery);
@@ -65,19 +66,19 @@ const lenisOptions = {
   touchMultiplier: 2,
 };
 
-// useHead({
-//   titleTemplate: (pageTitle) =>
-//     pageTitle ? `${pageTitle} • ${title?.value}` : title?.value,
-//   link: icons.value,
-// });
+useHead({
+  titleTemplate: (pageTitle) =>
+    pageTitle ? `${pageTitle} • ${title?.value}` : title?.value,
+  link: icons.value,
+});
 
-// PageSetup({
-//   seoMeta: {
-//     description: description?.value,
-//     image: ogImage?.value,
-//     url: `https://dbco.online`,
-//   },
-// });
+useSeoMeta(
+  pageSEO({
+    description: description?.value,
+    image: ogImage?.value,
+    url: `https://dbco.online`,
+  })
+);
 </script>
 
 <style>
