@@ -62,7 +62,8 @@ useSeoMeta({
   ogTitle: "My Amazing Site",
   description: "This is my amazing site, let me tell you all about it.",
   ogDescription: "This is my amazing site, let me tell you all about it.",
-  ogImage: "https://example.com/image.png",
+  ogImage:
+    "https://cdn.sanity.io/images/5jjj3zhb/production/ec37f9d70ab0e425132020df39beaa4051f9303c-2724x1740.jpg?w=1200&auto=format",
   twitterCard: "summary_large_image",
 });
 
