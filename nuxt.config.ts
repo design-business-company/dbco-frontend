@@ -2,7 +2,6 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr: true,
   modules: [
     "@pinia/nuxt",
     "@nuxtjs/sanity",
