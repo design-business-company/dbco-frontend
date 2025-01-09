@@ -11,6 +11,7 @@
 <script setup>
 import { settingsSeoQuery } from "~/queries/settingsSeo";
 import pageSEO from "~/assets/scripts/pages/seo";
+import { useRoute } from "vue-router";
 
 const { $urlFor } = useNuxtApp();
 
@@ -52,6 +53,9 @@ const ogImage = computed(() => {
   return "";
 });
 
+const route = useRoute();
+const url = computed(() => `https://dbco.online${route.path}`); // Reactive URL
+
 useLenis();
 
 const lenisOptions = {
@@ -76,7 +80,7 @@ useSeoMeta(
   pageSEO({
     description: description?.value,
     image: ogImage?.value,
-    url: `https://dbco.online`,
+    url: url.value,
     logo: $urlFor(data.value.favicon)
       .format("png")
       .width(512)
