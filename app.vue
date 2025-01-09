@@ -11,6 +11,7 @@
 <script setup>
 import { settingsSeoQuery } from "~/queries/settingsSeo";
 import pageSEO from "~/assets/scripts/pages/seo";
+
 const { $urlFor } = useNuxtApp();
 
 const { data, error, status, refresh } = await useSanityQuery(settingsSeoQuery);
@@ -71,13 +72,13 @@ useHead({
   link: icons.value,
 });
 
-PageSetup({
-  seoMeta: {
+useSeoMeta(
+  pageSEO({
     description: description?.value,
     image: ogImage?.value,
     url: `https://dbco.online`,
-  },
-});
+  })
+);
 </script>
 
 <style>

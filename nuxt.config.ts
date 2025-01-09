@@ -2,6 +2,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: true,
   modules: [
     "@pinia/nuxt",
     "@nuxtjs/sanity",
@@ -34,11 +35,11 @@ export default defineNuxtConfig({
 
   // remove entry.css file from manifest in favor of inlining styles in app.vue
   hooks: {
-    'build:manifest': (manifest) => {
-      const css = manifest['node_modules/nuxt/dist/app/entry.js']?.css
+    "build:manifest": (manifest) => {
+      const css = manifest["node_modules/nuxt/dist/app/entry.js"]?.css;
       if (css) {
         for (let i = css.length - 1; i >= 0; i--) {
-          if (css[i].startsWith('entry')) css.splice(i, 1)
+          if (css[i].startsWith("entry")) css.splice(i, 1);
         }
       }
     },
@@ -56,7 +57,7 @@ export default defineNuxtConfig({
     encryptionKey: process.env.ENCRYPTION_KEY,
     public: {
       muxEnvKey: process.env.MUX_ENV_KEY,
-    }
+    },
   },
 
   // Details on warning in console: https://github.com/nuxt-modules/sanity/issues/1059

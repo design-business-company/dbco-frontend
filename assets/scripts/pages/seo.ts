@@ -12,7 +12,7 @@ export default function pageSEO(seoData: SEOData) {
     description: seoData.description,
     author: "Design Business Company",
     publisher: "Design Business Company",
-    robots: !seoData.noIndexNoFollow ? "noindex, nofollow" : "index, follow",
+    robots: seoData.noIndexNoFollow ? "noindex, nofollow" : "index, follow",
 
     // opengraph
     ogTitle: seoData.title,
@@ -34,7 +34,7 @@ export default function pageSEO(seoData: SEOData) {
   // Filter out empty values so they don't override the globals
   const filteredData = Object.fromEntries(
     Object.entries(defaultData).filter(([_, value]) => Boolean(value))
-  )
+  );
 
   return filteredData;
 }

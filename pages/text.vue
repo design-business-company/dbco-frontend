@@ -97,7 +97,6 @@
 </template>
 
 <script setup>
-import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 const { setPageTheme } = useTheme();
 
@@ -107,11 +106,6 @@ onBeforeMount(() => {
     foreground: "#cccccc",
     accent: "#0000ff",
   });
-});
-
-// Run common mount/unmount scripts. Seup SEO, etc.
-PageSetup({
-  seoMeta: { title: "Text" },
 });
 
 // Define page transitions or other page meta

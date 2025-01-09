@@ -16,13 +16,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { onMounted, onUnmounted, ref } from "vue";
-import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
-
-// Run common mount/unmount scripts. Seup SEO, etc.
-PageSetup({
-  seoMeta: { title: "Three" },
-});
 
 // Define page transitions or other page meta
 definePageMeta({

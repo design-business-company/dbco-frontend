@@ -18,13 +18,8 @@
 </template>
 
 <script setup>
-import PageSetup from "~/composables/PageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 import gsap from "gsap";
-
-PageSetup({
-  seoMeta: { title: "Viewport" },
-});
 
 definePageMeta({
   pageTransition: pageTransitionDefault(),

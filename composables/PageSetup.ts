@@ -1,6 +1,6 @@
 // ~/composables/PageSetup.ts
 import { onMounted, onUnmounted } from "vue";
-import pageSEO from "~/assets/scripts/pages/seo"; 
+import pageSEO from "~/assets/scripts/pages/seo";
 import { type SEOData } from "~/assets/scripts/pages/seo";
 
 interface PageSetupOptions {

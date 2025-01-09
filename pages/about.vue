@@ -8,7 +8,7 @@
 import { watch } from "vue";
 import { useRoute } from "vue-router";
 import { useTheme } from "~/composables/useTheme";
-import PageSetup from "~/composables/PageSetup";
+import pageSEO from "~/assets/scripts/pages/seo";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 import { aboutQuery } from "~/queries/pages/about";
 import { useEventBus } from "~/composables/useEventBus";
@@ -44,19 +44,12 @@ onMounted(() => {
   const { emit } = useEventBus();
   emit("page::mounted");
 });
+
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
 
-PageSetup({
-  seoMeta: {
-    title: "About",
-    description: data.value?.seo?.description,
-    image: `${data.value?.seo?.image}?w=1200`,
-    url: `https://dbco.online${route.fullPath}`,
-    noIndexNoFollow: data.value?.seo?.noIndexNoFollow,
-  },
-});
+useSeoMeta(pageSEO(data.value?.seo));
 
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta

@@ -46,7 +46,9 @@ import {
   createCirclePath,
 } from "@/assets/scripts/utils/createSvgShapes.js";
 
-gsap.registerPlugin(MorphSVGPlugin);
+if (process.client) {
+  gsap.registerPlugin(MorphSVGPlugin);
+}
 
 const device = useDeviceStore();
 const svgBox = ref({ width: 800, height: 800 }); // Reactive SVG dimensions
@@ -90,16 +92,21 @@ const currentPaths = computed(() =>
 let index = 0;
 
 onMounted(() => {
+  if (!process.client) return;
+
   updateSvgDimensions();
 
   const tspans = pathText.value.querySelectorAll("tspan");
   gsap.set(tspans, { opacity: 0 });
 
-  if (path.value && pathText.value) {
-    path.value.setAttribute("d", currentPaths.value[0].pathData);
+  if (path.value) {
+    path.value.setAttribute("d", currentPaths.value[0]?.pathData || "");
+  }
+
+  if (pathText.value) {
     pathText.value.setAttribute(
       "startOffset",
-      currentPaths.value[0].startOffset || "0%"
+      currentPaths.value[0]?.startOffset || "0%"
     );
   }
 });
