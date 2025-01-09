@@ -55,7 +55,7 @@ onMounted(() => {
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
 
-useSeoMeta(useSeoMeta(pageSEO(data.value?.seo)));
+useSeoMeta(pageSEO(data.value?.seo));
 
 // PageSetup({
 //   seoMeta: {
