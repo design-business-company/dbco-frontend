@@ -1,5 +1,5 @@
 // ~/composables/PageSetup.ts
-import { onBeforeMount, onUnmounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import pageSEO from "~/assets/scripts/pages/seo";
 import { type SEOData } from "~/assets/scripts/pages/seo";
 
@@ -10,7 +10,7 @@ interface PageSetupOptions {
 export default function PageSetup(options?: PageSetupOptions) {
   const nuxt = useNuxtApp();
 
-  onBeforeMount(() => {
+  onMounted(() => {
     // Update dimension on refresh
     (nuxt.$dimensions as any).set();
 

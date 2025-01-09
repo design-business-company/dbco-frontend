@@ -15,13 +15,14 @@ import { useRoute } from "vue-router";
 import { useTheme } from "~/composables/useTheme";
 import { homeQuery } from "~/queries/pages/home";
 import { useEventBus } from "~/composables/useEventBus";
-import PageSetup from "~/composables/PageSetup";
+// import PageSetup from "~/composables/PageSetup";
+import pageSEO from "~/assets/scripts/pages/seo";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 
 /* ----------------------------------------------------------------------------
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
-const route = useRoute();
+// const route = useRoute();
 const { data, error, status } = await useSanityQuery(homeQuery);
 
 if (error.value) await navigateTo("/error");
@@ -54,14 +55,16 @@ onMounted(() => {
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
 
-PageSetup({
-  seoMeta: {
-    description: data.value?.seo?.description,
-    image: `${data.value?.seo?.image}?w=1200`,
-    url: `https://dbco.online${route.fullPath}`,
-    noIndexNoFollow: data.value?.seo?.noIndexNoFollow,
-  },
-});
+useSeoMeta(useSeoMeta(pageSEO(options.seoMeta)));
+
+// PageSetup({
+//   seoMeta: {
+//     description: data.value?.seo?.description,
+//     image: `${data.value?.seo?.image}?w=1200`,
+//     url: `https://dbco.online${route.fullPath}`,
+//     noIndexNoFollow: data.value?.seo?.noIndexNoFollow,
+//   },
+// });
 
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta
