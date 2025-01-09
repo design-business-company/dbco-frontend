@@ -77,6 +77,11 @@ useSeoMeta(
     description: description?.value,
     image: ogImage?.value,
     url: `https://dbco.online`,
+    logo: $urlFor(data.value.favicon)
+      .format("png")
+      .width(512)
+      .height(512)
+      .url(),
   })
 );
 </script>

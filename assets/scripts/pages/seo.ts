@@ -4,6 +4,7 @@ export interface SEOData {
   image?: string;
   url?: string;
   noIndexNoFollow?: boolean;
+  logo?: string;
 }
 
 export default function pageSEO(seoData: SEOData) {
@@ -20,6 +21,7 @@ export default function pageSEO(seoData: SEOData) {
     ogImage: seoData.image,
     ogType: "website",
     ogUrl: seoData.url,
+    ogLogo: seoData.logo,
 
     // twitter
     twitterCard: seoData.image ? "summary_large_image" : null,
