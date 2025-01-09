@@ -15,8 +15,7 @@ import { useRoute } from "vue-router";
 import { useTheme } from "~/composables/useTheme";
 import { pageQuery } from "~/queries/pages/page";
 import { useEventBus } from "~/composables/useEventBus";
-
-import PageSetup from "~/composables/PageSetup";
+import pageSEO from "~/assets/scripts/pages/seo";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 
 /* ----------------------------------------------------------------------------
@@ -59,22 +58,14 @@ onMounted(() => {
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
 
-PageSetup({
-  seoMeta: {
-    title: data.value?.title,
-    description: data.value?.seo?.description,
-    image: `${data.value?.seo?.image}?w=1200`,
-    url: `https://dbco.online${route.fullPath}`,
-    noIndexNoFollow: data.value?.seo?.noIndexNoFollow,
-  },
-});
+useSeoMeta(pageSEO(data.value?.seo));
 
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta
  * --------------------------------------------------------------------------*/
 definePageMeta({
   pageTransition: pageTransitionDefault(),
-  middleware: 'auth',
+  middleware: "auth",
 });
 </script>
 

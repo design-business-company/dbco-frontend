@@ -64,6 +64,20 @@ const lenisOptions = {
   smoothTouch: false,
   touchMultiplier: 2,
 };
+
+// useHead({
+//   titleTemplate: (pageTitle) =>
+//     pageTitle ? `${pageTitle} • ${title?.value}` : title?.value,
+//   link: icons.value,
+// });
+
+// PageSetup({
+//   seoMeta: {
+//     description: description?.value,
+//     image: ogImage?.value,
+//     url: `https://dbco.online`,
+//   },
+// });
 </script>
 
 <style>
