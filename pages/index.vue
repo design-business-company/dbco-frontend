@@ -54,6 +54,8 @@ onMounted(() => {
 
 useSeoMeta(pageSEO(data.value?.seo));
 
+// useSeoMeta({ title: "", description: data.value.seo.description });
+
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta
  * --------------------------------------------------------------------------*/

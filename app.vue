@@ -11,10 +11,14 @@
 <script setup>
 import { settingsSeoQuery } from "~/queries/settingsSeo";
 import pageSEO from "~/assets/scripts/pages/seo";
+import { useAppStore } from "~/stores/app";
 
 const { $urlFor } = useNuxtApp();
 
 const { data, error, status, refresh } = await useSanityQuery(settingsSeoQuery);
+
+const app = useAppStore();
+app.setSeo(data.value);
 
 const title = computed(() => data.value?.title);
 const description = computed(() => data.value?.description);
@@ -34,7 +38,7 @@ const icons = computed(() => {
     },
     {
       rel: "apple-touch-icon",
-      href: $urlFor(data.value.image)
+      href: $urlFor(data.value.favicon)
         .format("png")
         .width(180)
         .height(180)

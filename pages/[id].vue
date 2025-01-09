@@ -58,7 +58,14 @@ onMounted(() => {
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
 
-useSeoMeta(pageSEO(data.value?.seo));
+useSeoMeta(
+  pageSEO({
+    ...data.value?.seo,
+    url: process.client
+      ? `https://dbco.online${window.location.pathname}${window.location.search}`
+      : "https://dbco.online",
+  })
+);
 
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta

@@ -12,6 +12,9 @@ import pageSEO from "~/assets/scripts/pages/seo";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 import { aboutQuery } from "~/queries/pages/about";
 import { useEventBus } from "~/composables/useEventBus";
+import { useAppStore } from "~/stores/app";
+
+const app = useAppStore();
 
 /* ----------------------------------------------------------------------------
  * Fetch data from sanity
@@ -49,7 +52,14 @@ onMounted(() => {
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
 
-useSeoMeta(pageSEO(data.value?.seo));
+useSeoMeta(
+  pageSEO({
+    ...data.value?.seo,
+    url: process.client
+      ? `https://dbco.online${window.location.pathname}${window.location.search}`
+      : "https://dbco.online",
+  })
+);
 
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta

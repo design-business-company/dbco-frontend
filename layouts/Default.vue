@@ -22,13 +22,16 @@ const { data, error, status, refresh } = await useSanityQuery(settingsHeader);
 onMounted(() => {
   app.setAppHasLoaded(true);
   app.setRouteIsTransitioning(false);
+  app.setRoute(route);
 });
 
 watch(
   () => route.path,
   () => {
+    app.setRoute(route);
     // tell the store we're transitioning
     app.setRouteIsTransitioning(true);
+
     // close nav
     setTimeout(() => {
       app.setMobileNavVisibility(false);
