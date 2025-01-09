@@ -21,8 +21,6 @@ import { useEventBus } from "~/composables/useEventBus";
 const route = useRoute();
 const { data, error, status, refresh } = await useSanityQuery(contactQuery);
 
-// if (error.value) await navigateTo("/error");
-
 /* ----------------------------------------------------------------------------
  * Set page theme
  * --------------------------------------------------------------------------*/
