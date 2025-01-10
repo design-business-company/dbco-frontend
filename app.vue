@@ -35,7 +35,7 @@ const icons = computed(() => {
     },
     {
       rel: "apple-touch-icon",
-      href: $urlFor(data.value.image)
+      href: $urlFor(data.value.favicon)
         .format("png")
         .width(180)
         .height(180)
