@@ -31,6 +31,7 @@
     "d3": "^7.9.0",
     "embla-carousel-auto-scroll": "^8.4.0",
     "embla-carousel-vue": "^8.4.0",
+    "focus-trap": "^7.6.2",
     "gsap": "file:gsap-bonus.tgz",
     "nuxt": "^3.14.1592",
     "nuxt3-lenis": "^1.5.9",

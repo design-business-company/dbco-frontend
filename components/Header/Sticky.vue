@@ -1,25 +1,29 @@
 <template>
   <nav
     ref="nav"
-    v-bind="inertAttribute"
     :class="[
       'sticky-nav',
-      { 'nav-is-open': app.mobileNavIsVisible },
       { 'is-hidden': !app.headerIsVisible },
       { 'is-disabled': !app.headerIsVisible && device.winHeight <= 600 },
       { 'is-behind-static-header': isHydrated && device.scrollNearTop },
     ]"
+    data-lenis-prevent
   >
     <Grid class="wrapper">
-      <Column class="text-body-1" span="6" span-laptop="4" span-desktop="3">
+      <Column
+        class="logo text-body-1"
+        span="6"
+        span-laptop="4"
+        span-desktop="3"
+      >
         <HeaderStickyLogo />
       </Column>
 
       <Column
-        class="links text-body-1"
+        class="trigger text-body-1"
         span="6"
         span-laptop="4"
-        span-desktop="3"
+        span-desktop="9"
       >
         <HeaderStickyLinks :links="links" class="default-nav" />
         <HeaderMobileNavTrigger
@@ -27,20 +31,17 @@
           class="mobile-nav-trigger"
         />
       </Column>
-
-      <Column>
-        <HeaderMobileNav />
-      </Column>
     </Grid>
+    <HeaderMobileNav />
   </nav>
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted } from "vue";
 import { useDeviceStore } from "~/stores/device";
 import { useAppStore } from "~/stores/app";
-import { onMounted, onUnmounted } from "vue";
 import { onClickOutside } from "@vueuse/core";
-import { ref } from "vue";
+import * as focusTrap from "focus-trap";
 
 const props = defineProps({
   links: {
@@ -49,21 +50,62 @@ const props = defineProps({
   },
 });
 
-const isHydrated = ref(false);
-
+const nav = ref(null);
 const app = useAppStore();
 const device = useDeviceStore();
+const isHydrated = ref(false);
+const lenis = useLenis();
+let trapInstance = null;
+
+watch(
+  () => app.mobileNavIsVisible,
+  (navIsVisible) => {
+    if (navIsVisible) {
+      enableFocusTrap();
+      disableBodyScroll();
+    } else {
+      disableFocusTrap();
+      enableBodyScroll();
+    }
+  }
+);
+
+watch(
+  () => device.winWidth,
+  (windowSize) => {
+    if (windowSize >= 600) {
+      app.setMobileNavVisibility(false);
+    }
+  }
+);
+
+function enableFocusTrap() {
+  if (nav.value) {
+    trapInstance = focusTrap.createFocusTrap(nav.value, {
+      escapeDeactivates: true,
+      clickOutsideDeactivates: true,
+    });
+    trapInstance.activate();
+  }
+}
+
+function disableFocusTrap() {
+  if (trapInstance) {
+    trapInstance.deactivate();
+    trapInstance = null;
+  }
+}
+
+function enableBodyScroll() {
+  lenis.instance.value.isStopped = false;
+}
+
+function disableBodyScroll() {
+  lenis.instance.value.isStopped = true;
+}
 
 const scrollUpThreshold = 10;
 const previousScrollY = ref(0);
-
-const inertAttribute = computed(() => {
-  if (!app.headerIsVisible || device.scrollNearTop) {
-    return { inert: true };
-  }
-
-  return {};
-});
 
 // watch main window event
 const nuxt = useNuxtApp();
@@ -117,8 +159,6 @@ onUnmounted(() => {
   scrollEl.value.removeEventListener("scrollStop", handleScrollStop);
 });
 
-const nav = ref(null);
-
 onClickOutside(nav, (event) => {
   if (app.mobileNavIsVisible) {
     app.setMobileNavVisibility(false);
@@ -127,23 +167,22 @@ onClickOutside(nav, (event) => {
 </script>
 
 <style lang="scss" scoped>
-@use "~/assets/styles/mixins";
-
 .sticky-nav {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 999;
-  transition: transform 200ms var(--transition-function);
+  z-index: 9999;
 
   .wrapper {
+    visibility: visible;
+    pointer-events: all;
     transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    will-change: transform, background-color;
+    transition: transform 200ms var(--transition-function),
+      background-color var(--transition);
     background-color: var(--background-primary);
-    padding-top: var(--tinier);
-    padding-bottom: var(--tinier);
-    transition: background-color var(--transition), color var(--transition),
-      transform 200ms var(--transition-function);
   }
 
   &.is-hidden .wrapper {
@@ -158,35 +197,18 @@ onClickOutside(nav, (event) => {
     pointer-events: none;
 
     .wrapper {
-      transform: translate3d(0, -150%, 0);
+      transform: translate3d(0, -125%, 0);
     }
   }
 
   &.is-behind-static-header {
-    // pointer-events: none;
+    @include tablet {
+      pointer-events: none;
 
-    .wrapper {
-      @include tablet {
-        transform: translate3d(0, -150%, 0);
+      .wrapper {
+        transform: translate3d(0, -100%, 0);
       }
     }
-
-    @include tablet {
-      transform: translate3d(0, -150%, 0);
-      // visibility: hidden;
-    }
-  }
-
-  // &.nav-is-open {
-  //   .wrapper {
-  //     visibility: visible;
-  //     pointer-events: all;
-  //     transform: translate3d(0, 0, 0);
-  //   }
-  // }
-
-  .links {
-    display: flex;
   }
 }
 

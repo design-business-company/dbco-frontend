@@ -1,7 +1,6 @@
 <template>
-  <Observer :onEnter="onEnter" :onLeave="onLeave" class="static-header-wrapper">
+  <Observer :onEnter="onEnter" class="static-header-wrapper">
     <header class="static-header">
-      <!-- <header class="static-header" v-bind="inertAttribute"> -->
       <Grid>
         <Column class="text-body-1" span="6" span-laptop="4" span-desktop="3">
           <HeaderStaticLogo />
@@ -19,6 +18,7 @@
 
 .static-header-wrapper {
   margin-top: var(--biggest);
+  position: relative;
 
   @include tablet {
     margin-top: 0;
@@ -28,10 +28,8 @@
 .static-header {
   position: relative;
   width: 100%;
-  z-index: 999;
   padding-top: var(--tinier);
   padding-bottom: var(--big);
-
   display: none;
 
   @include tablet {
@@ -55,21 +53,7 @@ const props = defineProps({
   },
 });
 
-const inertAttribute = computed(() => {
-  if (app.headerIsVisible) {
-    return { inert: true };
-  }
-  return {};
-});
-
 function onEnter() {
   resetTheme();
-  // disable sticky nav when header in view
-  // app.setMobileNavVisibility(false);
-  // console.log("hide", app.headerIsVisible);
-}
-
-function onLeave() {
-  // app.setMobileNavVisibility(true);
 }
 </script>
