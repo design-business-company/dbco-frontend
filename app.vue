@@ -10,15 +10,19 @@
 
 <script setup>
 import { settingsSeoQuery } from "~/queries/settingsSeo";
-import pageSEO from "~/assets/scripts/pages/seo";
 import { useRoute } from "vue-router";
+import { useAppStore } from "~/stores/app";
 
+// helpers...
 const { $urlFor } = useNuxtApp();
+const appStore = useAppStore();
+const route = useRoute();
 
-const { data, error, status, refresh } = await useSanityQuery(settingsSeoQuery);
+// fetch data from sanity
+const { data } = await useSanityQuery(settingsSeoQuery);
 
+// set up data, make it reactive
 const title = computed(() => data.value?.title);
-const description = computed(() => data.value?.description);
 
 const icons = computed(() => {
   if (!data.value?.favicon) return [];
@@ -45,16 +49,14 @@ const icons = computed(() => {
   ];
 });
 
-const ogImage = computed(() => {
-  if (data.value?.image) {
-    return $urlFor(data.value.image).url();
-  }
+const url = computed(() => `https://dbco.online${route.path}`);
 
-  return "";
+appStore.setSeoData({
+  image: $urlFor(data.value.image).url(),
+  description: data.value?.description,
+  url: url,
+  logo: $urlFor(data.value?.favicon).format("png").width(512).height(512).url(),
 });
-
-const route = useRoute();
-const url = computed(() => `https://dbco.online${route.path}`); // Reactive URL
 
 useLenis();
 
@@ -75,19 +77,6 @@ useHead({
     pageTitle ? `${pageTitle} • ${title?.value}` : title?.value,
   link: icons.value,
 });
-
-useSeoMeta(
-  pageSEO({
-    description: description?.value,
-    image: ogImage?.value,
-    url: url.value,
-    logo: $urlFor(data.value.favicon)
-      .format("png")
-      .width(512)
-      .height(512)
-      .url(),
-  })
-);
 </script>
 
 <style>

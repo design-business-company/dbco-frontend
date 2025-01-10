@@ -31,26 +31,6 @@ Observe accepts an options object with the following properties:
 - `once` (optional): Boolean indicating whether the observer should stop observing after the first intersection.
 - `options` (optional): An object containing options for the Intersection Observer such as root, rootMargin, and threshold.
 
-## `PageSetup` Composable
-
-The `PageSetup` composable is designed to facilitate the initial setup and cleanup of pages within a Nuxt application. It primarily manages SEO metadata and page dimensions, ensuring that your pages are correctly initialized and cleaned up when they are mounted and unmounted.
-
-```js
-// First, import the composable into your page component:
-import PageSetup from "~/composables/PageSetup";
-
-// Optionally, define SEO metadata:
-const seoData = {
-  title: "Your Page Title",
-  description: "Your page description",
-  keywords: ["keyword1", "keyword2"],
-  // More SEO options...
-};
-
-// Initialize the page setup in your setup function:
-PageSetup({ seoMeta: seoData });
-```
-
 ## `Theme` Composable
 
 The `Theme` composable is a powerful tool for dynamically managing and applying CSS themes across your Nuxt application. It leverages a Vuex store to keep track of theme changes and applies these changes directly to CSS variables, ensuring that your UI remains consistent and responsive to user preferences or system settings.
