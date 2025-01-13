@@ -1,5 +1,6 @@
 <template>
   <Observer
+    v-if="playbackId"
     :on-enter="handleEnter"
     :on-leave="handleLeave"
     class="vid-container"
@@ -8,21 +9,19 @@
     }"
   >
     <mux-player
-      v-if="playbackId"
       :playback-id="playbackId"
       :controls="false"
       :muted="settings.mute"
-      :autoplay="settings.autoplay"
+      :autoplay="false"
       :placeholder="placeholder"
-      :loop="settings.loop"
       :metadata-video-title="alt"
       :playsinline="settings.playsinline"
       :env-key="envKey"
       ref="vid"
-      accent-color="#ff0000"
       class="vid mux-player"
       :poster="poster"
-      min-resolution="1080p"
+      min-resolution="720p"
+      preload="metadata"
       :class="{
         'mux-player--controls-hidden': !settings.controls,
       }"
@@ -90,9 +89,19 @@ const formattedAspectRatio = computed(() => {
   return props.aspectRatio?.replaceAll(":", "/").trim() ?? "auto";
 });
 
+const videoCanPlay = (e) => {
+  e.target.play();
+  e.target.removeEventListener('canplay', videoCanPlay)
+}
+
 const handleEnter = () => {
-  if (props.settings.autoplay && vid.value?.readyState === 4) {
-    vid.value.play();
+  if (props.settings.autoplay) {
+    if (vid.value?.readyState === 4) {
+      vid.value.play();
+    } else {
+      vid.value.play();
+      vid.value.addEventListener('canplay', videoCanPlay)
+    }
   }
 };
 

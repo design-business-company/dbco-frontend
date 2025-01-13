@@ -6,7 +6,6 @@
 
 <script setup>
 import { watch } from "vue";
-import { useRoute } from "vue-router";
 import { useTheme } from "~/composables/useTheme";
 import pageSEO from "~/assets/scripts/pages/seo";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
@@ -16,8 +15,7 @@ import { useEventBus } from "~/composables/useEventBus";
 /* ----------------------------------------------------------------------------
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
-const route = useRoute();
-const { data, error, status, refresh } = await useSanityQuery(aboutQuery);
+const { data } = await useSanityQuery(aboutQuery);
 
 // if (error.value) await navigateTo("/error");
 
@@ -49,7 +47,7 @@ onMounted(() => {
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
 
-useSeoMeta(pageSEO(data.value?.seo));
+useServerSeoMeta(pageSEO(data.value?.seo));
 
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta

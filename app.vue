@@ -76,7 +76,7 @@ useHead({
   link: icons.value,
 });
 
-useSeoMeta(
+useServerSeoMeta(
   pageSEO({
     description: description?.value,
     image: ogImage?.value,

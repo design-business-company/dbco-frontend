@@ -38,5 +38,7 @@ export default function pageSEO(seoData: SEOData) {
     Object.entries(defaultData).filter(([_, value]) => Boolean(value))
   );
 
+
+
   return filteredData;
 }

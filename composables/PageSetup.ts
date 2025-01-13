@@ -16,7 +16,7 @@ export default function PageSetup(options?: PageSetupOptions) {
 
     // Set page meta if seoMeta is provided
     if (options?.seoMeta) {
-      useSeoMeta(pageSEO(options.seoMeta));
+      useServerSeoMeta(pageSEO(options.seoMeta));
     }
   });
 
