@@ -23,6 +23,10 @@ h1 {
     @media (min-width: 450px) {
       display: block;
     }
+
+    @include tablet {
+      display: none;
+    }
   }
 
   .name-abbr {
@@ -30,6 +34,10 @@ h1 {
 
     @media (min-width: 450px) {
       display: none;
+    }
+
+    @include tablet {
+      display: block;
     }
   }
 
