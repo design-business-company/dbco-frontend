@@ -103,6 +103,15 @@
         fill="currentColor"
       />
     </g>
+
+    <g v-if="name === 'Play'">
+      <path d="M5.16675 2.5L16.8334 10L5.16675 17.5V2.5Z" />
+    </g>
+
+    <g v-if="name === 'Pause'">
+      <path d="M8.33333 3.33301H5V16.6663H8.33333V3.33301Z" />
+      <path d="M15.0001 3.33301H11.6667V16.6663H15.0001V3.33301Z" />
+    </g>
   </svg>
 </template>
 
@@ -116,7 +125,9 @@ const props = withDefaults(
       | "Clipboard"
       | "Plus"
       | "EyeHidden"
-      | "EyeVisible";
+      | "EyeVisible"
+      | "Play"
+      | "Pause";
   }>(),
   {
     name: "arrowRight",
