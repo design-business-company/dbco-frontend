@@ -124,11 +124,15 @@ const handleLeave = () => {
 };
 
 const play = () => {
+  if (!vid.value) return;
+
   vid.value.play();
   isPlaying.value = true;
 };
 
 const pause = () => {
+  if (!vid.value) return;
+
   vid.value.pause();
   isPlaying.value = false;
 };
@@ -142,32 +146,13 @@ const toggle = () => {
   isPlaying.value ? pause() : play();
 };
 
-watch(vid, (player) => {
-  if (player) {
-    player.addEventListener("play", () => {
-      play();
-      console.log("playing");
-    });
-    player.addEventListener("pause", () => {
-      pause();
-      console.log("paused");
-    });
-  }
-});
-
-onMounted(() => {
-  if (vid.value) {
-    vid.value.addEventListener("play", play);
-    vid.value.addEventListener("pause", pause);
-  }
-});
-
-onBeforeUnmount(() => {
-  if (vid.value) {
-    vid.value.removeEventListener("play", play);
-    vid.value.removeEventListener("pause", pause);
-  }
-});
+// watch(isPlaying, (isPlaying) => {
+//   if (isPlaying) {
+//     console.log("is playing");
+//   } else {
+//     console.log("is not playing");
+//   }
+// });
 </script>
 
 <style lang="scss" scoped>
@@ -191,7 +176,15 @@ onBeforeUnmount(() => {
   }
 
   @media (pointer: coarse) {
-    opacity: 1;
+    .vid-button {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vid-button {
+      opacity: 1;
+    }
   }
 }
 
