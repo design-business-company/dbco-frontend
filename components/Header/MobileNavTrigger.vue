@@ -4,7 +4,13 @@
       class="mobile-trigger__button"
       :aria-label="app.mobileNavIsVisible ? 'Close Nav' : 'Open Nav'"
     >
-      <div class="mobile-trigger__button-content">
+      <div
+        class="mobile-trigger__button-content"
+        :class="[
+          'mobile-trigger__button-content',
+          { 'nav-is-visible': app.mobileNavIsVisible },
+        ]"
+      >
         <svg
           width="34"
           height="12"
@@ -48,7 +54,6 @@ const bottomLineRef = ref(null);
   justify-content: center;
   height: 44px;
   border-radius: 0;
-
   &__button {
     cursor: pointer;
     appearance: none;
@@ -64,12 +69,24 @@ const bottomLineRef = ref(null);
       padding: var(--tinier) var(--smallest);
       font-size: inherit;
       line-height: 0;
+
+      &.nav-is-visible {
+        background-color: var(--foreground-primary);
+
+        path {
+          stroke: var(--background-primary);
+        }
+      }
     }
 
     &:hover {
       .mobile-trigger__button-content {
         transition-duration: 100ms;
         background-color: var(--background-secondary);
+
+        &.nav-is-visible {
+          background-color: var(--foreground-secondary);
+        }
       }
     }
 
@@ -92,7 +109,7 @@ const bottomLineRef = ref(null);
     height: auto;
 
     path {
-      transition: d 150ms ease-out;
+      transition: d 150ms ease-out, stroke var(--transition);
     }
   }
 }
