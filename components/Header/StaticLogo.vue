@@ -25,8 +25,7 @@ h1 {
 
 span {
   display: inline-flex;
-  cursor: default;
-  /* cursor: crosshair; */
+  cursor: crosshair;
 }
 </style>
 
@@ -160,6 +159,10 @@ function shuffle(obj) {
 
 onMounted(() => {
   shuffleArray(line.value[0].options);
+
+  line.value.forEach((item, index) => {
+    shuffle(line.value[index]);
+  });
 });
 
 onUnmounted(() => {
