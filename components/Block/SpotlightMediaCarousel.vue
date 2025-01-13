@@ -96,7 +96,9 @@ const handleExit = () => {
 };
 
 const onSlideChange = (ev) => {
+  // not currently on a plan where we can pass props... but adding for if/when we do
   useTrackEvent("Carousel change", { props: { name: props.title } });
+  // for now each event gets manually added as a goal in plausible
   useTrackEvent(`Carousel change: ${props.title}`);
 };
 
