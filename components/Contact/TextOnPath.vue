@@ -207,11 +207,6 @@ function fadeInCharacters() {
     height: clamp(300px, 40vmax, 800px);
   }
 
-  @include laptop {
-    margin-top: -2%;
-    margin-bottom: -2%;
-  }
-
   :deep(svg) {
     width: 100%;
     height: 100%;

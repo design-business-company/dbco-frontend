@@ -37,6 +37,8 @@ ul {
     text-decoration: none;
     text-underline-offset: 0.15em;
     color: var(--foreground-tertiary);
+    padding: var(--tinier) 0;
+    will-change: color;
     transition: color var(--transition);
 
     &.router-link-exact-active {

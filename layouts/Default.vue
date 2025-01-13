@@ -1,7 +1,7 @@
 <template>
   <div class="site-wrapper" v-if="data?.links">
-    <HeaderStatic :links="data?.links" />
     <HeaderSticky :links="data?.links" />
+    <HeaderStatic :links="data?.links" />
     <main :class="['site-content', { 'nav-is-open': app.mobileNavIsVisible }]">
       <Scrim />
       <slot />
@@ -49,8 +49,8 @@ watch(
   flex: 1;
 
   &.nav-is-open {
-    filter: blur(var(--tiniest));
-    opacity: 0.4;
+    // filter: blur(var(--tiniest));
+    // opacity: 0.2;
     pointer-events: none;
   }
 }
