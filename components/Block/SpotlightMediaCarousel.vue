@@ -96,7 +96,7 @@ const handleExit = () => {
 };
 
 const onSlideChange = (ev) => {
-  useTrackEvent("Carousel change", { props: { name: props.title } });
+  useTrackEvent(`Carousel change: ${props.title}`);
 };
 
 onKeyStroke("ArrowRight", (e) => {

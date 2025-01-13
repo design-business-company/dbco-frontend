@@ -180,6 +180,9 @@ function morphToNextPath() {
     duration: 0.5,
     stagger: 0.01,
     ease: "power2.out",
+    onComplete: () => {
+      useTrackEvent("Click: 'You design, we business'");
+    },
   });
 }
 
