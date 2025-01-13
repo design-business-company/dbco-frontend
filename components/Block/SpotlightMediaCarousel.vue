@@ -14,7 +14,7 @@
     >
       <div class="spotlight-media-carousel__container">
         <BlockMedia
-          v-for="item in items"
+          v-for="(item, index) in items"
           :key="item._key"
           :media="item"
           class="spotlight-media-carousel__slide"
@@ -31,12 +31,17 @@
 </template>
 
 <script setup>
+import { onMounted, onUnmounted } from "vue";
 import emblaCarouselVue from "embla-carousel-vue";
 import AutoScroll from "embla-carousel-auto-scroll";
 import { onKeyStroke } from "@vueuse/core";
 import { clamp } from "@/utils/clamp";
 
 const props = defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
   items: {
     type: Array,
     required: true,
@@ -90,6 +95,10 @@ const handleExit = () => {
   }
 };
 
+const onSlideChange = (ev) => {
+  useTrackEvent("Carousel change", props.title);
+};
+
 onKeyStroke("ArrowRight", (e) => {
   e.preventDefault();
   emblaApi.value.scrollNext();
@@ -98,6 +107,14 @@ onKeyStroke("ArrowRight", (e) => {
 onKeyStroke("ArrowLeft", (e) => {
   e.preventDefault();
   emblaApi.value.scrollPrev();
+});
+
+onMounted(() => {
+  emblaApi.value.on("select", onSlideChange);
+});
+
+onUnmounted(() => {
+  emblaApi.value.off("select", onSlideChange);
 });
 </script>
 
