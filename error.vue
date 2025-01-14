@@ -5,9 +5,9 @@
         <Grid>
           <Space size="huge" />
 
-          <Column span-tablet="6">
+          <Column span-tablet="6" span-laptop="4" span-desktop="3">
             <Text style="padding-bottom: var(--smallest)" size="headline-1"
-              >Well, shit!</Text
+              >Dammit!</Text
             >
           </Column>
           <Column span-tablet="6">

@@ -8,14 +8,14 @@
         :onLeave="(el) => onLeave(el, index)"
         ref="particles"
       >
-        <Text size="caption-1">{{ index }}</Text>
+        <Text size="caption-1">{{ formatIndex(index + 1) }}</Text>
       </Observer>
     </Column>
   </Grid>
 </template>
 
 <script setup>
-import { ref, onBeforeUnmount } from "vue";
+import { onBeforeUnmount } from "vue";
 import { gsap } from "gsap";
 
 const props = defineProps({
@@ -24,6 +24,10 @@ const props = defineProps({
     required: true,
   },
 });
+
+const formatIndex = (index) => {
+  return String(index).padStart(3, "0"); // Pad the number to 3 digits
+};
 
 const timelines = new Map(); // Store timelines for each element
 
