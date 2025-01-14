@@ -32,7 +32,7 @@ watch(
     // close nav
     setTimeout(() => {
       app.setMobileNavVisibility(false);
-    }, 1000);
+    }, 500);
   }
 );
 </script>

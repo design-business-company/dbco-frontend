@@ -48,7 +48,7 @@ const props = defineProps({
   sizes: {
     type: String,
     required: false,
-  }
+  },
 });
 
 // Normalize input to always use `media`
@@ -76,6 +76,7 @@ const normalizedMedia = computed(() => {
     flex-direction: column;
     gap: var(--tiniest);
     align-items: flex-start;
+    text-indent: 0;
   }
 
   &__caption {

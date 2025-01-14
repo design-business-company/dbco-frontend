@@ -39,9 +39,9 @@ export const useDeviceStore = defineStore("device", {
     dpi: 0 as number | 0,
     // theme
     theme: {
-      background: "#ffffff", // Default white background
-      foreground: "#000000", // Default black foreground
-      accent: "#ff0000", // Default red accent
+      background: "#ffffff",
+      foreground: "#000000",
+      accent: "#ff0000",
     } as Theme,
     // page theme
     pageTheme: {

@@ -1,5 +1,5 @@
 <template>
-  <section :class="['page', 'contact']">
+  <section :class="['page', 'contact']" v-if="data">
     <header class="sr-only"><h1>Contact Design Business Company</h1></header>
     <ContactTextOnPath />
     <ContentBlocks :content="data.content" />
@@ -7,54 +7,33 @@
 </template>
 
 <script setup>
-import { watch } from "vue";
-import { useRoute } from "vue-router";
 import { useTheme } from "~/composables/useTheme";
 import usePageSetup from "~/composables/usePageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 import { contactQuery } from "~/queries/pages/contact";
-import { useEventBus } from "~/composables/useEventBus";
 
 /* ----------------------------------------------------------------------------
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
-const route = useRoute();
 const { data, error, status, refresh } = await useSanityQuery(contactQuery);
+// if (error.value) await navigateTo("/error");
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
- await usePageSetup({
-  seoMeta: data.value?.seo
-})
+usePageSetup({ seoMeta: data.value?.seo });
 
 /* ----------------------------------------------------------------------------
- * Set page theme
+ * Setup page theme
  * --------------------------------------------------------------------------*/
+const { setPageTheme } = useTheme();
 
-watch(
-  data,
-  (sanityData) => {
-    if (!process.client || !sanityData || sanityData.length === 0) return;
-
-    const { setPageTheme } = useTheme();
-
-    if (sanityData?.pageTheme?.theme) {
-      setPageTheme(sanityData.pageTheme);
-    }
-  },
-  { immediate: true }
-);
-
-onMounted(() => {
-  // tell the app that the page has successfully mounted
-  const { emit } = useEventBus();
-  emit("page::mounted");
-});
+setPageTheme(data.value.pageTheme);
 
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta
  * --------------------------------------------------------------------------*/
+
 definePageMeta({
   pageTransition: pageTransitionDefault(),
 });

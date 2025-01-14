@@ -42,8 +42,6 @@
 import { useAppStore } from "~/stores/app";
 import { useTheme } from "~/composables/useTheme";
 
-const { resetTheme } = useTheme();
-
 const app = useAppStore();
 
 const props = defineProps({
@@ -54,6 +52,6 @@ const props = defineProps({
 });
 
 function onEnter() {
-  resetTheme();
+  app.setHeaderIsVisible(true);
 }
 </script>

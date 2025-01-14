@@ -61,6 +61,8 @@ export const useTheme = () => {
   };
 
   const updateCssVariables = (theme: Omit<ColorTheme, "theme">) => {
+    if (!process.client) return;
+
     const cssVars = {
       "--background-primary": theme.background,
       "--foreground-primary": theme.foreground,
@@ -85,6 +87,8 @@ export const useTheme = () => {
   };
 
   const resetTheme = () => {
+    console.log("reset theme");
+
     deviceStore.updateTheme(deviceStore.pageTheme);
     updateCssVariables(deviceStore.pageTheme);
   };
