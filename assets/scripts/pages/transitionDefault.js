@@ -1,4 +1,4 @@
-import gsap from "gsap";
+import { gsap } from "gsap";
 import { useAppStore } from "~/stores/app";
 
 export default function pageTransitionDefault() {

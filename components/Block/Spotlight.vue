@@ -91,7 +91,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import gsap from "gsap";
+import { gsap } from "gsap";
 
 const name = ref(null);
 const role = ref(null);

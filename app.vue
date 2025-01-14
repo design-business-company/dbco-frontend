@@ -71,12 +71,15 @@ const lenisOptions = {
 };
 
 useHead({
+  templateParams: {
+    siteName: () => title?.value ?? 'Design Business Company'
+  },
   titleTemplate: (pageTitle) =>
     pageTitle ? `${pageTitle} • ${title?.value}` : title?.value,
   link: icons.value,
 });
 
-useSeoMeta(
+useServerSeoMeta(
   pageSEO({
     description: description?.value,
     image: ogImage?.value,

@@ -19,7 +19,7 @@
 
 <script setup>
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
-import gsap from "gsap";
+import { gsap } from "gsap";
 
 definePageMeta({
   pageTransition: pageTransitionDefault(),

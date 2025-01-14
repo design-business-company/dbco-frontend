@@ -56,10 +56,11 @@ const emblaPlugins = computed(() => {
   if (props.settings && props.settings.autoplay) {
     return [
       AutoScroll({
-        speed: 0.9,
+        speed: 0.75,
         startDelay: 0,
         stopOnInteraction: false,
         stopOnMouseEnter: true,
+        stopOnFocusIn: false,
       }),
     ];
   }
@@ -76,6 +77,8 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
     },
     containScroll: false,
     inViewThreshold: 0.01,
+    dragFree: true,
+    dragThreshold: 50,
   },
   emblaPlugins.value
 );

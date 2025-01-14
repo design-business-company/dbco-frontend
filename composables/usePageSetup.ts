@@ -7,17 +7,16 @@ interface PageSetupOptions {
   seoMeta?: SEOData;
 }
 
-export default function PageSetup(options?: PageSetupOptions) {
+export default function usePageSetup(options?: PageSetupOptions) {
   const nuxt = useNuxtApp();
+
+  if (options?.seoMeta) {
+    useServerSeoMeta(pageSEO(options.seoMeta));
+  }
 
   onMounted(() => {
     // Update dimension on refresh
     (nuxt.$dimensions as any).set();
-
-    // Set page meta if seoMeta is provided
-    if (options?.seoMeta) {
-      useSeoMeta(pageSEO(options.seoMeta));
-    }
   });
 
   onUnmounted(() => {

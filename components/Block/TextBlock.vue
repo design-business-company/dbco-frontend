@@ -56,7 +56,7 @@ import BlockRule from "~/components/Block/Rule.vue";
 import BlockMedia from "~/components/Block/Media.vue";
 import BlockButtonGroup from "~/components/ButtonGroup.vue";
 import Space from "~/components/Space.vue";
-import gsap from "gsap";
+import { gsap } from "gsap";
 
 const props = defineProps({
   blocks: {

@@ -1,5 +1,6 @@
 <template>
   <Observer
+    v-if="playbackId"
     :on-enter="handleEnter"
     :on-leave="handleLeave"
     :class="['vid-container']"
@@ -18,21 +19,19 @@
       </div>
     </button>
     <mux-player
-      v-if="playbackId"
       :playback-id="playbackId"
       :controls="false"
       :muted="settings.mute"
-      :autoplay="settings.autoplay"
       :placeholder="placeholder"
-      :loop="settings.loop"
       :metadata-video-title="alt"
       :playsinline="settings.playsinline"
       :env-key="envKey"
+      :loop="settings.loop"
       ref="vid"
-      accent-color="#ff0000"
       class="vid mux-player"
       :poster="poster"
-      min-resolution="1080p"
+      min-resolution="720p"
+      preload="metadata"
       :class="{
         'mux-player--controls-hidden': !settings.controls,
       }"
@@ -43,7 +42,7 @@
 <script setup>
 import "@mux/mux-player";
 import { createBlurUp } from "@mux/blurup";
-import { onMounted, onBeforeUnmount, ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { useDeviceStore } from "~/stores/device";
 
 const deviceStore = useDeviceStore();
@@ -105,6 +104,11 @@ const formattedAspectRatio = computed(() => {
   return props.aspectRatio?.replaceAll(":", "/").trim() ?? "auto";
 });
 
+const videoCanPlay = (e) => {
+  e.target.play();
+  e.target.removeEventListener('canplay', videoCanPlay)
+}
+
 const handleEnter = () => {
   if (!deviceStore.userMotionReduced) {
     if (props.settings.autoplay && !userPaused.value) {
@@ -117,6 +121,10 @@ const handleEnter = () => {
 
 const handleLeave = () => {
   if (vid.value) {
+    if (!vid.value.paused) {
+      userPaused.value = false;
+    }
+    
     pause();
   } else {
     console.warn("Video element is not available in handleLeave.");
@@ -145,14 +153,6 @@ const manualToggle = () => {
 const toggle = () => {
   isPlaying.value ? pause() : play();
 };
-
-// watch(isPlaying, (isPlaying) => {
-//   if (isPlaying) {
-//     console.log("is playing");
-//   } else {
-//     console.log("is not playing");
-//   }
-// });
 </script>
 
 <style lang="scss" scoped>
@@ -176,7 +176,7 @@ const toggle = () => {
   }
 
   @media (pointer: coarse) {
-    .vid-button {
+    .vid-button, &:hover .vid-button {
       opacity: 1;
     }
   }
@@ -202,19 +202,20 @@ const toggle = () => {
     z-index: 9;
     bottom: 0;
     left: 0;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: var(--tinier);
     cursor: pointer;
+    will-change: opacity;
     transition: opacity var(--transition-fast);
 
     .content {
-      padding: var(--tinier);
+      width: 32px;
+      height: 32px;
       background-color: var(--background-primary);
       border-radius: var(--border-radius);
       transition: background-color var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     &:hover .content {
@@ -223,7 +224,7 @@ const toggle = () => {
 
     svg {
       display: block;
-      width: 100%;
+      width: var(--smallest);
       height: auto;
       fill: var(--foreground-primary);
     }
