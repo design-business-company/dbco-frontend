@@ -71,6 +71,9 @@ const lenisOptions = {
 };
 
 useHead({
+  templateParams: {
+    siteName: () => title?.value ?? 'Design Business Company'
+  },
   titleTemplate: (pageTitle) =>
     pageTitle ? `${pageTitle} • ${title?.value}` : title?.value,
   link: icons.value,
