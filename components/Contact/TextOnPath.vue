@@ -35,7 +35,7 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from "vue";
-import gsap from "gsap";
+import { gsap } from "gsap";
 import MorphSVGPlugin from "gsap/MorphSVGPlugin";
 import { useDeviceStore } from "~/stores/device";
 

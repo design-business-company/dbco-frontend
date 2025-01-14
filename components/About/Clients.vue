@@ -124,7 +124,7 @@ import emblaCarouselVue from "embla-carousel-vue";
 import AutoScroll from "embla-carousel-auto-scroll";
 import { onKeyStroke } from "@vueuse/core";
 import { ref } from "vue";
-import gsap from "gsap";
+import { gsap } from "gsap";
 
 const query = groq`*[_type=="client"]`;
 const { data } = useSanityQuery(query);

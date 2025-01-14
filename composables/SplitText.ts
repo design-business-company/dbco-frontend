@@ -1,5 +1,5 @@
 import { ref, onUnmounted } from "vue";
-import gsap from "gsap";
+import { gsap } from "gsap";
 import SplitText from "gsap/SplitText";
 
 if (process.client) {

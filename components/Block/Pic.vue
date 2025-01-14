@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import gsap from "gsap";
+import { gsap } from "gsap";
 const { $urlFor } = useNuxtApp();
 
 const props = defineProps({

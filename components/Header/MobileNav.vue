@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import gsap from "gsap";
+import { gsap } from "gsap";
 import { useAppStore } from "~/stores/app";
 import { useDeviceStore } from "~/stores/device";
 import { settingsFooter } from "~/queries/settingsFooter";
