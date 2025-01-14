@@ -110,6 +110,8 @@ const serializers = {
 };
 
 const onEnter = (ev) => {
+  if (!ev) return;
+
   const domElements = ev.children;
 
   if (!domElements) return;
@@ -130,6 +132,8 @@ const onEnter = (ev) => {
 };
 
 const onLeave = (ev) => {
+  if (!ev) return;
+
   const domElements = ev.children;
 
   if (!domElements) return;

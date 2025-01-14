@@ -3,7 +3,7 @@
     v-if="playbackId"
     :on-enter="handleEnter"
     :on-leave="handleLeave"
-    :class="['vid-container']"
+    :class="['vid-container', { 'is-paused': !isPlaying }]"
     :style="{
       '--aspect-ratio': formattedAspectRatio,
     }"
@@ -23,7 +23,7 @@
       :controls="false"
       :muted="settings.mute"
       :placeholder="placeholder"
-      :metadata-video-title="alt"
+      :aria-label="alt"
       :playsinline="settings.playsinline"
       :env-key="envKey"
       :loop="settings.loop"
@@ -89,7 +89,6 @@ const placeholder = ref(null);
 const poster = computed(() => {
   if (!props.poster) return null;
 
-  // const width = vid.value ? vid.value.clientWidth : 1080;
   const width = 1080;
 
   return $urlFor(props.poster).width(width).auto("format").quality(80).url();
@@ -105,10 +104,10 @@ const formattedAspectRatio = computed(() => {
   return props.aspectRatio?.replaceAll(":", "/").trim() ?? "auto";
 });
 
-const videoCanPlay = (e) => {
-  e.target.play();
-  e.target.removeEventListener('canplay', videoCanPlay)
-}
+// const videoCanPlay = (e) => {
+//   e.target.play();
+//   e.target.removeEventListener("canplay", videoCanPlay);
+// };
 
 const handleEnter = () => {
   if (!deviceStore.userMotionReduced) {
@@ -125,7 +124,7 @@ const handleLeave = () => {
     if (!vid.value.paused) {
       userPaused.value = false;
     }
-    
+
     pause();
   } else {
     console.warn("Video element is not available in handleLeave.");
@@ -166,6 +165,12 @@ const toggle = () => {
   overflow: hidden;
   cursor: pointer;
 
+  &.is-paused {
+    .vid-button {
+      opacity: 1;
+    }
+  }
+
   @media (pointer: fine) {
     .vid-button {
       opacity: 0;
@@ -177,7 +182,8 @@ const toggle = () => {
   }
 
   @media (pointer: coarse) {
-    .vid-button, &:hover .vid-button {
+    .vid-button,
+    &:hover .vid-button {
       opacity: 1;
     }
   }

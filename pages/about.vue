@@ -1,5 +1,5 @@
 <template>
-  <section :class="['page', 'about']">
+  <section :class="['page', 'about']" v-if="data">
     <AboutContentBlocks :content="data.content" />
   </section>
 </template>
@@ -21,33 +21,20 @@ const { data } = await useSanityQuery(aboutQuery);
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
- await usePageSetup({
-  seoMeta: data.value?.seo
-})
+usePageSetup({ seoMeta: data.value?.seo });
 
 /* ----------------------------------------------------------------------------
- * Set page theme
+ * Setup page theme
  * --------------------------------------------------------------------------*/
+const { setPageTheme } = useTheme();
 
-watch(
-  data,
-  (sanityData) => {
-    if (!process.client || !sanityData || sanityData.length === 0) return;
+setPageTheme(data.value.pageTheme);
 
-    const { setPageTheme } = useTheme();
-
-    if (sanityData?.pageTheme?.theme) {
-      setPageTheme(sanityData.pageTheme);
-    }
-  },
-  { immediate: true }
-);
-
-onMounted(() => {
-  // tell the app that the page has successfully mounted
-  const { emit } = useEventBus();
-  emit("page::mounted");
-});
+// onMounted(() => {
+//   // tell the app that the page has successfully mounted
+//   const { emit } = useEventBus();
+//   emit("page::mounted");
+// });
 
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta

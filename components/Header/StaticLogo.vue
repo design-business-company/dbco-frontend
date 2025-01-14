@@ -33,7 +33,8 @@ span {
 import { ref, onMounted, onUnmounted } from "vue";
 
 const shuffleDuration = 100;
-const resetDuration = 3000;
+const totalShuffleTime = 1500;
+const resetDuration = 5000;
 
 const line = ref([
   {
@@ -125,7 +126,7 @@ const line = ref([
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]]; // ES6 destructuring swap
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
 }
 
@@ -150,26 +151,41 @@ function shuffle(obj) {
       obj.resetTimer = setTimeout(() => {
         obj.val = obj.name;
       }, resetDuration);
-      timers.value.push(obj.resetTimer); // Store timer for cleanup
+      timers.value.push(obj.resetTimer);
     }
   }, shuffleDuration);
 
-  timers.value.push(interval); // Store interval for cleanup
+  timers.value.push(interval);
 }
 
 onMounted(() => {
-  shuffleArray(line.value[0].options);
-
-  line.value.forEach((item, index) => {
-    shuffle(line.value[index]);
-  });
+  shuffleAndLandOnDefault();
 });
 
 onUnmounted(() => {
   // Clear all intervals and timeouts when component unmounts
   timers.value.forEach((timer) => clearTimeout(timer));
-  timers.value = []; // Optionally reset the timers array
+  timers.value = [];
 });
+
+function shuffleAndLandOnDefault() {
+  line.value.forEach((obj) => {
+    obj.animating = true;
+    let timesRun = 0;
+
+    const interval = setInterval(() => {
+      timesRun += 1;
+      shuffleArray(obj.options);
+      obj.val = obj.options[0];
+
+      if (timesRun >= totalShuffleTime / shuffleDuration) {
+        clearInterval(interval);
+        obj.animating = false;
+        obj.val = obj.name; // Set to the default value
+      }
+    }, shuffleDuration);
+  });
+}
 
 // function reset() {
 //   line.forEach((line) => (line.val = line.name));

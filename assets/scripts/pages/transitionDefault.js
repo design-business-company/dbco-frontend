@@ -24,7 +24,6 @@ export default function pageTransitionDefault() {
         delay: 0.5,
         opacity: 1,
         y: 0,
-        rotate: 0,
         onComplete: () => {
           app.setRouteIsTransitioning(false);
           done();

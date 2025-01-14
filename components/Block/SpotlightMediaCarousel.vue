@@ -146,6 +146,10 @@ onUnmounted(() => {
 
   &:hover {
     cursor: grab;
+
+    &:deep(.vid-container) {
+      cursor: grab;
+    }
   }
 
   &:active {

@@ -5,10 +5,8 @@
 </template>
 
 <script setup>
-import { watch } from "vue";
 import { useTheme } from "~/composables/useTheme";
 import { homeQuery } from "~/queries/pages/home";
-import { useEventBus } from "~/composables/useEventBus";
 import usePageSetup from "~/composables/usePageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 
@@ -16,39 +14,25 @@ import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
 const { data, error, status } = await useSanityQuery(homeQuery);
-
-if (error.value) await navigateTo("/error");
+// if (error.value) await navigateTo("/error");
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
- await usePageSetup({
-  seoMeta: data.value?.seo
-})
+usePageSetup({ seoMeta: data.value?.seo });
 
 /* ----------------------------------------------------------------------------
- * Set page theme
+ * Setup page theme
  * --------------------------------------------------------------------------*/
+const { setPageTheme } = useTheme();
 
-watch(
-  data,
-  (sanityData) => {
-    if (!process.client || !sanityData || sanityData.length === 0) return;
+setPageTheme(data.value.pageTheme);
 
-    const { setPageTheme } = useTheme();
-
-    if (sanityData?.pageTheme) {
-      setPageTheme(sanityData.pageTheme);
-    }
-  },
-  { immediate: true }
-);
-
-onMounted(() => {
-  // tell the app that the page has successfully mounted
-  const { emit } = useEventBus();
-  emit("page::mounted");
-});
+// onMounted(() => {
+//   // tell the app that the page has successfully mounted
+//   const { emit } = useEventBus();
+//   emit("page::mounted");
+// });
 
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta

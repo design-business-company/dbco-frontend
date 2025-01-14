@@ -33,9 +33,7 @@ const { data, error, status, refresh } = await useSanityQuery(pageQuery, {
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
- await usePageSetup({
-  seoMeta: data.value?.seo
-})
+usePageSetup({ seoMeta: data.value?.seo });
 
 /* ----------------------------------------------------------------------------
  * Set page theme
