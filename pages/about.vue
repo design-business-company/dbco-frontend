@@ -7,7 +7,7 @@
 <script setup>
 import { watch } from "vue";
 import { useTheme } from "~/composables/useTheme";
-import pageSEO from "~/assets/scripts/pages/seo";
+import usePageSetup from "~/composables/usePageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 import { aboutQuery } from "~/queries/pages/about";
 import { useEventBus } from "~/composables/useEventBus";
@@ -16,8 +16,14 @@ import { useEventBus } from "~/composables/useEventBus";
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
 const { data } = await useSanityQuery(aboutQuery);
-
 // if (error.value) await navigateTo("/error");
+
+/* ----------------------------------------------------------------------------
+ * Handle SEO Shit
+ * --------------------------------------------------------------------------*/
+ await usePageSetup({
+  seoMeta: data.value?.seo
+})
 
 /* ----------------------------------------------------------------------------
  * Set page theme
@@ -42,12 +48,6 @@ onMounted(() => {
   const { emit } = useEventBus();
   emit("page::mounted");
 });
-
-/* ----------------------------------------------------------------------------
- * Handle SEO Shit
- * --------------------------------------------------------------------------*/
-
-useServerSeoMeta(pageSEO(data.value?.seo));
 
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta
