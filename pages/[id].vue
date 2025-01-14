@@ -1,11 +1,6 @@
 <template>
-  <section :class="['page']">
-    <template v-if="status === 'pending'">
-      <p>pending</p>
-    </template>
-    <template v-else>
-      <ContentBlocks :content="data.content" />
-    </template>
+  <section :class="['page']" v-if="data.content">
+    <ContentBlocks :content="data.content" />
   </section>
 </template>
 
@@ -27,8 +22,7 @@ const pageId = route.params.id;
 const { data, error, status, refresh } = await useSanityQuery(pageQuery, {
   slug: pageId,
 });
-
-// if (error.value) await navigateTo("/error");
+if (error.value) await navigateTo("/error");
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
@@ -36,22 +30,11 @@ const { data, error, status, refresh } = await useSanityQuery(pageQuery, {
 usePageSetup({ seoMeta: data.value?.seo });
 
 /* ----------------------------------------------------------------------------
- * Set page theme
+ * Setup page theme
  * --------------------------------------------------------------------------*/
+const { setPageTheme } = useTheme();
 
-watch(
-  data,
-  (sanityData) => {
-    if (!process.client || !sanityData || sanityData.length === 0) return;
-
-    const { setPageTheme } = useTheme();
-
-    if (sanityData?.pageTheme) {
-      setPageTheme(sanityData.pageTheme);
-    }
-  },
-  { immediate: true }
-);
+setPageTheme(data.value.pageTheme);
 
 onMounted(() => {
   // tell the app that the page has successfully mounted

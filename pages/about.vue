@@ -5,18 +5,16 @@
 </template>
 
 <script setup>
-import { watch } from "vue";
 import { useTheme } from "~/composables/useTheme";
 import usePageSetup from "~/composables/usePageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 import { aboutQuery } from "~/queries/pages/about";
-import { useEventBus } from "~/composables/useEventBus";
 
 /* ----------------------------------------------------------------------------
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
-const { data } = await useSanityQuery(aboutQuery);
-// if (error.value) await navigateTo("/error");
+const { data, error } = await useSanityQuery(aboutQuery);
+if (error.value) await navigateTo("/error");
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit

@@ -14,7 +14,7 @@ import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
 const { data, error, status } = await useSanityQuery(homeQuery);
-// if (error.value) await navigateTo("/error");
+if (error.value) await navigateTo("/error");
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit

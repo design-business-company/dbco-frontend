@@ -16,7 +16,7 @@ import { contactQuery } from "~/queries/pages/contact";
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
 const { data, error, status, refresh } = await useSanityQuery(contactQuery);
-// if (error.value) await navigateTo("/error");
+if (error.value) await navigateTo("/error");
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
