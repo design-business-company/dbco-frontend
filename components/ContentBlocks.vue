@@ -32,11 +32,9 @@
     </Grid>
 
     <Grid v-if="block._type === 'media'">
-      <Space />
       <Column>
         <BlockMedia :media="block.media[0]" />
       </Column>
-      <Space />
     </Grid>
 
     <div v-if="block._type === 'hyperText'">

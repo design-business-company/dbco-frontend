@@ -1,6 +1,5 @@
 <template>
   <Grid v-if="data" element="footer" class="site-footer">
-    <Space size="huger" />
     <Column
       v-if="data.links"
       span="12"
@@ -12,7 +11,10 @@
       <div class="content">
         <div v-for="link in data.links.content">
           <Text size="caption-2" class="content"
-            >{{ link.cta }}<br />
+            ><span style="color: var(--foreground-secondary)">{{
+              link.cta
+            }}</span
+            ><br />
             <a :href="link.url" target="_blank">{{ link.title }}</a
             ><br /><br
           /></Text>
@@ -75,7 +77,6 @@
     </Column>
 
     <Column
-      v-if="data.copyright"
       span="12"
       span-tablet="6"
       start-tablet="7"
@@ -84,8 +85,8 @@
       class="copyright"
     >
       <Text size="caption-2" class="title">Copyright</Text>
-      <Text element="div" size="caption-2" class="content">
-        &copy;2023-{{ date }}
+      <Text element="div" size="caption-2" class="content copyright">
+        &copy;2023–{{ date }}
       </Text>
     </Column>
   </Grid>
@@ -94,25 +95,6 @@
 <script setup>
 import { settingsFooter } from "~/queries/settingsFooter";
 import BlockCopyLinkExternal from "~/components/Block/CopyLinkExternal.vue";
-import { useIntersectionObserver } from "@vueuse/core";
-import { useTheme } from "~/composables/useTheme";
-
-const { resetTheme } = useTheme();
-
-const footerRef = ref(null);
-
-const { stop } = useIntersectionObserver(
-  footerRef,
-  ([entry]) => {
-    if (entry.isIntersecting) {
-      resetTheme();
-    }
-  },
-  {
-    threshold: 0,
-    rootMargin: `0px 0px 0px 0px`,
-  }
-);
 
 const customSerializers = {
   marks: {
@@ -132,8 +114,14 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 .site-footer {
   row-gap: var(--small);
-  padding-top: var(--small);
-  padding-bottom: var(--small);
+  padding-top: var(--biggest);
+  padding-bottom: var(--biggest);
+  margin-top: var(--biggest);
+
+  @include tablet {
+    padding-top: var(--big);
+    padding-bottom: var(--big);
+  }
 }
 
 .text-caption-2 {
@@ -175,5 +163,9 @@ onBeforeUnmount(() => {
   @include tablet {
     display: block;
   }
+}
+
+.copyright {
+  font-variant-numeric: tabular-nums;
 }
 </style>

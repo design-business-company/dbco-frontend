@@ -85,7 +85,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       deviceStore.setScrollY(this.instance?.y);
     },
 
-    isNearTop(threshold = 50) {
+    isNearTop(threshold = 72) {
       if (!this.instance) return;
       const scrollPosition = this.instance.y;
       deviceStore.setScrollNearTop(scrollPosition <= threshold);

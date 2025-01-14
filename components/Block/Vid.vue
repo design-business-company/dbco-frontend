@@ -89,7 +89,8 @@ const placeholder = ref(null);
 const poster = computed(() => {
   if (!props.poster) return null;
 
-  const width = vid.value ? vid.value.clientWidth : 1080;
+  // const width = vid.value ? vid.value.clientWidth : 1080;
+  const width = 1080;
 
   return $urlFor(props.poster).width(width).auto("format").quality(80).url();
 });

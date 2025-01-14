@@ -1,11 +1,6 @@
 <template>
-  <section :class="['page']">
-    <template v-if="status === 'pending'">
-      <p>pending</p>
-    </template>
-    <template v-else>
-      <ContentBlocks :content="data.content" />
-    </template>
+  <section :class="['page', 'home']" v-if="data">
+    <ContentBlocks :content="data.content" />
   </section>
 </template>
 
@@ -82,6 +77,17 @@ svg {
     border-left: 1px solid var(--foreground-primary);
     padding-left: var(--tiny);
     padding-right: var(--smallest);
+  }
+}
+
+.home {
+  :deep(.grid:first-of-type) {
+    @media (max-width: $tablet) {
+      .media__video .vid-container {
+        aspect-ratio: 1/1;
+        margin-bottom: calc(-1 * var(--big));
+      }
+    }
   }
 }
 </style>
