@@ -26,6 +26,7 @@
       :metadata-video-title="alt"
       :playsinline="settings.playsinline"
       :env-key="envKey"
+      :loop="settings.loop"
       ref="vid"
       class="vid mux-player"
       :poster="poster"
