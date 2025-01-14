@@ -116,8 +116,8 @@ const handleScroll = () => {
   const currentScrollY = scroll.instance.y;
 
   if (
-    // device.scrollNearTop ||
-    // device.scrollAtTop ||
+    device.scrollNearTop ||
+    device.scrollAtTop ||
     device.scrollAtBottom ||
     device.scrollNearBottom ||
     app.mobileNavIsVisible
