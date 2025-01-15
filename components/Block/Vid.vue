@@ -88,16 +88,20 @@ const placeholder = ref(null);
 const viewport = useViewport();
 
 const posterWidth = computed(() => {
-  if (viewport.isGreaterOrEquals('desktop')) return 1280;
-  if (viewport.isGreaterOrEquals('laptop')) return 1080;
-  if (viewport.isGreaterOrEquals('tablet')) return 800;
+  if (viewport.isGreaterOrEquals("desktop")) return 1280;
+  if (viewport.isGreaterOrEquals("laptop")) return 1080;
+  if (viewport.isGreaterOrEquals("tablet")) return 800;
   return 360;
 });
 
 const poster = computed(() => {
   if (!props.poster) return null;
 
-  return $urlFor(props.poster).width(posterWidth.value).auto("format").quality(80).url();
+  return $urlFor(props.poster)
+    .width(posterWidth.value)
+    .auto("format")
+    .quality(80)
+    .url();
 });
 
 if (props.playbackId) {
@@ -114,7 +118,7 @@ onMounted(() => {
   vid.value?.addEventListener("loadedmetadata", handleVideoLoaded);
 
   vid.value?.addEventListener("error", handleVideoError);
-})
+});
 
 const handleVideoLoaded = () => {
   isLoading.value = false;
@@ -122,12 +126,12 @@ const handleVideoLoaded = () => {
   if (props.settings.autoplay && !userPaused.value && isInView.value) {
     play();
   }
-}
+};
 
 const handleVideoError = (e) => {
   isLoading.value = false;
-  console.error('Error loading video: ', e);
-}
+  console.error("Error loading video: ", e);
+};
 
 const handleEnter = () => {
   isInView.value = true;
@@ -284,7 +288,7 @@ mux-video {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 200ms var(--transition-function);
+  transition: opacity var(--transition-fast-time) ease-in-out;
 }
 
 .fade-enter-from,
