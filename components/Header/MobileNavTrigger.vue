@@ -111,8 +111,7 @@ const bottomLineRef = ref(null);
     height: 1.5px;
     position: relative;
     background-color: var(--foreground-primary);
-    transition: background-color var(--transition-fast),
-      transform var(--transition-fast);
+    transition: background-color var(--transition-fast), transform 250ms;
     border-radius: 10px;
 
     &:first-child {
