@@ -2,7 +2,13 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@pinia/nuxt", "@nuxtjs/sanity", "@nuxtjs/plausible", "nuxt3-lenis", "nuxt-viewport"],
+  modules: [
+    "@pinia/nuxt",
+    "@nuxtjs/sanity",
+    "@nuxtjs/plausible",
+    "nuxt3-lenis",
+    "nuxt-viewport",
+  ],
 
   plugins: [
     { src: "~/plugins/device/deviceInfo.ts", mode: "client" },
@@ -75,12 +81,12 @@ export default defineNuxtConfig({
       desktop: 1350,
       ultrawide: 1660,
     },
-    fallbackBreakpoint: 'tablet',
+    fallbackBreakpoint: "tablet",
     defaultBreakpoints: {
-      mobile: 'phablet',
-      tablet: 'tablet',
-      desktop: 'desktop'
-    }
+      mobile: "phablet",
+      tablet: "tablet",
+      desktop: "desktop",
+    },
   },
 
   vue: {
@@ -89,9 +95,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // this is causing the netlify error:
-  // error decoding lambda response: error decoding lambda
-  // compatibilityDate: "2024-12-05",
   vite: {
     css: {
       preprocessorOptions: {
@@ -105,5 +108,8 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: "2025-01-15",
+  // this is causing the netlify error:
+  // error decoding lambda response: error decoding lambda
+  // more info here: https://answers.netlify.com/t/nuxt-3-build-suddently-fails-building/129677/6
+  // compatibilityDate: "2025-01-15",
 });
