@@ -37,7 +37,9 @@ const bottomLineRef = ref(null);
   justify-content: center;
   height: 44px;
   border-radius: 0;
+
   &__button {
+    margin-right: calc(-1 * var(--tinier));
     cursor: pointer;
     appearance: none;
     background: 0;
@@ -58,7 +60,8 @@ const bottomLineRef = ref(null);
 
         .mobile-trigger__button-line {
           background-color: var(--background-primary);
-          &:first-child, &:last-child {
+          &:first-child,
+          &:last-child {
             transform: translate3d(0, 0, 0);
           }
         }
@@ -108,7 +111,8 @@ const bottomLineRef = ref(null);
     height: 1.5px;
     position: relative;
     background-color: var(--foreground-primary);
-    transition: background-color var(--transition-fast), transform var(--transition-fast);
+    transition: background-color var(--transition-fast),
+      transform var(--transition-fast);
     border-radius: 10px;
 
     &:first-child {

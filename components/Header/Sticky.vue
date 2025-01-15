@@ -178,9 +178,8 @@ onClickOutside(nav, (event) => {
     visibility: visible;
     pointer-events: all;
     transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
     will-change: transform, background-color;
-    transition: transform 200ms var(--transition-function),
+    transition: transform 400ms var(--transition-function),
       background-color var(--transition);
     background-color: var(--background-primary);
   }
