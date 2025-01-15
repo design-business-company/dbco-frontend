@@ -130,7 +130,10 @@
   --accent-error: var(--red-500);
   --accent-valid: var(--green-500);
 
-  --transition-function: ease-out;
+  /** easings */
+  --ease-out-quart: cubic-bezier(0.22, 1, 0.44, 1);
+
+  --transition-function: var(--ease-out-quart);
   --transition-time: 400ms;
   --transition: var(--transition-time) var(--transition-function);
   --transition-fast-time: 300ms;

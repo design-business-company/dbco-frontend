@@ -18,29 +18,26 @@
         </transition>
       </div>
     </button>
-    <mux-player
+    <mux-video
       :playback-id="playbackId"
-      :controls="false"
       :muted="settings.mute"
-      :placeholder="placeholder"
       :aria-label="alt"
       :playsinline="settings.playsinline"
       :env-key="envKey"
       :loop="settings.loop"
       ref="vid"
-      class="vid mux-player"
-      :poster="poster"
+      class="vid mux-video"
+      :poster="poster ?? placeholder"
       min-resolution="720p"
-      preload="metadata"
       :class="{
-        'mux-player--controls-hidden': !settings.controls,
+        'mux-video--controls-hidden': !settings.controls,
       }"
     />
   </Observer>
 </template>
 
 <script setup>
-import "@mux/mux-player";
+import "@mux/mux-video";
 import { createBlurUp } from "@mux/blurup";
 import { ref, computed } from "vue";
 import { useDeviceStore } from "~/stores/device";
@@ -84,14 +81,23 @@ const envKey = computed(() => config.public.muxEnvKey);
 
 const vid = ref(null);
 const isPlaying = ref(false);
+const isLoading = ref(true);
+const isInView = ref(false);
 const placeholder = ref(null);
+
+const viewport = useViewport();
+
+const posterWidth = computed(() => {
+  if (viewport.isGreaterOrEquals('desktop')) return 1280;
+  if (viewport.isGreaterOrEquals('laptop')) return 1080;
+  if (viewport.isGreaterOrEquals('tablet')) return 800;
+  return 360;
+});
 
 const poster = computed(() => {
   if (!props.poster) return null;
 
-  const width = 1080;
-
-  return $urlFor(props.poster).width(width).auto("format").quality(80).url();
+  return $urlFor(props.poster).width(posterWidth.value).auto("format").quality(80).url();
 });
 
 if (props.playbackId) {
@@ -104,13 +110,29 @@ const formattedAspectRatio = computed(() => {
   return props.aspectRatio?.replaceAll(":", "/").trim() ?? "auto";
 });
 
-// const videoCanPlay = (e) => {
-//   e.target.play();
-//   e.target.removeEventListener("canplay", videoCanPlay);
-// };
+onMounted(() => {
+  vid.value?.addEventListener("loadedmetadata", handleVideoLoaded);
+
+  vid.value?.addEventListener("error", handleVideoError);
+})
+
+const handleVideoLoaded = () => {
+  isLoading.value = false;
+
+  if (props.settings.autoplay && !userPaused.value && isInView.value) {
+    play();
+  }
+}
+
+const handleVideoError = (e) => {
+  isLoading.value = false;
+  console.error('Error loading video: ', e);
+}
 
 const handleEnter = () => {
-  if (!deviceStore.userMotionReduced) {
+  isInView.value = true;
+
+  if (!deviceStore.userMotionReduced && !isLoading.value) {
     if (props.settings.autoplay && !userPaused.value) {
       play();
     }
@@ -120,6 +142,8 @@ const handleEnter = () => {
 };
 
 const handleLeave = () => {
+  isInView.value = false;
+
   if (vid.value) {
     if (!vid.value.paused) {
       userPaused.value = false;
@@ -130,6 +154,11 @@ const handleLeave = () => {
     console.warn("Video element is not available in handleLeave.");
   }
 };
+
+onBeforeUnmount(() => {
+  vid.value?.removeEventListener("loadedmetadata", handleVideoLoaded);
+  vid.value?.removeEventListener("error", handleVideoError);
+});
 
 const play = () => {
   if (!vid.value) return;
@@ -238,8 +267,8 @@ const toggle = () => {
   }
 }
 
-.mux-player,
-mux-player {
+.mux-video,
+mux-video {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -249,7 +278,7 @@ mux-player {
   aspect-ratio: var(--aspect-ratio);
 }
 
-.mux-player--controls-hidden {
+.mux-video--controls-hidden {
   --controls: none;
 }
 

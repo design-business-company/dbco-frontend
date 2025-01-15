@@ -51,6 +51,7 @@ watch(
   &.nav-is-open {
     // filter: blur(var(--tiniest));
     // opacity: 0.2;
+    overflow: hidden;
     pointer-events: none;
   }
 }
