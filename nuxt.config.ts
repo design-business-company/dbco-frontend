@@ -77,9 +77,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // this is causing the netlify error:
-  // error decoding lambda response: error decoding lambda
-  // compatibilityDate: "2024-11-08",
   vite: {
     css: {
       preprocessorOptions: {
@@ -93,5 +90,7 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: "2024-12-05",
+  // this is causing the netlify error:
+  // error decoding lambda response: error decoding lambda
+  // compatibilityDate: "2024-12-05",
 });
