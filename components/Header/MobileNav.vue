@@ -56,11 +56,11 @@ const { data } = await useSanityQuery(settingsFooter);
 
 const handleLinkClick = (path) => {
   routerLinkActive.value = path;
+  navigateTo(path);
   
   setTimeout(() => {
     app.setMobileNavVisibility(false);
-    navigateTo(path);
-  }, 250)
+  }, 300)
 
 };
 
