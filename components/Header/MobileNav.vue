@@ -2,9 +2,30 @@
   <transition @leave="onLeave" @enter="onEnter">
     <div v-if="app.mobileNavIsVisible" class="mobile-nav" ref="mobileNavRef">
       <ul ref="navItems" class="text-headline-3 mobile-nav__primary">
-        <li><HeaderMobileNavLink to="/" :current-path="routerLinkActive" @link-click="handleLinkClick">Work</HeaderMobileNavLink></li>
-        <li><HeaderMobileNavLink to="/about" :current-path="routerLinkActive" @link-click="handleLinkClick">About</HeaderMobileNavLink></li>
-        <li><HeaderMobileNavLink to="/contact" :current-path="routerLinkActive" @link-click="handleLinkClick">Contact</HeaderMobileNavLink></li>
+        <li>
+          <HeaderMobileNavLink
+            to="/"
+            :current-path="routerLinkActive"
+            @link-click="handleLinkClick"
+            >Work</HeaderMobileNavLink
+          >
+        </li>
+        <li>
+          <HeaderMobileNavLink
+            to="/about"
+            :current-path="routerLinkActive"
+            @link-click="handleLinkClick"
+            >About</HeaderMobileNavLink
+          >
+        </li>
+        <li>
+          <HeaderMobileNavLink
+            to="/contact"
+            :current-path="routerLinkActive"
+            @link-click="handleLinkClick"
+            >Contact</HeaderMobileNavLink
+          >
+        </li>
       </ul>
       <Grid ref="socialItems" style="padding: 0">
         <Column>
@@ -57,11 +78,10 @@ const { data } = await useSanityQuery(settingsFooter);
 const handleLinkClick = (path) => {
   routerLinkActive.value = path;
   navigateTo(path);
-  
+
   setTimeout(() => {
     app.setMobileNavVisibility(false);
-  }, 300)
-
+  }, 1250);
 };
 
 function onEnter(el, done) {
@@ -122,7 +142,6 @@ function onLeave(el, done) {
       aspect-ratio: 1/1;
       padding-top: 0;
       padding-bottom: 0;
-      animation: flip 20s infinite;
       max-height: none;
     }
   }
@@ -178,17 +197,9 @@ function onLeave(el, done) {
     justify-content: center;
     align-items: center;
     transition: color var(--transition-fast),
-      background-color var(--transition-fast), border-radius var(--transition-fast),
-      height var(--transition-fast);
-  }
-}
-
-@keyframes flip {
-  0% {
-    rotate: 0deg;
-  }
-  100% {
-    rotate: 360deg;
+      background-color var(--transition-fast),
+      border-radius 400ms 200ms var(--transition-function),
+      height 400ms 200ms var(--transition-function);
   }
 }
 </style>
