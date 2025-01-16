@@ -107,6 +107,8 @@ const poster = computed(() => {
 if (props.playbackId) {
   createBlurUp(props.playbackId, {}).then((res) => {
     placeholder.value = res.blurDataURL;
+  }).catch((e) => {
+    console.log("Error creating blur up: ", e);
   });
 }
 
