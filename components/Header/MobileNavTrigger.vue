@@ -11,27 +11,10 @@
           { 'nav-is-visible': app.mobileNavIsVisible },
         ]"
       >
-        <svg
-          width="34"
-          height="12"
-          viewBox="0 0 34 12"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            ref="topLineRef"
-            :d="`M1 ${!app.mobileNavIsVisible ? '1H33' : '6H33'}`"
-            stroke="var(--foreground-primary)"
-            stroke-width="1.5"
-            stroke-linecap="round"
-          />
-          <path
-            ref="bottomLineRef"
-            :d="`M1 ${!app.mobileNavIsVisible ? '11H33' : '6H33'}`"
-            stroke="var(--foreground-primary)"
-            stroke-width="1.5"
-            stroke-linecap="round"
-          />
-        </svg>
+        <div class="mobile-trigger__button-lines">
+          <div class="mobile-trigger__button-line"></div>
+          <div class="mobile-trigger__button-line"></div>
+        </div>
       </div>
     </button>
   </div>
@@ -54,7 +37,9 @@ const bottomLineRef = ref(null);
   justify-content: center;
   height: 44px;
   border-radius: 0;
+
   &__button {
+    margin-right: calc(-1 * var(--tinier));
     cursor: pointer;
     appearance: none;
     background: 0;
@@ -73,8 +58,12 @@ const bottomLineRef = ref(null);
       &.nav-is-visible {
         background-color: var(--foreground-primary);
 
-        path {
-          stroke: var(--background-primary);
+        .mobile-trigger__button-line {
+          background-color: var(--background-primary);
+          &:first-child,
+          &:last-child {
+            transform: translate3d(0, 0, 0);
+          }
         }
       }
     }
@@ -103,13 +92,34 @@ const bottomLineRef = ref(null);
       }
     }
   }
-  svg {
-    display: block;
-    width: 32px;
-    height: auto;
 
-    path {
-      transition: d 150ms ease-out, stroke var(--transition);
+  &__button-lines {
+    display: grid;
+    position: relative;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    place-items: center;
+    width: 32px;
+    height: 12px;
+  }
+
+  &__button-line {
+    display: block;
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 1;
+    width: 100%;
+    height: 1.5px;
+    position: relative;
+    background-color: var(--foreground-primary);
+    transition: background-color var(--transition-fast), transform 250ms;
+    border-radius: 10px;
+
+    &:first-child {
+      transform: translateY(-4.5px);
+    }
+
+    &:last-child {
+      transform: translateY(4.5px);
     }
   }
 }

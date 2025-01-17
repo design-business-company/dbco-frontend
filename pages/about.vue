@@ -1,5 +1,5 @@
 <template>
-  <section :class="['page', 'about']" v-if="data">
+  <section ref="pageRef" :class="['page', 'about']" v-if="data">
     <AboutContentBlocks :content="data.content" />
   </section>
 </template>
@@ -10,6 +10,8 @@ import usePageSetup from "~/composables/usePageSetup";
 import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 import { aboutQuery } from "~/queries/pages/about";
 
+const pageRef = ref(null);
+
 /* ----------------------------------------------------------------------------
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
@@ -19,7 +21,7 @@ if (error.value) await navigateTo("/error");
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
-usePageSetup({ seoMeta: data.value?.seo });
+usePageSetup({ seoMeta: data.value?.seo, pageRef });
 
 /* ----------------------------------------------------------------------------
  * Setup page theme

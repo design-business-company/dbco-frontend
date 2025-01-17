@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@nuxtjs/sanity",
     "@nuxtjs/plausible",
     "nuxt3-lenis",
+    "nuxt-viewport",
   ],
 
   plugins: [
@@ -71,9 +72,26 @@ export default defineNuxtConfig({
     strict: false,
   },
 
+  viewport: {
+    breakpoints: {
+      mobile: 360,
+      phablet: 430,
+      tablet: 600,
+      laptop: 1024,
+      desktop: 1350,
+      ultrawide: 1660,
+    },
+    fallbackBreakpoint: "tablet",
+    defaultBreakpoints: {
+      mobile: "phablet",
+      tablet: "tablet",
+      desktop: "desktop",
+    },
+  },
+
   vue: {
     compilerOptions: {
-      isCustomElement: (tag) => tag.startsWith("mux-player"),
+      isCustomElement: (tag) => tag.startsWith("mux-"),
     },
   },
 
@@ -92,5 +110,6 @@ export default defineNuxtConfig({
 
   // this is causing the netlify error:
   // error decoding lambda response: error decoding lambda
-  // compatibilityDate: "2024-12-05",
+  // more info here: https://answers.netlify.com/t/nuxt-3-build-suddently-fails-building/129677/6
+  // compatibilityDate: "2025-01-15",
 });

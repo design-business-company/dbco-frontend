@@ -1,5 +1,5 @@
 <template>
-  <section :class="['page']" v-if="data.content">
+  <section ref="pageRef" :class="['page']" v-if="data.content">
     <ContentBlocks :content="data.content" />
   </section>
 </template>
@@ -18,7 +18,7 @@ import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
  * --------------------------------------------------------------------------*/
 const route = useRoute();
 const pageId = route.params.id;
-
+const pageRef = ref(null);
 const { data, error, status, refresh } = await useSanityQuery(pageQuery, {
   slug: pageId,
 });
@@ -27,7 +27,7 @@ if (error.value) await navigateTo("/error");
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
-usePageSetup({ seoMeta: data.value?.seo });
+usePageSetup({ seoMeta: data.value?.seo, pageRef });
 
 /* ----------------------------------------------------------------------------
  * Setup page theme
