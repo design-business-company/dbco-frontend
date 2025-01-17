@@ -141,7 +141,6 @@ const handleEnter = () => {
 
   if (isLoading.value) {
     vid.value?.load();
-    console.log("load this one: ", vid.value);
   }
 
   if (!deviceStore.userMotionReduced && !isLoading.value) {
