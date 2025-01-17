@@ -105,11 +105,13 @@ const poster = computed(() => {
 });
 
 if (props.playbackId) {
-  createBlurUp(props.playbackId, {}).then((res) => {
-    placeholder.value = res.blurDataURL;
-  }).catch((e) => {
-    console.log("Error creating blur up: ", e);
-  });
+  createBlurUp(props.playbackId, {})
+    .then((res) => {
+      placeholder.value = res.blurDataURL;
+    })
+    .catch((e) => {
+      console.log("Error creating blur up: ", e);
+    });
 }
 
 const formattedAspectRatio = computed(() => {
@@ -118,7 +120,6 @@ const formattedAspectRatio = computed(() => {
 
 onMounted(() => {
   vid.value?.addEventListener("loadedmetadata", handleVideoLoaded);
-
   vid.value?.addEventListener("error", handleVideoError);
 });
 
@@ -137,6 +138,11 @@ const handleVideoError = (e) => {
 
 const handleEnter = () => {
   isInView.value = true;
+
+  if (isLoading.value) {
+    vid.value?.load();
+    console.log("load this one: ", vid.value);
+  }
 
   if (!deviceStore.userMotionReduced && !isLoading.value) {
     if (props.settings.autoplay && !userPaused.value) {
