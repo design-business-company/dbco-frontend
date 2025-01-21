@@ -18,6 +18,7 @@
         <CustomPortableText
           v-if="item.shortDescription"
           :value="item.shortDescription.text"
+          :simple="true"
         />
       </div>
     </div>
