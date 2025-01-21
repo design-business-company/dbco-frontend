@@ -30,6 +30,7 @@
                 <CustomPortableText
                   v-if="shortDescription"
                   :value="shortDescription.text"
+                  :simple="true"
                 />
               </span>
             </Observer>
@@ -59,6 +60,7 @@
               <CustomPortableText
                 v-if="description?.text"
                 :value="description.text"
+                :simple="true"
               />
             </Text>
             <Text
@@ -67,7 +69,11 @@
               class="spotlight__credits"
               ref="cred"
             >
-              <CustomPortableText v-if="credits?.text" :value="credits.text" />
+              <CustomPortableText
+                v-if="credits?.text"
+                :value="credits.text"
+                :simple="true"
+              />
             </Text>
           </Observer>
         </Column>

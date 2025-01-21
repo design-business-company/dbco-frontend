@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { gsap } from "gsap";
 import { type PropType } from "vue";
 
@@ -56,18 +56,20 @@ const props = defineProps({
   },
 });
 
+const { size, element, indent } = toRefs(props);
+
 const container = ref<HTMLElement | null>(null);
 
-const handleEnter = () => {
-  if (props.animateOnEnter && container.value) {
-    // Animate each child element of the container
-    gsap.fromTo(
-      container.value,
-      { opacity: 0.2 },
-      { opacity: 1, duration: 0.5, delay: 0.25 }
-    );
-  }
-};
+// const handleEnter = () => {
+//   if (props.animateOnEnter && container.value) {
+//     // Animate each child element of the container
+//     gsap.fromTo(
+//       container.value,
+//       { opacity: 0.2 },
+//       { opacity: 1, duration: 0.5, delay: 0.25 }
+//     );
+//   }
+// };
 </script>
 
 <style scoped>

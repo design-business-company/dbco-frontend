@@ -18,7 +18,7 @@
         </transition>
       </div>
     </button>
-    <mux-video
+    <mux-player
       :playback-id="playbackId"
       :muted="settings.mute"
       :aria-label="alt"
@@ -26,18 +26,18 @@
       :env-key="envKey"
       :loop="settings.loop"
       ref="vid"
-      class="vid mux-video"
+      class="vid mux-player"
       :poster="poster ?? placeholder"
       min-resolution="720p"
       :class="{
-        'mux-video--controls-hidden': !settings.controls,
+        'mux-player--controls-hidden': !settings.controls,
       }"
     />
   </Observer>
 </template>
 
 <script setup>
-import "@mux/mux-video";
+import "@mux/mux-player";
 import { createBlurUp } from "@mux/blurup";
 import { ref, computed } from "vue";
 import { useDeviceStore } from "~/stores/device";
@@ -105,13 +105,14 @@ const poster = computed(() => {
 });
 
 if (props.playbackId) {
-  createBlurUp(props.playbackId, {})
-    .then((res) => {
-      placeholder.value = res.blurDataURL;
-    })
-    .catch((e) => {
-      console.log("Error creating blur up: ", e);
-    });
+  try {
+    createBlurUp(props.playbackId, {})
+      .then((res) => {
+        placeholder.value = res.blurDataURL;
+      })
+  } catch (e) {
+    console.warn("Error creating blur up: ", e);
+  }
 }
 
 const formattedAspectRatio = computed(() => {
@@ -278,8 +279,8 @@ const toggle = () => {
   }
 }
 
-.mux-video,
-mux-video {
+.mux-player,
+mux-player {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -289,7 +290,7 @@ mux-video {
   aspect-ratio: var(--aspect-ratio);
 }
 
-.mux-video--controls-hidden {
+.mux-player--controls-hidden {
   --controls: none;
 }
 

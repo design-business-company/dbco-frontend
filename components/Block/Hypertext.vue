@@ -1,14 +1,13 @@
 <template>
   <Grid class="hypertext">
     <Column span="12" span-tablet="10">
-      <SanityContent :blocks="blocks" :serializers="serializers" />
+      <CustomPortableText :value="blocks" />
     </Column>
   </Grid>
 </template>
 
 <script setup>
-import { markRaw, toRefs } from "vue";
-import BlockHypertextSpan from "@/components/Block/HypertextSpan.vue";
+import { toRefs } from "vue";
 
 // Props
 const props = defineProps({
@@ -19,13 +18,6 @@ const props = defineProps({
 });
 
 const { blocks } = toRefs(props);
-
-// Data for serializers
-const serializers = {
-  marks: {
-    hypertextSpan: markRaw(BlockHypertextSpan),
-  },
-};
 
 defineOptions({
   inheritAttrs: false,

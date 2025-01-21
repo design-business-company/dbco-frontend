@@ -13,6 +13,7 @@ import BlockCopyLinkInternal from "~/components/Block/CopyLinkInternal.vue";
 import BlockCopyCode from "~/components/Block/CopyCode.vue";
 import BlockCopyUnderline from "~/components/Block/CopyUnderline.vue";
 import BlockCopyHighlight from "~/components/Block/CopyHighlight.vue";
+import BlockHypertextSpan from "~/components/Block/HypertextSpan.vue";
 import BlockCopyStrike from "~/components/Block/CopyStrike.vue";
 import BlockCopyParagraph from "~/components/Block/CopyParagraph.vue";
 import BlockCopyList from "~/components/Block/CopyList.vue";
@@ -28,17 +29,30 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  // Used to render simple rich text (disregards style and just renders the text)
+  simple: {
+    type: Boolean,
+    required: false,
+    default: false,
+  }
 });
 
-const { value } = toRefs(props);
+const { value, simple } = toRefs(props);
 
 const serializers = {
   types: {
+    span: (props, { slots }) => {
+      return h('span', { ...props }, slots.default?.());
+    },
     rule: BlockRule,
     media: BlockMedia,
     spacer: Space,
-    textHeading: BlockTextHeading,
-    textColumns: BlockTextColumns,
+    textHeading: ({ value }, { slots }) => {
+      return h(BlockTextHeading, {...value}, slots.default)
+    },
+    textColumns: ({ value }) => {
+      return h(BlockTextColumns, {...value } )
+    },
     buttonGroup: BlockButtonGroup,
   },
   list: {
@@ -46,11 +60,7 @@ const serializers = {
     number: BlockCopyList,
   },
   block: ({ value }, { slots }) => {
-    return h(
-      BlockCopyParagraph,
-      { ...value },
-      slots.default?.()
-    )
+    return h(BlockCopyParagraph, { ...value, simple: simple.value }, slots.default)
   },
   marks: {
     link: BlockCopyLinkExternal,
@@ -58,9 +68,10 @@ const serializers = {
     code: BlockCopyCode,
     underline: BlockCopyUnderline,
     highlight: BlockCopyHighlight,
+    hypertextSpan: BlockHypertextSpan,
     "strike-through": BlockCopyStrike,
-    fontSize: ({ value }, { slots }) => {
-      return h("span", { class: value?.class || "" }, slots.default?.());
+    fontSize: (props, { slots }) => {
+      return h("span", { class: props?.class || "" }, slots.default?.());
     },
   },
 };

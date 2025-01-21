@@ -1,17 +1,30 @@
 <template>
-  <div v-for="row in $attrs.value.row" class="text-columns">
+  <div v-if="row" v-for="singleRow in row" class="text-columns">
     <BlockTextBody
       class="text-column col-left"
-      :blocks="row.leftColumn.text[0]"
+      :blocks="singleRow.leftColumn.text"
     />
     <BlockTextBody
       class="text-column col-right"
-      :blocks="row.rightColumn.text[0]"
+      :blocks="singleRow.rightColumn.text"
     />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+const props = defineProps({
+  row: {
+    type: Object,
+    required: true,
+  },
+});
+
+const { row } = toRefs(props);
+
+defineOptions({
+  inheritAttrs: false,
+});
+</script>
 
 <style lang="scss" scoped>
 .text-columns {

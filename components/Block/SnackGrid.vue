@@ -15,9 +15,9 @@
         />
       </div>
       <div class="snack-grid__description text-caption-2">
-        <SanityContent
+        <CustomPortableText
           v-if="item.shortDescription"
-          :blocks="item.shortDescription.text"
+          :value="item.shortDescription.text"
         />
       </div>
     </div>

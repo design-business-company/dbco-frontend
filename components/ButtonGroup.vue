@@ -1,7 +1,7 @@
 <template>
-  <div class="button-group">
+  <div v-if="buttons?.length" class="button-group">
     <Button
-      v-for="button in $attrs.value.buttons"
+      v-for="button in buttons"
       as="link"
       :size="button.buttonSize"
       :style="button.buttonStyle"
@@ -13,8 +13,18 @@
   </div>
 </template>
 
-<script>
-export default {};
+<script setup>
+const props = defineProps({
+  buttons: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
+});
+
+defineOptions({
+  inheritAttrs: false,
+});
 </script>
 
 <style lang="scss" scoped>
