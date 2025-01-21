@@ -27,9 +27,9 @@
                 —
               </span>
               <span class="spotlight__short-description">
-                <SanityContent
+                <CustomPortableText
                   v-if="shortDescription"
-                  :blocks="shortDescription.text"
+                  :value="shortDescription.text"
                 />
               </span>
             </Observer>
@@ -56,9 +56,9 @@
               class="spotlight__description"
               ref="info"
             >
-              <SanityContent
+              <CustomPortableText
                 v-if="description?.text"
-                :blocks="description.text"
+                :value="description.text"
               />
             </Text>
             <Text
@@ -67,7 +67,7 @@
               class="spotlight__credits"
               ref="cred"
             >
-              <SanityContent v-if="credits?.text" :blocks="credits.text" />
+              <CustomPortableText v-if="credits?.text" :value="credits.text" />
             </Text>
           </Observer>
         </Column>

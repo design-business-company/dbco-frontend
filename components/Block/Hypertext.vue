@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { markRaw } from "vue";
+import { markRaw, toRefs } from "vue";
 import BlockHypertextSpan from "@/components/Block/HypertextSpan.vue";
 
 // Props
@@ -18,12 +18,18 @@ const props = defineProps({
   },
 });
 
+const { blocks } = toRefs(props);
+
 // Data for serializers
 const serializers = {
   marks: {
     hypertextSpan: markRaw(BlockHypertextSpan),
   },
 };
+
+defineOptions({
+  inheritAttrs: false,
+});
 </script>
 
 <style lang="scss">

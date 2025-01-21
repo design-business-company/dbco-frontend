@@ -2,6 +2,12 @@
   <span class="underline"><slot></slot></span>
 </template>
 
+<script setup>
+defineOptions({
+  inheritAttrs: false,
+});
+</script>
+
 <style scoped>
 .underline {
   display: inline-block;

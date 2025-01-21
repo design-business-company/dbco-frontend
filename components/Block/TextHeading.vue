@@ -1,16 +1,12 @@
 <template>
   <Text :size="$attrs.value.size" element="div">
-    <PortableText :value="$attrs.value.text" :components="serializers" />
+    <CustomPortableText :value="$attrs.value.text" />
   </Text>
 </template>
 
 <script setup>
-import { PortableText } from "@portabletext/vue";
-import BlockCopyHeading from "~/components/Block/CopyHeading.vue";
-
-const serializers = {
-  blocks: {
-    normal: BlockCopyHeading,
-  },
-};
+defineOptions({
+  inheritAttrs: false,
+});
 </script>
+

@@ -95,6 +95,10 @@ export default defineNuxtConfig({
     },
   },
 
+  // this is causing the netlify error:
+  // error decoding lambda response: error decoding lambda
+  // more info here: https://answers.netlify.com/t/nuxt-3-build-suddently-fails-building/129677/6
+  // compatibilityDate: "2025-01-15",
   vite: {
     css: {
       preprocessorOptions: {
@@ -108,8 +112,5 @@ export default defineNuxtConfig({
     },
   },
 
-  // this is causing the netlify error:
-  // error decoding lambda response: error decoding lambda
-  // more info here: https://answers.netlify.com/t/nuxt-3-build-suddently-fails-building/129677/6
-  // compatibilityDate: "2025-01-15",
+  compatibilityDate: "2025-01-21",
 });

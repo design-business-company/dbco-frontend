@@ -2,6 +2,12 @@
   <mark class="highlight"><slot /></mark>
 </template>
 
+<script setup>
+defineOptions({
+  inheritAttrs: false,
+});
+</script>
+
 <style lang="scss">
 .highlight {
   background-color: color-mix(

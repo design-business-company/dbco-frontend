@@ -3,9 +3,8 @@
     :is="element"
     ref="container"
     :class="[`text-${size}`, { '--indent': indent }]"
-    v-bind="$attrs"
   >
-    <slot></slot>
+    <slot />
   </component>
 </template>
 

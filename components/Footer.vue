@@ -33,10 +33,7 @@
     >
       <Text size="caption-2" class="title">{{ data.privacy.title }}</Text>
       <Text element="div" size="caption-2" class="content">
-        <SanityContent
-          :blocks="data.privacy.content"
-          :serializers="customSerializers"
-        />
+        <CustomPortableText :value="data.privacy.content" />
       </Text>
     </Column>
 
@@ -51,10 +48,7 @@
     >
       <Text size="caption-2" class="title">{{ data.colophon.title }}</Text>
       <Text element="div" size="caption-2" class="content">
-        <SanityContent
-          :blocks="data.colophon.content"
-          :serializers="customSerializers"
-        />
+        <CustomPortableText :value="data.colophon.content" />
       </Text>
     </Column>
 
@@ -69,10 +63,7 @@
     >
       <Text size="caption-2" class="title">{{ data.thankYou.title }}</Text>
       <Text element="div" size="caption-2" class="content">
-        <SanityContent
-          :blocks="data.thankYou.content"
-          :serializers="customSerializers"
-        />
+        <CustomPortableText :value="data.thankYou.content" />
       </Text>
     </Column>
 
@@ -94,21 +85,6 @@
 
 <script setup>
 import { settingsFooter } from "~/queries/settingsFooter";
-import BlockCopyLinkExternal from "~/components/Block/CopyLinkExternal.vue";
-
-const customSerializers = {
-  marks: {
-    link: ({ value }, { slots }) => {
-      return h(
-        BlockCopyLinkExternal,
-        {
-          ...value,
-        },
-        slots.default?.()
-      );
-    },
-  },
-};
 
 const { data } = await useSanityQuery(settingsFooter);
 

@@ -1,25 +1,34 @@
 <template>
-  <div v-if="$attrs.value.listItem" class="text-body-2">
+  <div v-if="listItem" class="text-body-2">
     <component :is="listType">
       <slot />
     </component>
   </div>
 </template>
 
-<script>
-export default {
-  computed: {
-    listType() {
-      const listItemType = this.$attrs.value.listItem;
-      return listItemType === "bullet"
-        ? "ul"
-        : listItemType === "number"
-        ? "ol"
-        : "div";
-    },
-  },
-};
+<script setup>
+const props = defineProps({
+  listItem: {
+    type: String,
+    required: true,
+  }
+})
+
+const { listItem } = toRefs(props);
+
+const listType = computed(() => {
+  return listItem.value === "bullet"
+    ? "ul"
+    : listItem.value === "number"
+    ? "ol"
+    : "div";
+});
+
+defineOptions({
+  inheritAttrs: false,
+});
 </script>
+
 <style lang="scss" scoped>
 ul,
 ol {

@@ -14,7 +14,7 @@
         :onLeave="onLeave"
         :once="settings.animation === 'none'"
       >
-        <PortableText :value="blocks" :components="serializers" />
+        <CustomPortableText :value="blocks" />
       </Observer>
     </Column>
 
@@ -30,7 +30,7 @@
         :onLeave="onLeave"
         :once="settings.animation === 'none'"
       >
-        <PortableText :value="blocks" :components="serializers" />
+        <CustomPortableText :value="blocks" />
       </Observer>
     </Column>
     <Space size="small" />
@@ -40,21 +40,7 @@
 <script setup>
 import { scrollHighlightAnimation } from "~/assets/scripts/utils/animateScrollHighlight.js";
 import { scrollFadeOnEnter } from "~/assets/scripts/utils/animateFadeOnEnter.js";
-import { PortableText } from "@portabletext/vue";
-import { h, ref } from "vue";
-import BlockCopyLinkExternal from "~/components/Block/CopyLinkExternal.vue";
-import BlockCopyLinkInternal from "~/components/Block/CopyLinkInternal.vue";
-import BlockCopyCode from "~/components/Block/CopyCode.vue";
-import BlockCopyUnderline from "~/components/Block/CopyUnderline.vue";
-import BlockCopyHighlight from "~/components/Block/CopyHighlight.vue";
-import BlockCopyStrike from "~/components/Block/CopyStrike.vue";
-import BlockCopyParagraph from "~/components/Block/CopyParagraph.vue";
-import BlockCopyList from "~/components/Block/CopyList.vue";
-import BlockTextHeading from "~/components/Block/TextHeading.vue";
-import BlockTextColumns from "~/components/Block/TextColumns.vue";
-import BlockRule from "~/components/Block/Rule.vue";
-import BlockMedia from "~/components/Block/Media.vue";
-import BlockButtonGroup from "~/components/ButtonGroup.vue";
+import { ref } from "vue";
 import Space from "~/components/Space.vue";
 import { gsap } from "gsap";
 
@@ -75,55 +61,6 @@ const props = defineProps({
 });
 
 const animateElements = ref(null);
-
-const serializers = {
-  types: {
-    rule: BlockRule,
-    media: BlockMedia,
-    spacer: Space,
-    textHeading: BlockTextHeading,
-    textColumns: BlockTextColumns,
-    buttonGroup: BlockButtonGroup,
-  },
-  list: {
-    bullet: BlockCopyList,
-    number: BlockCopyList,
-  },
-  block: {
-    normal: BlockCopyParagraph,
-    "body-1": BlockCopyParagraph,
-    "body-2": BlockCopyParagraph,
-    "caption-1": BlockCopyParagraph,
-    "caption-2": BlockCopyParagraph,
-  },
-  marks: {
-    link: ({ value }, { slots }) => {
-      return h(
-        BlockCopyLinkExternal,
-        {
-          ...value,
-        },
-        slots.default?.()
-      );
-    },
-    internalLink: ({ value }, { slots }) => {
-      return h(
-        BlockCopyLinkInternal,
-        {
-          ...value,
-        },
-        slots.default?.()
-      );
-    },
-    code: BlockCopyCode,
-    underline: BlockCopyUnderline,
-    highlight: BlockCopyHighlight,
-    "strike-through": BlockCopyStrike,
-    fontSize: ({ value }, { slots }) => {
-      return h("span", { class: value?.class || "" }, slots.default?.());
-    },
-  },
-};
 
 const onEnter = (ev) => {
   if (!ev) return;

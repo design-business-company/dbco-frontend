@@ -19,6 +19,12 @@ const props = defineProps({
     default: "smallest",
   },
 });
+
+const { spaceAbove, spaceBelow } = toRefs(props);
+
+defineOptions({
+  inheritAttrs: false,
+});
 </script>
 
 <style lang="scss">

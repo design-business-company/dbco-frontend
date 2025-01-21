@@ -10,6 +10,10 @@ import { useGsapWave } from "@/composables/Hypertext/Wave.js";
 
 useGsapPulse(".hypertext__span.new");
 useGsapWave(".hypertext__span.design");
+
+defineOptions({
+  inheritAttrs: false,
+});
 </script>
 
 <style scoped>

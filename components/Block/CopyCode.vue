@@ -4,6 +4,12 @@
   </code>
 </template>
 
+<script setup>
+defineOptions({
+  inheritAttrs: false,
+});
+</script>
+
 <style lang="scss" scoped>
 .ts-mono {
   display: inline-block;

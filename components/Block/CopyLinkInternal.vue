@@ -7,8 +7,21 @@
 </template>
 
 <script setup>
+const props = defineProps({
+  href: {
+    type: String,
+    required: true,
+  },
+  blank: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const { href, blank } = toRefs(props);
+
 defineOptions({
-  inheritAttrs: true,
+  inheritAttrs: false,
 });
 
 // Map specific references to routes

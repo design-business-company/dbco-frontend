@@ -2,6 +2,12 @@
   <s class="strikethrough"><slot></slot></s>
 </template>
 
+<script setup>
+defineOptions({
+  inheritAttrs: false,
+});
+</script>
+
 <style scoped>
 .strikethrough {
   display: inline-block;

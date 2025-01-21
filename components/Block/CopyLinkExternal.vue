@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   value: {
     type: Object,
     default: null,
@@ -41,6 +41,12 @@ defineProps({
     required: false,
     default: "",
   },
+});
+
+const { value, href, blank } = toRefs(props);
+
+defineOptions({
+  inheritAttrs: false,
 });
 </script>
 
