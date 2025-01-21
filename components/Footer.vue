@@ -98,7 +98,15 @@ import BlockCopyLinkExternal from "~/components/Block/CopyLinkExternal.vue";
 
 const customSerializers = {
   marks: {
-    link: BlockCopyLinkExternal,
+    link: ({ value }, { slots }) => {
+      return h(
+        BlockCopyLinkExternal,
+        {
+          ...value,
+        },
+        slots.default?.()
+      );
+    },
   },
 };
 

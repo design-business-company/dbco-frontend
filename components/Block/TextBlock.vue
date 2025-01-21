@@ -97,8 +97,24 @@ const serializers = {
     "caption-2": BlockCopyParagraph,
   },
   marks: {
-    link: BlockCopyLinkExternal,
-    internalLink: BlockCopyLinkInternal,
+    link: ({ value }, { slots }) => {
+      return h(
+        BlockCopyLinkExternal,
+        {
+          ...value,
+        },
+        slots.default?.()
+      );
+    },
+    internalLink: ({ value }, { slots }) => {
+      return h(
+        BlockCopyLinkInternal,
+        {
+          ...value,
+        },
+        slots.default?.()
+      );
+    },
     code: BlockCopyCode,
     underline: BlockCopyUnderline,
     highlight: BlockCopyHighlight,

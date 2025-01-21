@@ -13,8 +13,6 @@ import BlockCopyUnderline from "~/components/Block/CopyUnderline.vue";
 import BlockCopyHighlight from "~/components/Block/CopyHighlight.vue";
 import BlockCopyStrike from "~/components/Block/CopyStrike.vue";
 import BlockCopyParagraph from "~/components/Block/CopyParagraph.vue";
-import BlockCopyList from "~/components/Block/CopyList.vue";
-import BlockCopyListItem from "~/components/Block/CopyListItem.vue";
 import BlockRule from "~/components/Block/Rule.vue";
 
 defineProps({
@@ -48,7 +46,15 @@ const serializers = {
     normal: BlockCopyParagraph,
   },
   marks: {
-    link: BlockCopyLinkExternal,
+    link: ({ value }, { slots }) => {
+      return h(
+        BlockCopyLinkExternal,
+        {
+          ...value,
+        },
+        slots.default?.()
+      );
+    },
     internalLink: BlockCopyLinkInternal,
     code: BlockCopyCode,
     underline: BlockCopyUnderline,
