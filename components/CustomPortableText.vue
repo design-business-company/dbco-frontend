@@ -41,35 +41,61 @@ const { value, simple } = toRefs(props);
 
 const serializers = {
   types: {
-    span: (props, { slots }) => {
-      return h('span', { ...props }, slots.default?.());
+    span: ({ value }, { slots }) => {
+      return h('span', { ...value }, slots.default?.());
     },
-    rule: BlockRule,
-    media: BlockMedia,
-    spacer: Space,
+    rule:({ value }, { slots }) => {
+      return h(BlockRule, {...value}, slots.default)
+    },
+    media: ({ value }, { slots }) => {
+      return h(BlockMedia, {...value}, slots.default)
+    },
+    spacer: ({ value }, { slots }) => {
+      return h(Space, {...value}, slots.default)
+    },
     textHeading: ({ value }, { slots }) => {
       return h(BlockTextHeading, {...value}, slots.default)
     },
     textColumns: ({ value }) => {
       return h(BlockTextColumns, {...value } )
     },
-    buttonGroup: BlockButtonGroup,
+    buttonGroup: ({ value }, { slots }) => {
+      return h(BlockButtonGroup, {...value}, slots.default)
+    },
   },
   list: {
-    bullet: BlockCopyList,
-    number: BlockCopyList,
+    bullet: ({ value }, { slots }) => {
+      return h(BlockCopyList, {...value}, slots.default)
+    },
+    number: ({ value }, { slots }) => {
+      return h(BlockCopyList, {...value}, slots.default)
+    },
   },
   block: ({ value }, { slots }) => {
     return h(BlockCopyParagraph, { ...value, simple: simple.value }, slots.default)
   },
   marks: {
-    link: BlockCopyLinkExternal,
-    internalLink: BlockCopyLinkInternal,
-    code: BlockCopyCode,
-    underline: BlockCopyUnderline,
-    highlight: BlockCopyHighlight,
-    hypertextSpan: BlockHypertextSpan,
-    "strike-through": BlockCopyStrike,
+    link: ({ value }, { slots }) => {
+      return h(BlockCopyLinkExternal, { ...value }, slots.default)
+    },
+    internalLink: ({ value }, { slots }) => {
+      return h(BlockCopyLinkInternal, { ...value }, slots.default)
+    },
+    code: ({ value }, { slots }) => {
+      return h(BlockCopyCode, { ...value }, slots.default)
+    },
+    underline: ({ value }, { slots }) => {
+      return h(BlockCopyUnderline, { ...value }, slots.default)
+    },
+    highlight: ({ value }, { slots }) => {
+      return h(BlockCopyHighlight, { ...value }, slots.default)
+    },
+    hypertextSpan: ({ value }, { slots }) => {
+      return h(BlockHypertextSpan, { ...value }, slots.default)
+    },
+    "strike-through": ({ value }, { slots }) => {
+      return h(BlockCopyStrike, { ...value }, slots.default)
+    },
     fontSize: (props, { slots }) => {
       return h("span", { class: props?.class || "" }, slots.default?.());
     },

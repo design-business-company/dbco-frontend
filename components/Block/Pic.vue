@@ -31,18 +31,11 @@ const props = defineProps({
   sizes: {
     type: String,
     required: false,
-    default: `
-      (max-width: 320px) 280px,
-      (max-width: 640px) 600px,
-      (max-width: 1024px) 960px,
-      (max-width: 1280px) 1200px,
-      (max-width: 1600px) 1500px,
-      100vw
-    `
+    default: `60vw`
   }
 });
 
-const deviceSizes = ref([320, 640, 750, 828, 1080, 1200, 1920, 2048, 3840]);
+const deviceSizes = ref([320, 640, 750, 900, 1080, 1200, 1920, 2048, 3840]);
 
 const initialSrc = computed(() => {
   return $urlFor(props.src).width(640).url();

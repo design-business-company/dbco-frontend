@@ -1,6 +1,6 @@
 <template>
   <Text element="div" size="micro" class="caption">
-    <CustomPortableText :value="caption" />
+    <CustomPortableText :simple="true" :value="caption" />
   </Text>
 </template>
 

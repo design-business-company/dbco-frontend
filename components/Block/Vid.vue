@@ -109,7 +109,12 @@ if (props.playbackId) {
     createBlurUp(props.playbackId, {})
       .then((res) => {
         placeholder.value = res.blurDataURL;
+        return;
       })
+      .catch((e) => {
+        console.warn("Error creating blur up: ", e);
+        return;
+      });
   } catch (e) {
     console.warn("Error creating blur up: ", e);
   }
