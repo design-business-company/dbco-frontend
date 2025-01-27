@@ -2,7 +2,13 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@pinia/nuxt", "@nuxtjs/sanity", "@nuxtjs/plausible", "nuxt3-lenis", "nuxt-viewport"],
+  modules: [
+    "@pinia/nuxt",
+    "@nuxtjs/sanity",
+    "@nuxtjs/plausible",
+    "nuxt3-lenis",
+    "nuxt-viewport",
+  ],
 
   plugins: [
     { src: "~/plugins/device/deviceInfo.ts", mode: "client" },
@@ -43,6 +49,12 @@ export default defineNuxtConfig({
     preset: "netlify",
   },
 
+  build: {
+    // ensures that the same version of Vue is used both on the server (SSR)
+    // and on the client, so that they produce matching markup
+    transpile: ["vue"],
+  },
+
   plausible: {
     ignoredHostnames: ["localhost"],
   },
@@ -71,7 +83,7 @@ export default defineNuxtConfig({
       isCustomElement: (tag) => tag.startsWith("mux-player"),
     },
   },
-  
+
   vite: {
     css: {
       preprocessorOptions: {
