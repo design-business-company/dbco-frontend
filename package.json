@@ -33,7 +33,7 @@
     "embla-carousel-vue": "^8.4.0",
     "focus-trap": "^7.6.2",
     "gsap": "file:gsap-bonus.tgz",
-    "nuxt": "^3.15.1",
+    "nuxt": "3.15.2",
     "nuxt3-lenis": "^1.5.9",
     "pinia": "^2.3.0",
     "swiper": "^11.1.1",
