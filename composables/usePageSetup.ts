@@ -44,7 +44,7 @@ export default function usePageSetup(options?: PageSetupOptions) {
       if (poster) {
         posters.push({ src: poster });
       }
-    })
+    });
 
     imageEls?.forEach((el) => {
       const srcset = el.getAttribute("srcset");
@@ -54,13 +54,13 @@ export default function usePageSetup(options?: PageSetupOptions) {
       images.push({
         src,
         srcset,
-        sizes
-      })
-    })
+        sizes,
+      });
+    });
 
     posters.forEach(handlePreload);
     images.forEach(handlePreload);
-  }
+  };
 
   const handlePreload = (item: PreloadItem) => {
     if (!item?.src) return;
@@ -70,8 +70,8 @@ export default function usePageSetup(options?: PageSetupOptions) {
     if (item.srcset) img.srcset = item.srcset;
     if (item.sizes) img.sizes = item.sizes;
 
-    img.onload = () => {
-      console.log("Image loaded");
-    }
-  }
+    // img.onload = () => {
+    //   console.log("Image loaded");
+    // }
+  };
 }
