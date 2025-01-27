@@ -34,6 +34,7 @@
     "focus-trap": "^7.6.2",
     "gsap": "file:gsap-bonus.tgz",
     "nuxt": "^3.15.1",
+    "nuxt-viewport": "^2.2.0",
     "nuxt3-lenis": "^1.5.9",
     "pinia": "^2.3.0",
     "swiper": "^11.1.1",

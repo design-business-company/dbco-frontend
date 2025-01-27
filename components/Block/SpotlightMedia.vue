@@ -31,7 +31,7 @@ const props = defineProps({
 const { items } = toRefs(props);
 
 const sizes = computed(() => {
-  return `(max-width: 1024px) 100vw, ${100 / (items.value?.length ?? 1)}vw`
+  return `(min-width: ${DEVICE_SIZES.laptop}px) ${100 / (items.value?.length ?? 1)}vw, (min-width: ${DEVICE_SIZES.tablet}px) ${100 / (items.value?.length > 1 ? 2 : 1)}vw, 100vw`
 })
 </script>
 
