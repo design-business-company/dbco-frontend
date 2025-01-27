@@ -76,7 +76,7 @@ export default defineNuxtConfig({
       isCustomElement: (tag) => tag.startsWith("mux-player"),
     },
   },
-  
+
   vite: {
     css: {
       preprocessorOptions: {
@@ -89,8 +89,8 @@ export default defineNuxtConfig({
       },
     },
   },
-  
-  // this was previously causing a netlify error:
+
+  // this has been causing a netlify error:
   // error decoding lambda response: error decoding lambda
-  compatibilityDate: "2025-01-26",
+  // compatibilityDate: "2025-01-26",
 });
