@@ -49,7 +49,7 @@ export default defineNuxtConfig({
       const css = manifest["node_modules/nuxt/dist/app/entry.js"]?.css;
       if (css) {
         for (let i = css.length - 1; i >= 0; i--) {
-          if (css[i].startsWith("entry")) css.splice(i, 1);
+          if (css?.[i]?.startsWith("entry")) css.splice(i, 1);
         }
       }
     },
@@ -57,12 +57,6 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: "netlify",
-  },
-
-  build: {
-    // ensures that the same version of Vue is used both on the server (SSR)
-    // and on the client, so that they produce matching markup
-    transpile: ["vue"],
   },
 
   plausible: {
