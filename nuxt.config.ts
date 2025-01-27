@@ -45,7 +45,7 @@ export default defineNuxtConfig({
 
   // remove entry.css file from manifest in favor of inlining styles in app.vue
   hooks: {
-    "build:manifest": (manifest) => {
+    "build:manifest": (manifest: any) => {
       const css = manifest["node_modules/nuxt/dist/app/entry.js"]?.css;
       if (css) {
         for (let i = css.length - 1; i >= 0; i--) {
