@@ -286,6 +286,7 @@ mux-player {
   height: 100%;
   --loading-indicator: none;
   --media-object-fit: cover;
+  --dialog: none;
   aspect-ratio: var(--aspect-ratio);
 }
 
