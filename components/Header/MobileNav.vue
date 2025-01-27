@@ -2,9 +2,30 @@
   <transition @leave="onLeave" @enter="onEnter">
     <div v-if="app.mobileNavIsVisible" class="mobile-nav" ref="mobileNavRef">
       <ul ref="navItems" class="text-headline-3 mobile-nav__primary">
-        <li><NuxtLink to="/">Work</NuxtLink></li>
-        <li><NuxtLink to="/about">About</NuxtLink></li>
-        <li><NuxtLink to="/contact">Contact</NuxtLink></li>
+        <li>
+          <HeaderMobileNavLink
+            to="/"
+            :current-path="routerLinkActive"
+            @link-click="handleLinkClick"
+            >Work</HeaderMobileNavLink
+          >
+        </li>
+        <li>
+          <HeaderMobileNavLink
+            to="/about"
+            :current-path="routerLinkActive"
+            @link-click="handleLinkClick"
+            >About</HeaderMobileNavLink
+          >
+        </li>
+        <li>
+          <HeaderMobileNavLink
+            to="/contact"
+            :current-path="routerLinkActive"
+            @link-click="handleLinkClick"
+            >Contact</HeaderMobileNavLink
+          >
+        </li>
       </ul>
       <Grid ref="socialItems" style="padding: 0">
         <Column>
@@ -42,16 +63,26 @@
 <script setup>
 import { gsap } from "gsap";
 import { useAppStore } from "~/stores/app";
-import { useDeviceStore } from "~/stores/device";
 import { settingsFooter } from "~/queries/settingsFooter";
 
 const app = useAppStore();
+const router = useRouter();
 const navItems = ref(null);
 const socialItems = ref(null);
 const mobileNavRef = ref(null);
 const timeline = gsap.timeline();
+const routerLinkActive = ref(router.currentRoute.value.path);
 
-const { data, error, status, refresh } = await useSanityQuery(settingsFooter);
+const { data } = await useSanityQuery(settingsFooter);
+
+const handleLinkClick = (path) => {
+  routerLinkActive.value = path;
+  navigateTo(path);
+
+  setTimeout(() => {
+    app.setMobileNavVisibility(false);
+  }, 1250);
+};
 
 function onEnter(el, done) {
   timeline.eventCallback("onComplete", done);
@@ -89,8 +120,6 @@ function onLeave(el, done) {
 
 <style lang="scss" scoped>
 .mobile-nav {
-  // position: fixed;
-  // top: 40px;
   width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
@@ -98,6 +127,7 @@ function onLeave(el, done) {
   background-color: var(--background-primary);
   padding: 0 var(--grid-margin);
   height: calc(100lvh - 40px);
+  will-change: transform;
 
   &::-webkit-scrollbar {
     display: none;
@@ -112,7 +142,6 @@ function onLeave(el, done) {
       aspect-ratio: 1/1;
       padding-top: 0;
       padding-bottom: 0;
-      animation: flip 20s infinite;
       max-height: none;
     }
   }
@@ -139,11 +168,12 @@ function onLeave(el, done) {
     align-items: center;
     width: 100%;
     height: 100%;
+    will-change: transform;
+    transform: translateZ(0);
 
     &:has(.router-link-active) {
       a {
-        padding-top: 20vh;
-        padding-bottom: 20vh;
+        height: 40vh;
         background-color: var(--foreground-primary);
         color: var(--background-primary);
         border-radius: 100vw;
@@ -158,25 +188,18 @@ function onLeave(el, done) {
     background-color: var(--background-tertiary);
     width: 100%;
     height: 100%;
-    min-height: 58px;
-    max-height: 144px;
+    height: 58px;
     border-radius: var(--tinier);
+    will-change: auto;
+    transform: translateZ(0);
 
     display: flex;
     justify-content: center;
     align-items: center;
     transition: color var(--transition-fast),
-      background-color var(--transition-fast), border-radius var(--transition),
-      padding var(--transition);
-  }
-}
-
-@keyframes flip {
-  0% {
-    rotate: 0deg;
-  }
-  100% {
-    rotate: 360deg;
+      background-color var(--transition-fast),
+      border-radius 400ms 200ms var(--transition-function),
+      height 400ms 200ms var(--transition-function);
   }
 }
 </style>
