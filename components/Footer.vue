@@ -102,7 +102,7 @@ const customSerializers = {
   },
 };
 
-const { data, error, status, refresh } = await useSanityQuery(settingsFooter);
+const { data, error, status, refresh } = useSanityQuery(settingsFooter);
 
 const date = new Date().getFullYear();
 

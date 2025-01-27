@@ -19,6 +19,16 @@ export default defineNuxtConfig({
     storesDirs: ["./stores/app", "./stores/device"],
   },
 
+  future: {
+    compatibilityVersion: 4,
+  },
+
+  routeRules: {
+    "/": { prerender: true },
+    "/about": { prerender: true },
+    "/contact": { prerender: true },
+  },
+
   app: {
     head: {
       htmlAttrs: {
@@ -85,9 +95,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // this is causing the netlify error:
-  // error decoding lambda response: error decoding lambda
-  // compatibilityDate: "2024-12-05",
   viewport: {
     breakpoints: {
       mobile: 360,
