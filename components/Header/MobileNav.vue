@@ -52,7 +52,9 @@
           <Text size="caption-1">Copyright</Text>
         </Column>
         <Column span="6" element="ul">
-          <Text size="caption-1">2023-{{ new Date().getFullYear() }}</Text>
+          <Text size="caption-1" class="--mono"
+            >&copy;&nbsp;2023-{{ new Date().getFullYear() }}</Text
+          >
         </Column>
         <Space size="huge" />
       </Grid>

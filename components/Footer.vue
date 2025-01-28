@@ -86,7 +86,7 @@
     >
       <Text size="caption-2" class="title">Copyright</Text>
       <Text element="div" size="caption-2" class="content copyright">
-        &copy;2023–{{ date }}
+        &copy;&nbsp;2023–{{ date }}
       </Text>
     </Column>
   </Grid>
