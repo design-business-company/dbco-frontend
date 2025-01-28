@@ -118,5 +118,7 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: "2025-01-26",
+  // this has been causing a netlify error:
+  // error decoding lambda response: error decoding lambda
+  compatibilityDate: "2025-01-27",
 });
