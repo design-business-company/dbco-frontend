@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@nuxtjs/sanity",
     "@nuxtjs/plausible",
     "nuxt3-lenis",
+    "nuxt-viewport",
   ],
 
   plugins: [
@@ -24,6 +25,16 @@ export default defineNuxtConfig({
     storesDirs: ["./stores/app", "./stores/device"],
   },
 
+  future: {
+    compatibilityVersion: 4,
+  },
+
+  routeRules: {
+    "/": { prerender: true },
+    "/about": { prerender: true },
+    "/contact": { prerender: true },
+  },
+
   app: {
     head: {
       htmlAttrs: {
@@ -34,11 +45,11 @@ export default defineNuxtConfig({
 
   // remove entry.css file from manifest in favor of inlining styles in app.vue
   hooks: {
-    "build:manifest": (manifest) => {
+    "build:manifest": (manifest: any) => {
       const css = manifest["node_modules/nuxt/dist/app/entry.js"]?.css;
       if (css) {
         for (let i = css.length - 1; i >= 0; i--) {
-          if (css[i].startsWith("entry")) css.splice(i, 1);
+          if (css?.[i]?.startsWith("entry")) css.splice(i, 1);
         }
       }
     },
@@ -90,7 +101,22 @@ export default defineNuxtConfig({
     },
   },
 
-  // this has been causing a netlify error:
-  // error decoding lambda response: error decoding lambda
-  // compatibilityDate: "2025-01-27",
+  viewport: {
+    breakpoints: {
+      mobile: 360,
+      phablet: 430,
+      tablet: 600,
+      laptop: 1024,
+      desktop: 1350,
+      ultrawide: 1660,
+    },
+    fallbackBreakpoint: "tablet",
+    defaultBreakpoints: {
+      mobile: "phablet",
+      tablet: "tablet",
+      desktop: "desktop",
+    },
+  },
+
+  compatibilityDate: "2025-01-27",
 });

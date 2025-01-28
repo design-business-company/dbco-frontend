@@ -1,5 +1,9 @@
 <template>
-  <section :class="['page', 'contact']" v-if="data">
+  <section
+    ref="pageRef"
+    :class="['page', 'contact']"
+    v-if="data"
+  >
     <header class="sr-only"><h1>Contact Design Business Company</h1></header>
     <ContactTextOnPath />
     <ContentBlocks :content="data.content" />
@@ -21,7 +25,9 @@ if (error.value) await navigateTo("/error");
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
-usePageSetup({ seoMeta: data.value?.seo });
+const pageRef = ref(null);
+
+usePageSetup({ seoMeta: data.value?.seo, pageRef });
 
 /* ----------------------------------------------------------------------------
  * Setup page theme

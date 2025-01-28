@@ -33,6 +33,7 @@
               ?.toString()
               .replace(':', '/'),
           }"
+          :sizes="calculateSlideSizes(item.aspectRatio)"
         />
       </div>
     </div>
@@ -99,6 +100,12 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
   },
   emblaPlugins.value
 );
+
+const calculateSlideSizes = (aspectRatio) => {
+  if (!aspectRatio) return `(min-width: ${DEVICE_SIZES.tablet}px) 60vw, 90vw`;
+
+  return `(min-width: ${DEVICE_SIZES.tablet}px) ${widthTimesAspectRatio(aspectRatio, 50)}vw, ${widthTimesAspectRatio(aspectRatio, 70)}vw`;
+}
 
 const handleEnter = () => {
   if (props.settings && props.settings.autoplay) {

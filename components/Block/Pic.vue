@@ -32,11 +32,15 @@ const props = defineProps({
     type: String,
     required: false,
     default: `
-      (max-width: 320px) 280px,
-      (max-width: 640px) 600px,
-      (max-width: 1024px) 960px,
-      (max-width: 1280px) 1200px,
-      (max-width: 1600px) 1500px,
+      (max-width: 320px) 320w,
+      (max-width: 640px) 640w,
+      (max-width: 750px) 750w,
+      (max-width: 828px) 828w,
+      (max-width: 1080px) 1080w,
+      (max-width: 1200px) 1200w,
+      (max-width: 1920px) 1920w,
+      (max-width: 2048px) 2048w,
+      (max-width: 3840px) 3840w,
       100vw
     `
   }

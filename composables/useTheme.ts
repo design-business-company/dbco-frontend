@@ -87,7 +87,7 @@ export const useTheme = () => {
   };
 
   const resetTheme = () => {
-    console.log("reset theme");
+    // console.log("reset theme");
 
     deviceStore.updateTheme(deviceStore.pageTheme);
     updateCssVariables(deviceStore.pageTheme);

@@ -23,7 +23,7 @@
               ?.toString()
               .replace(':', '/'),
           }"
-          sizes="(max-width: 1024px) 100vw, 50vw"
+          :sizes="calculateSlideSizes(item.aspectRatio)"
         />
       </div>
     </div>
@@ -104,6 +104,12 @@ const onSlideChange = (ev) => {
   // for now each event gets manually added as a goal in plausible
   useTrackEvent(`Carousel change: ${props.title}`);
 };
+
+const calculateSlideSizes = (aspectRatio) => {
+  if (!aspectRatio) return `(min-width: ${DEVICE_SIZES.tablet}px) 60vw, 90vw`;
+
+  return `(min-width: ${DEVICE_SIZES.tablet}px) ${widthTimesAspectRatio(aspectRatio, 50)}vw, ${widthTimesAspectRatio(aspectRatio, 80)}vw`;
+}
 
 onKeyStroke("ArrowRight", (e) => {
   e.preventDefault();

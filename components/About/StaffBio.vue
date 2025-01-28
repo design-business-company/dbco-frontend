@@ -1,6 +1,10 @@
 <template>
   <article class="staff-bio">
-    <BlockMedia :media="images[0].media[0]" class="staff-bio__image" />
+    <BlockMedia
+      :media="images[0].media[0]"
+      class="staff-bio__image"
+      :sizes="`(min-width: ${DEVICE_SIZES.tablet}px) 30vw, (min-width: ${DEVICE_SIZES.phablet}px) 50vw, 90vw`"
+    />
     <div class="bio">
       <header>
         <Text element="h1" size="caption-2">{{ name }}</Text>

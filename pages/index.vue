@@ -1,5 +1,9 @@
 <template>
-  <section :class="['page', 'home']" v-if="data">
+  <section
+    ref="pageRef"
+    :class="['page', 'home']"
+    v-if="data"
+  >
     <ContentBlocks :content="data.content" />
   </section>
 </template>
@@ -19,7 +23,9 @@ if (error.value) await navigateTo("/error");
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
  * --------------------------------------------------------------------------*/
-usePageSetup({ seoMeta: data.value?.seo });
+const pageRef = ref(null);
+
+usePageSetup({ seoMeta: data.value?.seo, pageRef });
 
 /* ----------------------------------------------------------------------------
  * Setup page theme
