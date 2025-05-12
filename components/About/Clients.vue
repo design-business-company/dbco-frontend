@@ -151,6 +151,8 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
 const componentHasFadedIntoView = ref(false);
 
 const onEnter = (node) => {
+  if (!node) return;
+
   gsap.fromTo(
     node,
     {
@@ -161,11 +163,11 @@ const onEnter = (node) => {
     }
   );
 
-  if (autoScrollInstance) {
+  if (autoScrollInstance && emblaApi.value) {
     autoScrollInstance.play(); // Start autoscrolling
   }
 
-  const els = emblaRef.value.querySelectorAll(".clients__slide");
+  const els = emblaRef.value?.querySelectorAll(".clients__slide");
   if (!els?.length) return;
 
   if (!componentHasFadedIntoView.value) {
@@ -185,11 +187,13 @@ const onEnter = (node) => {
 };
 
 const onExit = (node) => {
+  if (!node) return;
+
   gsap.set(node, {
     opacity: 0.2,
   });
 
-  if (autoScrollInstance) {
+  if (autoScrollInstance && emblaApi.value) {
     autoScrollInstance.stop(); // Stop autoscrolling
   }
 };
@@ -217,8 +221,11 @@ onKeyStroke("ArrowLeft", (e) => {
 });
 
 onUnmounted(() => {
+  if (autoScrollInstance) {
+    autoScrollInstance.stop();
+  }
   if (emblaApi.value) {
-    emblaApi.value.destroy(); // Cleanup resources
+    emblaApi.value.destroy();
   }
 });
 </script>
