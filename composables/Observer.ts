@@ -50,10 +50,12 @@ export default function observe({
     watch(
       element,
       (newEl, oldEl) => {
-        if (observer && newEl) {
+        if (observer) {
           if (oldEl) observer.unobserve(oldEl);
           observer.disconnect();
-          observer.observe(newEl);
+          if (newEl) {
+            observer.observe(newEl);
+          }
         }
       },
       { immediate: true }

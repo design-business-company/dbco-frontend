@@ -136,12 +136,14 @@ const onEnter = (el) => {
 };
 
 const onLeave = (el) => {
-  const els = el?.children;
+  if (!el?.children) return;
 
-  Array.from(els).forEach((el) => {
-    gsap.set(el, {
-      opacity: 0,
-    });
+  Array.from(el.children).forEach((child) => {
+    if (child) {
+      gsap.set(child, {
+        opacity: 0,
+      });
+    }
   });
 };
 
