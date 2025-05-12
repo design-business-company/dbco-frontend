@@ -72,14 +72,14 @@ const lenisOptions = {
 
 useHead({
   templateParams: {
-    siteName: () => title?.value ?? 'Design Business Company'
+    siteName: () => title?.value ?? "Design Business Company",
   },
   titleTemplate: (pageTitle) =>
     pageTitle ? `${pageTitle} • ${title?.value}` : title?.value,
   link: icons.value,
 });
 
-useServerSeoMeta(
+const seoMeta = computed(() =>
   pageSEO({
     description: description?.value,
     image: ogImage?.value,
@@ -89,8 +89,11 @@ useServerSeoMeta(
       .width(512)
       .height(512)
       .url(),
+    siteName: title?.value || "Design Business Company",
   })
 );
+
+useServerSeoMeta(seoMeta);
 </script>
 
 <style>
