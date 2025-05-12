@@ -17,7 +17,33 @@ export default function usePageSetup(options?: PageSetupOptions) {
   const nuxt = useNuxtApp();
 
   if (options?.seoMeta) {
-    useServerSeoMeta(pageSEO(options.seoMeta));
+    const seoData = pageSEO({
+      ...options.seoMeta,
+      siteName: options.seoMeta.siteName || "Design Business Company",
+    });
+
+    // Use useHead for both title and meta tags to ensure they update during routing
+    useHead({
+      title: seoData.title,
+      meta: [
+        { name: "description", content: seoData.description },
+        { name: "robots", content: seoData.robots },
+        // OpenGraph
+        { property: "og:title", content: seoData.ogTitle },
+        { property: "og:description", content: seoData.ogDescription },
+        { property: "og:image", content: seoData.ogImage },
+        { property: "og:type", content: seoData.ogType },
+        { property: "og:url", content: seoData.ogUrl },
+        // Twitter
+        { name: "twitter:card", content: seoData.twitterCard },
+        { name: "twitter:title", content: seoData.twitterTitle },
+        { name: "twitter:description", content: seoData.twitterDescription },
+        { name: "twitter:image", content: seoData.twitterImage },
+        { name: "twitter:url", content: seoData.twitterUrl },
+        { name: "twitter:site", content: seoData.twitterSite },
+        { name: "twitter:creator", content: seoData.twitterCreator },
+      ].filter((meta) => meta.content), // Filter out empty values
+    });
   }
 
   onMounted(() => {
@@ -69,9 +95,5 @@ export default function usePageSetup(options?: PageSetupOptions) {
     img.src = item.src;
     if (item.srcset) img.srcset = item.srcset;
     if (item.sizes) img.sizes = item.sizes;
-
-    // img.onload = () => {
-    //   console.log("Image loaded");
-    // }
   };
 }

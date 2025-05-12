@@ -5,18 +5,21 @@ export interface SEOData {
   url?: string;
   noIndexNoFollow?: boolean;
   logo?: string;
+  siteName?: string;
 }
 
 export default function pageSEO(seoData: SEOData) {
+  const siteName = seoData.siteName || "Design Business Company";
+
   const defaultData = {
     title: seoData.title,
     description: seoData.description,
-    author: "Design Business Company",
-    publisher: "Design Business Company",
+    author: siteName,
+    publisher: siteName,
     robots: seoData.noIndexNoFollow ? "noindex, nofollow" : "index, follow",
 
     // opengraph
-    ogTitle: seoData.title ? `%siteName • ${seoData.title}` : "%siteName",
+    ogTitle: seoData.title ? `${siteName} • ${seoData.title}` : siteName,
     ogDescription: seoData.description,
     ogImage: seoData.image,
     ogType: "website",
@@ -25,7 +28,7 @@ export default function pageSEO(seoData: SEOData) {
 
     // twitter
     twitterCard: seoData.image ? "summary_large_image" : null,
-    twitterTitle: seoData.title ? `%siteName • ${seoData.title}` : "%siteName",
+    twitterTitle: seoData.title ? `${siteName} • ${seoData.title}` : siteName,
     twitterDescription: seoData.description,
     twitterImage: seoData.image,
     twitterUrl: seoData.url,
@@ -37,8 +40,6 @@ export default function pageSEO(seoData: SEOData) {
   const filteredData = Object.fromEntries(
     Object.entries(defaultData).filter(([_, value]) => Boolean(value))
   );
-
-
 
   return filteredData;
 }
