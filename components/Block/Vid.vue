@@ -108,11 +108,13 @@ const poster = computed(() => {
 });
 
 if (props.playbackId) {
-  createBlurUp(props.playbackId, {}).then((res) => {
-    placeholder.value = res.blurDataURL;
-  }).catch((err) => {
-    console.warn('Error creating blur up for video: ', err);
-  });
+  createBlurUp(props.playbackId, {})
+    .then((res) => {
+      placeholder.value = res.blurDataURL;
+    })
+    .catch((err) => {
+      console.warn("Error creating blur up for video: ", err);
+    });
 }
 
 const formattedAspectRatio = computed(() => {
@@ -138,7 +140,7 @@ const handleVideoError = (e) => {
 
 const handleEnter = () => {
   isInView.value = true;
-  
+
   if (isLoading.value) {
     vid.value?.load();
   }
@@ -155,15 +157,15 @@ const handleEnter = () => {
 const handleLeave = () => {
   isInView.value = false;
 
-  if (vid.value) {
-    if (!vid.value.paused) {
-      userPaused.value = false;
-    }
-
-    pause();
-  } else {
-    console.warn("Video element is not available in handleLeave.");
+  if (!vid.value) {
+    return;
   }
+
+  if (!vid.value.paused) {
+    userPaused.value = false;
+  }
+
+  pause();
 };
 
 const play = () => {
