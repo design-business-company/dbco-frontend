@@ -63,6 +63,10 @@
     <AboutClients v-if="block._type === 'carouselClients'" />
 
     <AboutStaffGallery v-if="block._type === 'staffGallery'" v-bind="block" />
+
+    <ToolsCircle
+      v-if="block._type === 'customBlock' && block.type === 'toolsGallery'"
+    />
   </div>
 </template>
 
