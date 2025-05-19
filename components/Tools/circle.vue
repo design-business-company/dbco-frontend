@@ -27,7 +27,7 @@ const { $urlFor } = useNuxtApp();
 /* ----------------------------------------------------------------------------
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
-const query = groq`*[_type=="tools"]{
+const query = groq`*[_type=="tools" && !featured]{
   title,
   description,
   media[] {
@@ -95,7 +95,7 @@ let scene,
 let animationFrameId;
 
 // Video pool management
-const MAX_CONCURRENT_VIDEOS = 24; // Limit concurrent videos
+const MAX_CONCURRENT_VIDEOS = 32; // Limit concurrent videos
 const videoPool = [];
 let activeVideoCount = 0;
 
@@ -210,7 +210,7 @@ const init = () => {
       mediaElement = createVideoElement(mediaUrl);
       if (!mediaElement) {
         mediaElement = document.createElement("img");
-        mediaElement.src = "/images/placeholder.jpg";
+        mediaElement.src = "/placeholder.png";
         mediaElement.style.width = "100px";
         mediaElement.style.height = "100px";
         mediaElement.style.objectFit = "cover";
