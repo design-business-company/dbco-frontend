@@ -29,9 +29,10 @@ const { $urlFor } = useNuxtApp();
 /* ----------------------------------------------------------------------------
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
-const query = groq`*[_type=="tools" && !featured]{
+const query = groq`*[_type=="tools" && !featured] | order(orderRank) {
   title,
   description,
+  orderRank,
   media[] {
     media[] {
       ...,
@@ -232,6 +233,10 @@ const cleanupVideo = (video) => {
   }
 };
 
+// Update the constant
+const POINT_COUNT = computed(() => mediaUrls.value.length);
+
+// Update init function to use dynamic point count
 const init = () => {
   // Scene setup
   scene = new THREE.Scene();
@@ -283,11 +288,6 @@ const init = () => {
   ring = new THREE.Mesh(geometry, material);
 
   // Set initial rotation
-  console.log("Setting initial rotation:", {
-    isMobile,
-    config: config.rotation.initial,
-  });
-
   ring.rotation.set(
     config.rotation.initial.x,
     config.rotation.initial.y,
@@ -297,17 +297,17 @@ const init = () => {
   scene.add(ring);
 
   // Create points with correct initial size
-  const angleStep = (Math.PI * 2) / 32;
+  const angleStep = (Math.PI * 2) / POINT_COUNT.value;
   const baseRadius = config.ringSize;
 
-  for (let i = 0; i < 32; i++) {
+  for (let i = 0; i < POINT_COUNT.value; i++) {
     const angle = i * angleStep;
     const x = Math.cos(angle) * baseRadius;
     const y = Math.sin(angle) * baseRadius;
     const z = (i % 2) * 0.01;
 
-    const mediaType = mediaUrls.value[i % mediaUrls.value.length].type;
-    const mediaUrl = mediaUrls.value[i % mediaUrls.value.length].url;
+    const mediaType = mediaUrls.value[i].type;
+    const mediaUrl = mediaUrls.value[i].url;
 
     let mediaElement;
     if (mediaType === "video") {
