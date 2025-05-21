@@ -178,7 +178,7 @@ const { isIntersecting } = observe({
   },
 });
 
-// Video element factory
+// Update video element factory
 const createVideoElement = (url) => {
   if (activeVideoCount >= MAX_CONCURRENT_VIDEOS) {
     const video = videoPool.find((v) => !v.inUse);
@@ -190,7 +190,7 @@ const createVideoElement = (url) => {
     return null;
   }
 
-  const video = document.createElement("mux-video");
+  const video = document.createElement("mux-player");
   video.playbackId = url;
   video.autoplay = false;
   video.loop = true;
@@ -198,6 +198,22 @@ const createVideoElement = (url) => {
   video.style.objectFit = "cover";
   video.style.backgroundColor = "white";
   video.controls = false;
+  video.playsinline = true;
+  video.preload = "metadata";
+  video.minResolution = "720p";
+  video.classList.add("mux-player--controls-hidden");
+
+  // Add mobile-specific attributes
+  video.setAttribute("playsinline", "true");
+  video.setAttribute("webkit-playsinline", "true");
+  video.setAttribute("x5-playsinline", "true");
+  video.setAttribute("x5-video-player-type", "h5");
+  video.setAttribute("x5-video-player-fullscreen", "false");
+  video.setAttribute("controls", "false");
+  video.setAttribute(
+    "style",
+    "--controls: none; --loading-indicator: none; --dialog: none;"
+  );
 
   video.inUse = true;
   activeVideoCount++;
@@ -206,7 +222,7 @@ const createVideoElement = (url) => {
   return video;
 };
 
-// Cleanup video element
+// Update cleanup video element
 const cleanupVideo = (video) => {
   if (video) {
     video.pause();
@@ -507,6 +523,19 @@ canvas {
 
 canvas:active {
   cursor: grabbing;
+}
+
+:deep(.mux-player) {
+  --controls: none !important;
+  --loading-indicator: none !important;
+  --dialog: none !important;
+  --media-object-fit: cover;
+}
+
+:deep(.mux-player--controls-hidden) {
+  --controls: none !important;
+  --loading-indicator: none !important;
+  --dialog: none !important;
 }
 
 // .circle-container {
