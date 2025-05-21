@@ -5,7 +5,7 @@
       <BlockMedia :media="item.media[0].media[0]" />
     </div> -->
 
-    <div class="circle-container">
+    <div class="circle-container" ref="containerRef">
       <canvas ref="canvas"></canvas>
     </div>
   </div>
@@ -21,6 +21,8 @@ import {
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { useNuxtApp } from "#app";
 import { mediaBlockQuery } from "@/queries/blocks";
+import observe from "~/composables/Observer";
+import Vid from "~/components/Block/Vid.vue";
 
 const { $urlFor } = useNuxtApp();
 
@@ -104,26 +106,97 @@ let frameCount = 0;
 let lastTime = performance.now();
 let fps = 0;
 
+// Update the configuration with separate desktop and mobile settings
+const CONFIG = {
+  desktop: {
+    ringSize: 3,
+    pointSize: 144,
+    rotation: {
+      initial: {
+        x: -1,
+        y: 1,
+        z: 0,
+      },
+      animation: {
+        x: 0.002,
+        y: -0.002,
+        z: 0.006,
+      },
+    },
+  },
+  mobile: {
+    ringSize: 2.75,
+    pointSize: 80,
+    rotation: {
+      initial: {
+        x: 1,
+        y: 0,
+        z: 1,
+      },
+      animation: {
+        x: 0.0,
+        y: 0.0,
+        z: 0.01,
+      },
+    },
+  },
+};
+
+// Add ref for the container
+const containerRef = ref(null);
+
+// Update the intersection observer setup
+const { isIntersecting } = observe({
+  element: containerRef,
+  onEnter: () => {
+    console.log("Circle is in view");
+    // Start animation if not already running
+    if (!animationFrameId) {
+      animate();
+    }
+    // Resume videos
+    videoPool.forEach((video) => {
+      if (video && video.play) {
+        video.play().catch((e) => console.log("Video play error:", e));
+      }
+    });
+  },
+  onLeave: () => {
+    console.log("Circle is out of view");
+    // Pause animations
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+    // Pause videos
+    videoPool.forEach((video) => {
+      if (video && video.pause) {
+        video.pause();
+      }
+    });
+  },
+  options: {
+    threshold: 0.1, // Trigger when at least 10% is visible
+  },
+});
+
 // Video element factory
 const createVideoElement = (url) => {
   if (activeVideoCount >= MAX_CONCURRENT_VIDEOS) {
-    // Reuse an existing video element
     const video = videoPool.find((v) => !v.inUse);
     if (video) {
       video.inUse = true;
       video.playbackId = url;
       return video;
     }
-    return null; // No available video elements
+    return null;
   }
 
-  const video = document.createElement("mux-player");
+  const video = document.createElement("mux-video");
   video.playbackId = url;
-  video.autoplay = true;
+  video.autoplay = false;
   video.loop = true;
   video.muted = true;
-  video.style.width = "100px";
-  video.style.height = "100px";
   video.style.objectFit = "cover";
   video.style.backgroundColor = "white";
   video.controls = false;
@@ -163,9 +236,9 @@ const init = () => {
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.rotateSpeed = 0.5;
-  controls.enableZoom = false; // Disable zoom
+  controls.enableZoom = false;
 
-  // WebGL Renderer setup with performance optimizations
+  // WebGL Renderer setup
   renderer = new THREE.WebGLRenderer({
     canvas: canvas.value,
     antialias: false,
@@ -176,7 +249,7 @@ const init = () => {
   renderer.setPixelRatio(1);
   renderer.setAnimationLoop(null);
 
-  // CSS2D Renderer setup with optimizations
+  // CSS2D Renderer setup
   labelRenderer = new CSS2DRenderer();
   labelRenderer.setSize(canvas.value.clientWidth, canvas.value.clientHeight);
   labelRenderer.domElement.style.position = "absolute";
@@ -184,23 +257,40 @@ const init = () => {
   labelRenderer.domElement.style.pointerEvents = "none";
   canvas.value.parentElement.appendChild(labelRenderer.domElement);
 
-  // Create invisible ring with fewer vertices
-  const geometry = new THREE.TorusGeometry(1, 0.1, 32, 32);
+  // Get current config based on device
+  const isMobile = window.innerWidth <= 1024;
+  const config = isMobile ? CONFIG.mobile : CONFIG.desktop;
+
+  // Create ring with correct initial size
+  const geometry = new THREE.TorusGeometry(config.ringSize, 0.1, 32, 32);
   const material = new THREE.MeshBasicMaterial({
     visible: false,
   });
   ring = new THREE.Mesh(geometry, material);
+
+  // Set initial rotation
+  console.log("Setting initial rotation:", {
+    isMobile,
+    config: config.rotation.initial,
+  });
+
+  ring.rotation.set(
+    config.rotation.initial.x,
+    config.rotation.initial.y,
+    config.rotation.initial.z
+  );
+
   scene.add(ring);
 
-  // Create a fixed number of points around the ring
+  // Create points with correct initial size
   const angleStep = (Math.PI * 2) / 32;
-  const baseRadius = 1; // Base radius for label positioning
+  const baseRadius = config.ringSize;
 
   for (let i = 0; i < 32; i++) {
     const angle = i * angleStep;
     const x = Math.cos(angle) * baseRadius;
     const y = Math.sin(angle) * baseRadius;
-    const z = 0;
+    const z = (i % 2) * 0.01;
 
     const mediaType = mediaUrls.value[i % mediaUrls.value.length].type;
     const mediaUrl = mediaUrls.value[i % mediaUrls.value.length].url;
@@ -211,31 +301,19 @@ const init = () => {
       if (!mediaElement) {
         mediaElement = document.createElement("img");
         mediaElement.src = "/placeholder.png";
-        mediaElement.style.width = "100px";
-        mediaElement.style.height = "100px";
-        mediaElement.style.objectFit = "cover";
-        mediaElement.style.backgroundColor = "#fff";
       }
     } else {
       mediaElement = document.createElement("img");
       mediaElement.loading = "lazy";
       mediaElement.src = mediaUrl;
-      mediaElement.style.width = "100px";
-      mediaElement.style.height = "100px";
-      mediaElement.style.objectFit = "cover";
-      mediaElement.style.backgroundColor = "#fff";
-
-      mediaElement.onload = () => {
-        mediaElement.style.backgroundColor = "transparent";
-      };
-
-      mediaElement.onerror = (e) => {
-        console.error("Failed to load image:", mediaUrl, e);
-        mediaElement.style.backgroundColor = "#ff0000";
-      };
     }
 
-    // Create CSS2D label
+    // Set initial size based on config
+    mediaElement.style.width = `${config.pointSize}px`;
+    mediaElement.style.height = `${config.pointSize}px`;
+    mediaElement.style.objectFit = "cover";
+    mediaElement.style.backgroundColor = "#fff";
+
     const label = new CSS2DObject(mediaElement);
     label.position.set(x, y, z);
     ring.add(label);
@@ -246,24 +324,21 @@ const init = () => {
   animate();
 };
 
+// Update animate function to handle visibility properly
 const animate = () => {
   animationFrameId = requestAnimationFrame(animate);
-
-  // Update performance stats
-  frameCount++;
-  const currentTime = performance.now();
-  if (currentTime - lastTime >= 1000) {
-    fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
-    frameCount = 0;
-    lastTime = currentTime;
-  }
 
   // Update controls
   if (controls) controls.update();
 
-  // Add summersault rotation
+  // Add rotation based on device
   if (ring) {
-    ring.rotation.z += 0.005; // Fixed summersault speed
+    const isMobile = window.innerWidth <= 1024;
+    const config = isMobile ? CONFIG.mobile : CONFIG.desktop;
+
+    ring.rotation.x += config.rotation.animation.x;
+    ring.rotation.y += config.rotation.animation.y;
+    ring.rotation.z += config.rotation.animation.z;
   }
 
   // Render scene
@@ -271,8 +346,23 @@ const animate = () => {
   labelRenderer.render(scene, camera);
 };
 
+// Update resize handling
+onMounted(() => {
+  init();
+  window.addEventListener("windowResized", handleResize);
+
+  // Force initial resize and settings application
+  requestAnimationFrame(() => {
+    handleResize();
+    // Start animation if initially visible
+    if (isIntersecting.value) {
+      animate();
+    }
+  });
+});
+
 onBeforeUnmount(() => {
-  window.removeEventListener("resize", handleResize);
+  window.removeEventListener("windowResized", handleResize);
   if (resizeRAF) cancelAnimationFrame(resizeRAF);
   if (resizeObserver) resizeObserver.disconnect();
   cancelAnimationFrame(animationFrameId);
@@ -320,8 +410,10 @@ onBeforeUnmount(() => {
   }
 });
 
-// Optimize resize handler with RAF
+// Remove transition state tracking
 let resizeRAF;
+
+// Update handleResize to use a simpler approach
 const handleResize = () => {
   if (resizeRAF) cancelAnimationFrame(resizeRAF);
   resizeRAF = requestAnimationFrame(() => {
@@ -333,65 +425,59 @@ const handleResize = () => {
     canvas.value.style.height = `${size}px`;
 
     // Update camera and renderer
-    camera.aspect = 1; // Keep it square
+    camera.aspect = 1;
     camera.updateProjectionMatrix();
     renderer.setSize(size, size);
     labelRenderer.setSize(size, size);
 
-    // Update ring size based on breakpoints
+    // Update ring size and rotation based on device
     if (ring) {
-      let ringSize;
-      // if (size <= 640) {
-      //   ringSize = 3.0;
-      // } else if (size <= 720) {
-      //   ringSize = 3.0;
-      // } else if (size <= 1024) {
-      //   ringSize = 3.0;
-      // } else if (size <= 1280) {
-      //   ringSize = 3.0;
-      // } else if (size <= 1440) {
-      //   ringSize = 3.0;
-      // } else if (size > 1440) {
-      //   ringSize = 3.0;
-      // }
-      ringSize = 3.0;
+      const isMobile = window.innerWidth <= 1024;
+      const config = isMobile ? CONFIG.mobile : CONFIG.desktop;
+      const ringSize = config.ringSize;
 
+      // Update ring geometry first
       const newGeometry = new THREE.TorusGeometry(ringSize, 0.1, 32, 32);
       ring.geometry.dispose();
       ring.geometry = newGeometry;
 
-      // Update label positions
+      // Update rotation
+      ring.rotation.set(
+        config.rotation.initial.x,
+        config.rotation.initial.y,
+        config.rotation.initial.z
+      );
+
+      // Update label positions and sizes in a single pass
       const angleStep = (Math.PI * 2) / labels.length;
+      const labelSize = config.pointSize;
+
       labels.forEach((label, i) => {
         const angle = i * angleStep;
+        const z = (i % 2) * 0.01;
+
+        // Update position
         label.position.set(
           Math.cos(angle) * ringSize,
           Math.sin(angle) * ringSize,
-          0
+          z
         );
+
+        // Update size
+        const img = label.element;
+        if (img) {
+          img.style.width = `${labelSize}px`;
+          img.style.height = `${labelSize}px`;
+          img.style.objectFit = "cover";
+          img.style.transform = "scale(1)";
+        }
       });
     }
-
-    // Update label sizes
-    const labelSize = Math.min(Math.max(size * 0.08, 96), size * 0.1);
-    labels.forEach((label) => {
-      const img = label.element;
-      if (img) {
-        img.style.width = `${labelSize}px`;
-        img.style.height = `${labelSize}px`;
-      }
-    });
   });
 };
 
 // Add a ResizeObserver for more responsive updates
 let resizeObserver;
-onMounted(() => {
-  init();
-  window.addEventListener("resize", handleResize);
-  // Initial size update
-  handleResize();
-});
 </script>
 
 <style lang="scss" scoped>
@@ -424,4 +510,10 @@ canvas {
 canvas:active {
   cursor: grabbing;
 }
+
+// .circle-container {
+//   :deep(mux-player) {
+//     pointer-events: none !important;
+//   }
+// }
 </style>

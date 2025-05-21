@@ -139,11 +139,118 @@ const MIN_ITEMS_TO_RENDER = 4; // Start rendering after this many items are load
 const videoCache = new Map();
 const textureCache = new Map();
 
-// Size configuration
-const baseRadius = 1.5;
-const POINT_SIZE = 0.8;
-const Z_OFFSET_RANGE = 0.05;
-const CAMERA_FOV = 15;
+// Add size configuration at the top with other constants
+const SIZE_CONFIG = {
+  mobile: {
+    ring: {
+      small: 2.0, // <= 360px
+      medium: 2.2, // <= 430px
+    },
+    particle: {
+      small: 1.5, // <= 360px
+      medium: 1.7, // <= 430px
+    },
+  },
+  tablet: {
+    ring: {
+      small: 2.5, // <= 600px
+      medium: 2.8, // <= 1024px
+    },
+    particle: {
+      small: 2.0, // <= 600px
+      medium: 2.2, // <= 1024px
+    },
+  },
+  laptop: {
+    ring: {
+      small: 2.5, // <= 1024px
+      medium: 2.5, // > 1024px
+    },
+    particle: {
+      small: 2.2, // <= 1024px
+      medium: 2.5, // > 1024px
+    },
+  },
+};
+
+// Add rotation configuration
+const ROTATION_CONFIG = {
+  mobile: {
+    initial: {
+      x: Math.PI * 1, // Slight tilt
+      y: 1,
+      z: 0,
+    },
+    animation: {
+      x: 0.0, // Slower rotation
+      y: 0.0,
+      z: 0.01,
+    },
+  },
+  tablet: {
+    initial: {
+      x: Math.PI * 0.15, // More tilt
+      y: Math.PI * 0.05,
+      z: 0,
+    },
+    animation: {
+      x: 0.003,
+      y: 0.004,
+      z: 0.002,
+    },
+  },
+  desktop: {
+    initial: {
+      x: Math.PI * 0.2, // Most dramatic tilt
+      y: Math.PI * 0.1,
+      z: 0,
+    },
+    animation: {
+      x: 0.004,
+      y: 0.005,
+      z: 0.003,
+    },
+  },
+};
+
+// Add rotation state
+let currentRotation = {
+  x: 0,
+  y: 0,
+  z: 0,
+};
+
+// Update device detection function to use only three breakpoints
+const getDeviceType = () => {
+  const width = window.innerWidth;
+  if (width <= 430) return "mobile";
+  if (width <= 1024) return "tablet";
+  return "laptop";
+};
+
+// Update size calculation function
+const calculateSizes = () => {
+  const deviceType = getDeviceType();
+  const width = window.innerWidth;
+  let sizeCategory;
+
+  switch (deviceType) {
+    case "mobile":
+      sizeCategory = width <= 360 ? "small" : "medium";
+      break;
+    case "tablet":
+      sizeCategory = width <= 600 ? "small" : "medium";
+      break;
+    case "laptop":
+      sizeCategory = width <= 1024 ? "small" : "medium";
+      break;
+  }
+
+  return {
+    ringSize: SIZE_CONFIG[deviceType].ring[sizeCategory],
+    particleSize: SIZE_CONFIG[deviceType].particle[sizeCategory],
+  };
+};
 
 // Add refs for the container and animation state
 const container = ref(null);
@@ -200,10 +307,18 @@ const animate = () => {
   // Update controls
   if (controls) controls.update();
 
-  // Add summersault rotation
+  // Update rotation based on device type
   if (ring) {
-    ring.rotation.z += 0.005;
-    ring.rotation.y += 0.005;
+    const deviceType = getDeviceType();
+    const rotationConfig = ROTATION_CONFIG[deviceType];
+
+    currentRotation.x += rotationConfig.animation.x;
+    currentRotation.y += rotationConfig.animation.y;
+    currentRotation.z += rotationConfig.animation.z;
+
+    ring.rotation.x = rotationConfig.initial.x + currentRotation.x;
+    ring.rotation.y = rotationConfig.initial.y + currentRotation.y;
+    ring.rotation.z = rotationConfig.initial.z + currentRotation.z;
   }
 
   // Update all meshes to face the camera
@@ -265,7 +380,12 @@ const logVideoStates = () => {
   console.log(`Videos: ${playing} playing, ${paused} paused`);
 };
 
-// Update init function to add back OrbitControls
+// Add back critical constants
+const Z_OFFSET_RANGE = 0.05;
+const CAMERA_FOV = 15;
+const POINT_COUNT = 32;
+
+// Update init function to properly set up the ring and points
 const init = async () => {
   // Clean up any existing videos and meshes
   if (labels.length > 0) {
@@ -302,7 +422,7 @@ const init = async () => {
     0.1,
     1000
   );
-  camera.position.z = 30;
+  camera.position.z = 30; // Back to original position
 
   // Add OrbitControls
   controls = new OrbitControls(camera, canvas.value);
@@ -335,256 +455,277 @@ const init = async () => {
   renderer.setPixelRatio(pixelRatio);
   renderer.setAnimationLoop(null);
 
-  // Create invisible ring with fewer vertices on mobile
-  const geometry = new THREE.TorusGeometry(baseRadius, 0.1, 32, 32);
+  const { ringSize, particleSize } = calculateSizes();
+  console.log("Initial sizes:", { ringSize, particleSize });
+
+  // Create invisible ring with dynamic size
+  const geometry = new THREE.TorusGeometry(
+    ringSize,
+    0.1,
+    POINT_COUNT,
+    POINT_COUNT
+  );
   const material = new THREE.MeshBasicMaterial({
     visible: false,
   });
   ring = new THREE.Mesh(geometry, material);
-  ring.rotation.x = Math.PI * 0.1;
+
+  // Set initial rotation based on device type
+  const deviceType = getDeviceType();
+  const rotationConfig = ROTATION_CONFIG[deviceType];
+  ring.rotation.x = rotationConfig.initial.x;
+  ring.rotation.y = rotationConfig.initial.y;
+  ring.rotation.z = rotationConfig.initial.z;
+
+  // Position ring at center of scene
+  ring.position.set(0, 0, 0);
   scene.add(ring);
 
   // Create a fixed number of points around the ring
-  const angleStep = (Math.PI * 2) / 32;
+  const angleStep = (Math.PI * 2) / POINT_COUNT;
 
-  // Start animation loop immediately
-  isAnimating.value = true;
-  animate();
+  // Start loading items
+  for (let i = 0; i < POINT_COUNT; i++) {
+    await loadItem(i);
+  }
+};
 
-  // Load items progressively
-  const loadItem = async (index) => {
-    const angle = index * angleStep;
-    const x = Math.cos(angle) * baseRadius;
-    const y = Math.sin(angle) * baseRadius;
-    const z = (Math.random() - 0.5) * Z_OFFSET_RANGE;
+// Update loadItem function to use correct angle calculation
+const loadItem = async (index) => {
+  const angleStep = (Math.PI * 2) / POINT_COUNT;
+  const angle = index * angleStep;
+  const { ringSize, particleSize } = calculateSizes();
 
-    const mediaType = mediaUrls.value[index % mediaUrls.value.length].type;
-    const mediaUrl = mediaUrls.value[index % mediaUrls.value.length].url;
-    const fallbackUrl =
-      mediaUrls.value[index % mediaUrls.value.length].fallbackUrl;
+  const x = Math.cos(angle) * ringSize;
+  const y = Math.sin(angle) * ringSize;
+  const z = (Math.random() - 0.5) * Z_OFFSET_RANGE;
 
-    console.log(`Loading item ${index}:`, { mediaType, mediaUrl, fallbackUrl });
+  const mediaType = mediaUrls.value[index % mediaUrls.value.length].type;
+  const mediaUrl = mediaUrls.value[index % mediaUrls.value.length].url;
+  const fallbackUrl =
+    mediaUrls.value[index % mediaUrls.value.length].fallbackUrl;
 
-    try {
-      if (mediaType === "video") {
-        console.log("Processing video:", mediaUrl);
-        const mediaElement = await createVideoElement(mediaUrl);
-        if (!mediaElement) {
-          console.log("Using placeholder for video");
-          let texture;
-          if (textureCache.has("placeholder")) {
-            texture = textureCache.get("placeholder");
-          } else {
-            texture = new THREE.TextureLoader().load("/placeholder.png");
-            texture.colorSpace = THREE.SRGBColorSpace;
-            textureCache.set("placeholder", texture);
-          }
-          const material = new THREE.MeshBasicMaterial({ map: texture });
-          const geometry = new THREE.PlaneGeometry(1, 1);
-          const mesh = new THREE.Mesh(geometry, material);
-          mesh.position.set(x, y, z);
-          mesh.scale.set(POINT_SIZE, POINT_SIZE, 1);
-          mesh.lookAt(camera.position);
-          if (ring) {
-            ring.add(mesh);
-            labels.push(mesh);
-          }
+  console.log(`Loading item ${index}:`, {
+    mediaType,
+    mediaUrl,
+    fallbackUrl,
+    x,
+    y,
+    z,
+  });
+
+  try {
+    if (mediaType === "video") {
+      console.log("Processing video:", mediaUrl);
+      const mediaElement = await createVideoElement(mediaUrl);
+      if (!mediaElement) {
+        console.log("Using placeholder for video");
+        let texture;
+        if (textureCache.has("placeholder")) {
+          texture = textureCache.get("placeholder");
         } else {
-          console.log("Creating video texture");
-          const canvas = document.createElement("canvas");
-          canvas.width = 640;
-          canvas.height = 360;
-          const ctx = canvas.getContext("2d");
-
-          const texture = new THREE.CanvasTexture(canvas);
-          texture.minFilter = THREE.LinearFilter;
-          texture.magFilter = THREE.LinearFilter;
-
-          const material = new THREE.MeshBasicMaterial({
-            map: texture,
-            transparent: true,
-            opacity: 1,
-          });
-          const geometry = new THREE.PlaneGeometry(1, 1);
-          const mesh = new THREE.Mesh(geometry, material);
-          mesh.position.set(x, y, z);
-          mesh.scale.set(POINT_SIZE, POINT_SIZE, 1);
-          mesh.lookAt(camera.position);
-          if (ring) {
-            ring.add(mesh);
-            labels.push(mesh);
-          }
-
-          const updateCanvas = () => {
-            if (mediaElement.readyState >= 2) {
-              ctx.drawImage(mediaElement, 0, 0, canvas.width, canvas.height);
-              texture.needsUpdate = true;
-            }
-            requestAnimationFrame(updateCanvas);
-          };
-          updateCanvas();
-        }
-      } else {
-        // Load placeholder first
-        let texture = textureCache.get("placeholder");
-        if (!texture) {
           texture = new THREE.TextureLoader().load("/placeholder.png");
           texture.colorSpace = THREE.SRGBColorSpace;
           textureCache.set("placeholder", texture);
         }
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+        const geometry = new THREE.PlaneGeometry(1, 1);
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(x, y, z);
+        mesh.scale.set(particleSize, particleSize, 1);
+        mesh.lookAt(camera.position);
+        if (ring) {
+          ring.add(mesh);
+          labels.push(mesh);
+        }
+      } else {
+        console.log("Creating video texture");
+        const canvas = document.createElement("canvas");
+        canvas.width = 640;
+        canvas.height = 360;
+        const ctx = canvas.getContext("2d");
+
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
 
         const material = new THREE.MeshBasicMaterial({
           map: texture,
-          toneMapped: true,
           transparent: true,
-          color: new THREE.Color(1, 1, 1), // Ensure full white
+          opacity: 1,
         });
         const geometry = new THREE.PlaneGeometry(1, 1);
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(x, y, z);
-        mesh.scale.set(POINT_SIZE, POINT_SIZE, 1);
+        mesh.scale.set(particleSize, particleSize, 1);
         mesh.lookAt(camera.position);
-
         if (ring) {
           ring.add(mesh);
           labels.push(mesh);
         }
 
-        // Load actual image in background
-        const loadImage = () => {
-          return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-
-            // Try fallback first
-            console.log(`Loading fallback for item ${index}:`, fallbackUrl);
-            img.src = fallbackUrl;
-
-            img.onload = () => {
-              console.log(`Fallback loaded for item ${index}`);
-              // Once fallback is loaded, try full resolution
-              const fullImg = new Image();
-              fullImg.crossOrigin = "anonymous";
-              fullImg.src = mediaUrl;
-
-              fullImg.onload = () => {
-                console.log(`Full image loaded for item ${index}`);
-                const newTexture = new THREE.TextureLoader().load(
-                  mediaUrl,
-                  // Success callback
-                  (texture) => {
-                    texture.colorSpace = THREE.SRGBColorSpace;
-                    texture.minFilter = THREE.LinearFilter;
-                    texture.magFilter = THREE.LinearFilter;
-                    material.map = texture;
-                    material.needsUpdate = true;
-                    textureCache.set(mediaUrl, texture);
-                    resolve();
-                  },
-                  // Progress callback
-                  undefined,
-                  // Error callback
-                  (error) => {
-                    console.error(
-                      `Error loading full image for item ${index}:`,
-                      error
-                    );
-                    // Fall back to the fallback image
-                    const fallbackTexture = new THREE.TextureLoader().load(
-                      fallbackUrl
-                    );
-                    fallbackTexture.colorSpace = THREE.SRGBColorSpace;
-                    material.map = fallbackTexture;
-                    material.needsUpdate = true;
-                    textureCache.set(mediaUrl, fallbackTexture);
-                    resolve();
-                  }
-                );
-              };
-
-              fullImg.onerror = (error) => {
-                console.error(
-                  `Error loading full image for item ${index}:`,
-                  error
-                );
-                // If full resolution fails, keep the fallback
-                const fallbackTexture = new THREE.TextureLoader().load(
-                  fallbackUrl
-                );
-                fallbackTexture.colorSpace = THREE.SRGBColorSpace;
-                material.map = fallbackTexture;
-                material.needsUpdate = true;
-                textureCache.set(mediaUrl, fallbackTexture);
-                resolve();
-              };
-            };
-
-            img.onerror = (error) => {
-              console.error(`Error loading fallback for item ${index}:`, error);
-              reject(error);
-            };
-          });
-        };
-
-        // Load image with retry logic
-        let retries = 3;
-        const attemptLoad = async () => {
-          try {
-            await loadImage();
-          } catch (error) {
-            console.error(
-              `Failed to load image (${retries} retries left):`,
-              error
-            );
-            if (retries > 0) {
-              retries--;
-              setTimeout(attemptLoad, 1000); // Wait 1 second before retry
-            }
+        const updateCanvas = () => {
+          if (mediaElement.readyState >= 2) {
+            ctx.drawImage(mediaElement, 0, 0, canvas.width, canvas.height);
+            texture.needsUpdate = true;
           }
+          requestAnimationFrame(updateCanvas);
         };
-
-        attemptLoad();
+        updateCanvas();
       }
-    } catch (error) {
-      console.error("Error creating media element:", error);
-      let texture;
-      if (textureCache.has("placeholder")) {
-        texture = textureCache.get("placeholder");
-      } else {
+    } else {
+      // Load placeholder first
+      let texture = textureCache.get("placeholder");
+      if (!texture) {
         texture = new THREE.TextureLoader().load("/placeholder.png");
         texture.colorSpace = THREE.SRGBColorSpace;
         textureCache.set("placeholder", texture);
       }
+
       const material = new THREE.MeshBasicMaterial({
         map: texture,
         toneMapped: true,
         transparent: true,
+        color: new THREE.Color(1, 1, 1),
       });
       const geometry = new THREE.PlaneGeometry(1, 1);
       const mesh = new THREE.Mesh(geometry, material);
       mesh.position.set(x, y, z);
-      mesh.scale.set(POINT_SIZE, POINT_SIZE, 1);
+      mesh.scale.set(particleSize, particleSize, 1);
       mesh.lookAt(camera.position);
+
       if (ring) {
         ring.add(mesh);
         labels.push(mesh);
       }
+
+      // Load actual image in background
+      const loadImage = () => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+
+          // Try fallback first
+          console.log(`Loading fallback for item ${index}:`, fallbackUrl);
+          img.src = fallbackUrl;
+
+          img.onload = () => {
+            console.log(`Fallback loaded for item ${index}`);
+            // Once fallback is loaded, try full resolution
+            const fullImg = new Image();
+            fullImg.crossOrigin = "anonymous";
+            fullImg.src = mediaUrl;
+
+            fullImg.onload = () => {
+              console.log(`Full image loaded for item ${index}`);
+              const newTexture = new THREE.TextureLoader().load(
+                mediaUrl,
+                // Success callback
+                (texture) => {
+                  texture.colorSpace = THREE.SRGBColorSpace;
+                  texture.minFilter = THREE.LinearFilter;
+                  texture.magFilter = THREE.LinearFilter;
+                  material.map = texture;
+                  material.needsUpdate = true;
+                  textureCache.set(mediaUrl, texture);
+                  resolve();
+                },
+                // Progress callback
+                undefined,
+                // Error callback
+                (error) => {
+                  console.error(
+                    `Error loading full image for item ${index}:`,
+                    error
+                  );
+                  // Fall back to the fallback image
+                  const fallbackTexture = new THREE.TextureLoader().load(
+                    fallbackUrl
+                  );
+                  fallbackTexture.colorSpace = THREE.SRGBColorSpace;
+                  material.map = fallbackTexture;
+                  material.needsUpdate = true;
+                  textureCache.set(mediaUrl, fallbackTexture);
+                  resolve();
+                }
+              );
+            };
+
+            fullImg.onerror = (error) => {
+              console.error(
+                `Error loading full image for item ${index}:`,
+                error
+              );
+              // If full resolution fails, keep the fallback
+              const fallbackTexture = new THREE.TextureLoader().load(
+                fallbackUrl
+              );
+              fallbackTexture.colorSpace = THREE.SRGBColorSpace;
+              material.map = fallbackTexture;
+              material.needsUpdate = true;
+              textureCache.set(mediaUrl, fallbackTexture);
+              resolve();
+            };
+          };
+
+          img.onerror = (error) => {
+            console.error(`Error loading fallback for item ${index}:`, error);
+            reject(error);
+          };
+        });
+      };
+
+      // Load image with retry logic
+      let retries = 3;
+      const attemptLoad = async () => {
+        try {
+          await loadImage();
+        } catch (error) {
+          console.error(
+            `Failed to load image (${retries} retries left):`,
+            error
+          );
+          if (retries > 0) {
+            retries--;
+            setTimeout(attemptLoad, 1000); // Wait 1 second before retry
+          }
+        }
+      };
+
+      attemptLoad();
     }
-
-    loadedCount++;
-
-    if (isFirstRender && loadedCount >= MIN_ITEMS_TO_RENDER) {
-      isFirstRender = false;
-      console.log("Initial render complete");
+  } catch (error) {
+    console.error("Error creating media element:", error);
+    let texture;
+    if (textureCache.has("placeholder")) {
+      texture = textureCache.get("placeholder");
+    } else {
+      texture = new THREE.TextureLoader().load("/placeholder.png");
+      texture.colorSpace = THREE.SRGBColorSpace;
+      textureCache.set("placeholder", texture);
     }
-
-    if (index < 31) {
-      loadItem(index + 1);
+    const material = new THREE.MeshBasicMaterial({
+      map: texture,
+      toneMapped: true,
+      transparent: true,
+    });
+    const geometry = new THREE.PlaneGeometry(1, 1);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y, z);
+    mesh.scale.set(particleSize, particleSize, 1);
+    mesh.lookAt(camera.position);
+    if (ring) {
+      ring.add(mesh);
+      labels.push(mesh);
     }
-  };
+  }
 
-  // Start loading items
-  loadItem(0);
+  loadedCount++;
+
+  if (isFirstRender && loadedCount >= MIN_ITEMS_TO_RENDER) {
+    isFirstRender = false;
+    console.log("Initial render complete");
+  }
 };
 
 // Update createVideoElement with mobile optimizations
@@ -760,29 +901,59 @@ const handleResize = () => {
   if (resizeRAF) cancelAnimationFrame(resizeRAF);
   resizeRAF = requestAnimationFrame(() => {
     const container = canvas.value.parentElement;
-    const size = Math.min(container.clientWidth, container.clientHeight);
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
 
-    // Update canvas size
-    canvas.value.style.width = `${size}px`;
-    canvas.value.style.height = `${size}px`;
+    // Calculate size to fill container while maintaining aspect ratio
+    const size = Math.max(containerWidth, containerHeight);
 
-    // Update camera and renderer with high quality settings
-    camera.aspect = 1; // Keep it square
+    // Update canvas size to fill container
+    canvas.value.style.width = `${containerWidth}px`;
+    canvas.value.style.height = `${containerHeight}px`;
+
+    // Update camera and renderer
+    camera.aspect = containerWidth / containerHeight;
+    camera.position.z = 30; // Keep consistent camera distance
     camera.updateProjectionMatrix();
 
     // Use device pixel ratio for better quality
     const pixelRatio = Math.min(window.devicePixelRatio, 2);
-    renderer.setSize(size * pixelRatio, size * pixelRatio, false);
+    renderer.setSize(
+      containerWidth * pixelRatio,
+      containerHeight * pixelRatio,
+      false
+    );
     renderer.setPixelRatio(pixelRatio);
 
-    // Update ring size based on breakpoints
-    if (ring) {
-      let ringSize;
-      ringSize = 3.0;
+    // Calculate new sizes
+    const { ringSize, particleSize } = calculateSizes();
+    console.log("Resize sizes:", {
+      ringSize,
+      particleSize,
+      containerWidth,
+      containerHeight,
+    });
 
-      const newGeometry = new THREE.TorusGeometry(ringSize, 0.1, 32, 32);
+    // Update ring size and rotation
+    if (ring) {
+      const deviceType = getDeviceType();
+      const rotationConfig = ROTATION_CONFIG[deviceType];
+
+      // Create new geometry with updated size
+      const newGeometry = new THREE.TorusGeometry(
+        ringSize,
+        0.1,
+        POINT_COUNT,
+        POINT_COUNT
+      );
       ring.geometry.dispose();
       ring.geometry = newGeometry;
+
+      // Reset rotation to initial state for new device type
+      ring.rotation.x = rotationConfig.initial.x;
+      ring.rotation.y = rotationConfig.initial.y;
+      ring.rotation.z = rotationConfig.initial.z;
+      currentRotation = { x: 0, y: 0, z: 0 };
 
       // Update label positions
       const angleStep = (Math.PI * 2) / labels.length;
@@ -794,10 +965,20 @@ const handleResize = () => {
           0
         );
       });
+
+      // Update particle sizes
+      labels.forEach((label) => {
+        if (label instanceof THREE.Mesh) {
+          label.scale.set(particleSize, particleSize, 1);
+        }
+      });
     }
 
-    // Update label sizes
-    const labelSize = Math.min(Math.max(size * 0.08, 96), size * 0.1);
+    // Update label sizes based on container size
+    const labelSize = Math.min(
+      Math.max(containerWidth * 0.08, 96),
+      containerWidth * 0.1
+    );
     labels.forEach((label) => {
       const img = label.element;
       if (img) {
@@ -825,11 +1006,11 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1/1.5;
 
-  @include desktop {
-    aspect-ratio: 6/4;
-  }
+  // @include desktop {
+  //   aspect-ratio: 6/4;
+  // }
 
   // @include ultrawide {
   //   aspect-ratio: /4;
@@ -837,8 +1018,11 @@ onMounted(() => {
 }
 
 canvas {
-  width: 100vmin;
-  height: 100vmin;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: block;
   cursor: grab;
   touch-action: none;

@@ -64,7 +64,7 @@
 
     <AboutStaffGallery v-if="block._type === 'staffGallery'" v-bind="block" />
 
-    <ToolsCircle
+    <ToolsCircleTwo
       v-if="block._type === 'customBlock' && block.type === 'toolsGallery'"
     />
   </div>
