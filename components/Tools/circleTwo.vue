@@ -73,7 +73,7 @@ const mediaUrls = computed(() => {
       if (media._type === "picture") {
         return {
           type: "image",
-          url: $urlFor(media.asset).width(640).url(),
+          url: $urlFor(media.asset).width(320).url(),
         };
       } else if (media._type === "video") {
         return {
@@ -149,7 +149,6 @@ const containerRef = ref(null);
 const { isIntersecting } = observe({
   element: containerRef,
   onEnter: () => {
-    console.log("Circle is in view");
     // Start animation if not already running
     if (!animationFrameId) {
       animate();
@@ -162,7 +161,6 @@ const { isIntersecting } = observe({
     });
   },
   onLeave: () => {
-    console.log("Circle is out of view");
     // Pause animations
     if (animationFrameId) {
       cancelAnimationFrame(animationFrameId);
