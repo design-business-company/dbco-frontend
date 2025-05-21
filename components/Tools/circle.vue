@@ -5,8 +5,13 @@
       <BlockMedia :media="item.media[0].media[0]" />
     </div> -->
 
-    <div class="circle-container">
+    <div ref="container" class="circle-container">
       <canvas ref="canvas"></canvas>
+      <div v-if="PERFORMANCE_MONITORING" class="performance-monitor">
+        <div>FPS: {{ fps }}</div>
+        <div>Memory: {{ memoryUsage }}MB</div>
+        <div>Videos: {{ activeVideos }}/{{ videoCount }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -21,6 +26,8 @@ import {
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { useNuxtApp } from "#app";
 import { mediaBlockQuery } from "@/queries/blocks";
+import Hls from "hls.js";
+import { useIntersectionObserver } from "@vueuse/core";
 
 const { $urlFor } = useNuxtApp();
 
@@ -63,17 +70,32 @@ if (error.value) {
 const mediaUrls = computed(() => {
   if (!data.value) return [];
 
+  // Add mobile detection
+  const isMobile =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+  console.log("Device type:", isMobile ? "Mobile" : "Desktop");
+
   return data.value
     .map((tool) => {
       const media = tool.media?.[0]?.media?.[0];
       if (!media) return null;
 
-      if (media._type === "picture") {
+      if (media._type === "picture" && media.asset) {
+        // Use smaller image size for mobile
+        const width = isMobile ? 320 : 640;
+        const url = $urlFor(media.asset).width(width).url();
+        const fallbackUrl = $urlFor(media.asset).width(160).url();
+
+        console.log("Image URLs:", { url, fallbackUrl });
+
         return {
           type: "image",
-          url: $urlFor(media.asset).width(640).url(),
+          url,
+          fallbackUrl,
         };
-      } else if (media._type === "video") {
+      } else if (media._type === "video" && media.playbackId) {
         return {
           type: "video",
           url: media.playbackId,
@@ -100,63 +122,187 @@ const videoPool = [];
 let activeVideoCount = 0;
 
 // Performance monitoring
-let frameCount = 0;
+const PERFORMANCE_MONITORING = true;
 let lastTime = performance.now();
-let fps = 0;
+let frameCount = 0;
+let fps = ref(0);
+let memoryUsage = ref(0);
+let videoCount = ref(0);
+let activeVideos = ref(0);
 
-// Video element factory
-const createVideoElement = (url) => {
-  if (activeVideoCount >= MAX_CONCURRENT_VIDEOS) {
-    // Reuse an existing video element
-    const video = videoPool.find((v) => !v.inUse);
-    if (video) {
-      video.inUse = true;
-      video.playbackId = url;
-      return video;
+// Add these variables at the top with other state variables
+let isFirstRender = true;
+let loadedCount = 0;
+const MIN_ITEMS_TO_RENDER = 4; // Start rendering after this many items are loaded
+
+// Add cache objects at the top with other state variables
+const videoCache = new Map();
+const textureCache = new Map();
+
+// Size configuration
+const baseRadius = 1.5;
+const POINT_SIZE = 0.8;
+const Z_OFFSET_RANGE = 0.05;
+const CAMERA_FOV = 15;
+
+// Add refs for the container and animation state
+const container = ref(null);
+const isVisible = ref(false);
+const isAnimating = ref(false);
+
+// Add back the missing intersection observer and animation code
+const { stop } = useIntersectionObserver(
+  container,
+  ([{ isIntersecting }]) => {
+    console.log("Visibility changed:", isIntersecting);
+    isVisible.value = isIntersecting;
+    if (isIntersecting) {
+      // Resume animation and videos
+      isAnimating.value = true;
+      videoPool.forEach((video) => {
+        if (video && !video.paused) {
+          video.play();
+        }
+      });
+      // Start animation if not already running
+      if (!animationFrameId) {
+        animate();
+      }
+      logVideoStates();
+    } else {
+      // Pause animation and videos
+      isAnimating.value = false;
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      videoPool.forEach((video) => {
+        if (video && !video.paused) {
+          video.pause();
+        }
+      });
+      logVideoStates();
     }
-    return null; // No available video elements
+  },
+  { threshold: 0.1 }
+);
+
+// Add back the animation function
+const animate = () => {
+  if (!isAnimating.value) {
+    animationFrameId = null;
+    return;
   }
 
-  const video = document.createElement("mux-player");
-  video.playbackId = url;
-  video.autoplay = true;
-  video.loop = true;
-  video.muted = true;
-  video.style.width = "100px";
-  video.style.height = "100px";
-  video.style.objectFit = "cover";
-  video.style.backgroundColor = "white";
-  video.controls = false;
+  animationFrameId = requestAnimationFrame(animate);
+  updatePerformanceStats();
 
-  video.inUse = true;
-  activeVideoCount++;
-  videoPool.push(video);
+  // Update controls
+  if (controls) controls.update();
 
-  return video;
+  // Add summersault rotation
+  if (ring) {
+    ring.rotation.z += 0.005;
+    ring.rotation.y += 0.005;
+  }
+
+  // Update all meshes to face the camera
+  labels.forEach((mesh) => {
+    if (mesh instanceof THREE.Mesh) {
+      mesh.lookAt(camera.position);
+    }
+  });
+
+  // Render scene
+  renderer.render(scene, camera);
 };
 
-// Cleanup video element
-const cleanupVideo = (video) => {
-  if (video) {
-    video.pause();
-    video.src = "";
-    video.inUse = false;
-    activeVideoCount--;
+// Add back the performance monitoring function
+const updatePerformanceStats = () => {
+  frameCount++;
+  const currentTime = performance.now();
+  if (currentTime - lastTime >= 1000) {
+    fps.value = Math.round((frameCount * 1000) / (currentTime - lastTime));
+    frameCount = 0;
+    lastTime = currentTime;
+
+    if (PERFORMANCE_MONITORING) {
+      // Update video counts - count both pool and cache
+      const totalVideos = new Set([...videoPool, ...videoCache.values()]).size;
+      const activeVideosCount = [...videoPool, ...videoCache.values()].filter(
+        (video) => video && !video.paused
+      ).length;
+
+      videoCount.value = totalVideos;
+      activeVideos.value = activeVideosCount;
+
+      // Update memory usage
+      if (window.performance && window.performance.memory) {
+        memoryUsage.value = Math.round(
+          window.performance.memory.usedJSHeapSize / 1024 / 1024
+        );
+      }
+
+      // Log detailed stats
+      console.log(`Performance Stats:
+        FPS: ${fps.value}
+        Memory: ${memoryUsage.value}MB
+        Total Videos: ${videoCount.value} (Pool: ${videoPool.length}, Cache: ${
+        videoCache.size
+      })
+        Active Videos: ${activeVideos.value}
+        Canvas Size: ${canvas.value?.width}x${canvas.value?.height}
+        Pixel Ratio: ${renderer?.getPixelRatio()}
+      `);
+    }
   }
 };
 
-const init = () => {
+// Add back the video state logging function
+const logVideoStates = () => {
+  const playing = videoPool.filter((video) => video && !video.paused).length;
+  const paused = videoPool.filter((video) => video && video.paused).length;
+  console.log(`Videos: ${playing} playing, ${paused} paused`);
+};
+
+// Update init function to add back OrbitControls
+const init = async () => {
+  // Clean up any existing videos and meshes
+  if (labels.length > 0) {
+    labels.forEach((mesh) => {
+      if (mesh.parent) {
+        mesh.parent.remove(mesh);
+      }
+      if (mesh.geometry) mesh.geometry.dispose();
+      if (mesh.material) {
+        if (Array.isArray(mesh.material)) {
+          mesh.material.forEach((m) => m.dispose());
+        } else {
+          mesh.material.dispose();
+        }
+      }
+    });
+    labels = [];
+  }
+
+  // Clean up video pool
+  videoPool.forEach((video) => {
+    cleanupVideo(video);
+  });
+  videoPool.length = 0;
+  activeVideoCount = 0;
+
   // Scene setup
   scene = new THREE.Scene();
 
   // Camera setup
   camera = new THREE.PerspectiveCamera(
-    45,
+    CAMERA_FOV,
     window.innerWidth / window.innerHeight,
     0.1,
     1000
   );
-  camera.position.z = 10;
+  camera.position.z = 30;
 
   // Add OrbitControls
   controls = new OrbitControls(camera, canvas.value);
@@ -165,113 +311,416 @@ const init = () => {
   controls.rotateSpeed = 0.5;
   controls.enableZoom = false; // Disable zoom
 
-  // WebGL Renderer setup with performance optimizations
+  // WebGL Renderer setup with color management
   renderer = new THREE.WebGLRenderer({
     canvas: canvas.value,
-    antialias: false,
+    antialias: true,
     alpha: true,
     powerPreference: "high-performance",
+    precision: "highp",
   });
-  renderer.setSize(canvas.value.clientWidth, canvas.value.clientHeight);
-  renderer.setPixelRatio(1);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.2;
+
+  // Set size and pixel ratio with mobile optimizations
+  const container = canvas.value.parentElement;
+  const size = Math.min(container.clientWidth, container.clientHeight);
+  canvas.value.style.width = `${size}px`;
+  canvas.value.style.height = `${size}px`;
+
+  // Lower pixel ratio on mobile
+  const pixelRatio = Math.min(window.devicePixelRatio, 2);
+  renderer.setSize(size * pixelRatio, size * pixelRatio, false);
+  renderer.setPixelRatio(pixelRatio);
   renderer.setAnimationLoop(null);
 
-  // CSS2D Renderer setup with optimizations
-  labelRenderer = new CSS2DRenderer();
-  labelRenderer.setSize(canvas.value.clientWidth, canvas.value.clientHeight);
-  labelRenderer.domElement.style.position = "absolute";
-  labelRenderer.domElement.style.top = "0";
-  labelRenderer.domElement.style.pointerEvents = "none";
-  canvas.value.parentElement.appendChild(labelRenderer.domElement);
-
-  // Create invisible ring with fewer vertices
-  const geometry = new THREE.TorusGeometry(1, 0.1, 32, 32);
+  // Create invisible ring with fewer vertices on mobile
+  const geometry = new THREE.TorusGeometry(baseRadius, 0.1, 32, 32);
   const material = new THREE.MeshBasicMaterial({
     visible: false,
   });
   ring = new THREE.Mesh(geometry, material);
+  ring.rotation.x = Math.PI * 0.1;
   scene.add(ring);
 
   // Create a fixed number of points around the ring
   const angleStep = (Math.PI * 2) / 32;
-  const baseRadius = 1; // Base radius for label positioning
 
-  for (let i = 0; i < 32; i++) {
-    const angle = i * angleStep;
+  // Start animation loop immediately
+  isAnimating.value = true;
+  animate();
+
+  // Load items progressively
+  const loadItem = async (index) => {
+    const angle = index * angleStep;
     const x = Math.cos(angle) * baseRadius;
     const y = Math.sin(angle) * baseRadius;
-    const z = 0;
+    const z = (Math.random() - 0.5) * Z_OFFSET_RANGE;
 
-    const mediaType = mediaUrls.value[i % mediaUrls.value.length].type;
-    const mediaUrl = mediaUrls.value[i % mediaUrls.value.length].url;
+    const mediaType = mediaUrls.value[index % mediaUrls.value.length].type;
+    const mediaUrl = mediaUrls.value[index % mediaUrls.value.length].url;
+    const fallbackUrl =
+      mediaUrls.value[index % mediaUrls.value.length].fallbackUrl;
 
-    let mediaElement;
-    if (mediaType === "video") {
-      mediaElement = createVideoElement(mediaUrl);
-      if (!mediaElement) {
-        mediaElement = document.createElement("img");
-        mediaElement.src = "/placeholder.png";
-        mediaElement.style.width = "100px";
-        mediaElement.style.height = "100px";
-        mediaElement.style.objectFit = "cover";
-        mediaElement.style.backgroundColor = "#fff";
+    console.log(`Loading item ${index}:`, { mediaType, mediaUrl, fallbackUrl });
+
+    try {
+      if (mediaType === "video") {
+        console.log("Processing video:", mediaUrl);
+        const mediaElement = await createVideoElement(mediaUrl);
+        if (!mediaElement) {
+          console.log("Using placeholder for video");
+          let texture;
+          if (textureCache.has("placeholder")) {
+            texture = textureCache.get("placeholder");
+          } else {
+            texture = new THREE.TextureLoader().load("/placeholder.png");
+            texture.colorSpace = THREE.SRGBColorSpace;
+            textureCache.set("placeholder", texture);
+          }
+          const material = new THREE.MeshBasicMaterial({ map: texture });
+          const geometry = new THREE.PlaneGeometry(1, 1);
+          const mesh = new THREE.Mesh(geometry, material);
+          mesh.position.set(x, y, z);
+          mesh.scale.set(POINT_SIZE, POINT_SIZE, 1);
+          mesh.lookAt(camera.position);
+          if (ring) {
+            ring.add(mesh);
+            labels.push(mesh);
+          }
+        } else {
+          console.log("Creating video texture");
+          const canvas = document.createElement("canvas");
+          canvas.width = 640;
+          canvas.height = 360;
+          const ctx = canvas.getContext("2d");
+
+          const texture = new THREE.CanvasTexture(canvas);
+          texture.minFilter = THREE.LinearFilter;
+          texture.magFilter = THREE.LinearFilter;
+
+          const material = new THREE.MeshBasicMaterial({
+            map: texture,
+            transparent: true,
+            opacity: 1,
+          });
+          const geometry = new THREE.PlaneGeometry(1, 1);
+          const mesh = new THREE.Mesh(geometry, material);
+          mesh.position.set(x, y, z);
+          mesh.scale.set(POINT_SIZE, POINT_SIZE, 1);
+          mesh.lookAt(camera.position);
+          if (ring) {
+            ring.add(mesh);
+            labels.push(mesh);
+          }
+
+          const updateCanvas = () => {
+            if (mediaElement.readyState >= 2) {
+              ctx.drawImage(mediaElement, 0, 0, canvas.width, canvas.height);
+              texture.needsUpdate = true;
+            }
+            requestAnimationFrame(updateCanvas);
+          };
+          updateCanvas();
+        }
+      } else {
+        // Load placeholder first
+        let texture = textureCache.get("placeholder");
+        if (!texture) {
+          texture = new THREE.TextureLoader().load("/placeholder.png");
+          texture.colorSpace = THREE.SRGBColorSpace;
+          textureCache.set("placeholder", texture);
+        }
+
+        const material = new THREE.MeshBasicMaterial({
+          map: texture,
+          toneMapped: true,
+          transparent: true,
+          color: new THREE.Color(1, 1, 1), // Ensure full white
+        });
+        const geometry = new THREE.PlaneGeometry(1, 1);
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(x, y, z);
+        mesh.scale.set(POINT_SIZE, POINT_SIZE, 1);
+        mesh.lookAt(camera.position);
+
+        if (ring) {
+          ring.add(mesh);
+          labels.push(mesh);
+        }
+
+        // Load actual image in background
+        const loadImage = () => {
+          return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+
+            // Try fallback first
+            console.log(`Loading fallback for item ${index}:`, fallbackUrl);
+            img.src = fallbackUrl;
+
+            img.onload = () => {
+              console.log(`Fallback loaded for item ${index}`);
+              // Once fallback is loaded, try full resolution
+              const fullImg = new Image();
+              fullImg.crossOrigin = "anonymous";
+              fullImg.src = mediaUrl;
+
+              fullImg.onload = () => {
+                console.log(`Full image loaded for item ${index}`);
+                const newTexture = new THREE.TextureLoader().load(
+                  mediaUrl,
+                  // Success callback
+                  (texture) => {
+                    texture.colorSpace = THREE.SRGBColorSpace;
+                    texture.minFilter = THREE.LinearFilter;
+                    texture.magFilter = THREE.LinearFilter;
+                    material.map = texture;
+                    material.needsUpdate = true;
+                    textureCache.set(mediaUrl, texture);
+                    resolve();
+                  },
+                  // Progress callback
+                  undefined,
+                  // Error callback
+                  (error) => {
+                    console.error(
+                      `Error loading full image for item ${index}:`,
+                      error
+                    );
+                    // Fall back to the fallback image
+                    const fallbackTexture = new THREE.TextureLoader().load(
+                      fallbackUrl
+                    );
+                    fallbackTexture.colorSpace = THREE.SRGBColorSpace;
+                    material.map = fallbackTexture;
+                    material.needsUpdate = true;
+                    textureCache.set(mediaUrl, fallbackTexture);
+                    resolve();
+                  }
+                );
+              };
+
+              fullImg.onerror = (error) => {
+                console.error(
+                  `Error loading full image for item ${index}:`,
+                  error
+                );
+                // If full resolution fails, keep the fallback
+                const fallbackTexture = new THREE.TextureLoader().load(
+                  fallbackUrl
+                );
+                fallbackTexture.colorSpace = THREE.SRGBColorSpace;
+                material.map = fallbackTexture;
+                material.needsUpdate = true;
+                textureCache.set(mediaUrl, fallbackTexture);
+                resolve();
+              };
+            };
+
+            img.onerror = (error) => {
+              console.error(`Error loading fallback for item ${index}:`, error);
+              reject(error);
+            };
+          });
+        };
+
+        // Load image with retry logic
+        let retries = 3;
+        const attemptLoad = async () => {
+          try {
+            await loadImage();
+          } catch (error) {
+            console.error(
+              `Failed to load image (${retries} retries left):`,
+              error
+            );
+            if (retries > 0) {
+              retries--;
+              setTimeout(attemptLoad, 1000); // Wait 1 second before retry
+            }
+          }
+        };
+
+        attemptLoad();
       }
-    } else {
-      mediaElement = document.createElement("img");
-      mediaElement.loading = "lazy";
-      mediaElement.src = mediaUrl;
-      mediaElement.style.width = "100px";
-      mediaElement.style.height = "100px";
-      mediaElement.style.objectFit = "cover";
-      mediaElement.style.backgroundColor = "#fff";
-
-      mediaElement.onload = () => {
-        mediaElement.style.backgroundColor = "transparent";
-      };
-
-      mediaElement.onerror = (e) => {
-        console.error("Failed to load image:", mediaUrl, e);
-        mediaElement.style.backgroundColor = "#ff0000";
-      };
+    } catch (error) {
+      console.error("Error creating media element:", error);
+      let texture;
+      if (textureCache.has("placeholder")) {
+        texture = textureCache.get("placeholder");
+      } else {
+        texture = new THREE.TextureLoader().load("/placeholder.png");
+        texture.colorSpace = THREE.SRGBColorSpace;
+        textureCache.set("placeholder", texture);
+      }
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        toneMapped: true,
+        transparent: true,
+      });
+      const geometry = new THREE.PlaneGeometry(1, 1);
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(x, y, z);
+      mesh.scale.set(POINT_SIZE, POINT_SIZE, 1);
+      mesh.lookAt(camera.position);
+      if (ring) {
+        ring.add(mesh);
+        labels.push(mesh);
+      }
     }
 
-    // Create CSS2D label
-    const label = new CSS2DObject(mediaElement);
-    label.position.set(x, y, z);
-    ring.add(label);
-    labels.push(label);
-  }
+    loadedCount++;
 
-  // Start animations
-  animate();
+    if (isFirstRender && loadedCount >= MIN_ITEMS_TO_RENDER) {
+      isFirstRender = false;
+      console.log("Initial render complete");
+    }
+
+    if (index < 31) {
+      loadItem(index + 1);
+    }
+  };
+
+  // Start loading items
+  loadItem(0);
 };
 
-const animate = () => {
-  animationFrameId = requestAnimationFrame(animate);
+// Update createVideoElement with mobile optimizations
+const createVideoElement = (url) => {
+  console.log("Creating video element for:", url);
 
-  // Update performance stats
-  frameCount++;
-  const currentTime = performance.now();
-  if (currentTime - lastTime >= 1000) {
-    fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
-    frameCount = 0;
-    lastTime = currentTime;
+  // Check cache first
+  if (videoCache.has(url)) {
+    console.log("Using cached video element");
+    const cachedVideo = videoCache.get(url);
+    if (cachedVideo.inUse) {
+      return createNewVideoElement(url);
+    }
+    cachedVideo.inUse = true;
+    videoPool.push(cachedVideo);
+    logVideoStates();
+    return cachedVideo;
   }
 
-  // Update controls
-  if (controls) controls.update();
-
-  // Add summersault rotation
-  if (ring) {
-    ring.rotation.z += 0.005; // Fixed summersault speed
+  if (activeVideoCount >= MAX_CONCURRENT_VIDEOS) {
+    const video = videoPool.find((v) => !v.inUse);
+    if (video) {
+      video.inUse = true;
+      video.loop = true;
+      const streamUrl = `https://stream.mux.com/${url}.m3u8`;
+      if (Hls.isSupported()) {
+        const hls = new Hls({
+          maxBufferLength: 30,
+          maxMaxBufferLength: 60,
+          enableWorker: true,
+          lowLatencyMode: true,
+          // Mobile-specific HLS settings
+          abrEwmaDefaultEstimate: 1000000,
+          maxBufferSize: 60 * 1000 * 1000,
+        });
+        hls.loadSource(streamUrl);
+        hls.attachMedia(video);
+      }
+      console.log("Reusing video element");
+      logVideoStates();
+      return video;
+    }
+    console.log("No available video elements");
+    return null;
   }
 
-  // Render scene
-  renderer.render(scene, camera);
-  labelRenderer.render(scene, camera);
+  return createNewVideoElement(url);
+};
+
+// Update createNewVideoElement with mobile optimizations
+const createNewVideoElement = (url) => {
+  const video = document.createElement("video");
+  const streamUrl = `https://stream.mux.com/${url}.m3u8`;
+  console.log("Setting video source to:", streamUrl);
+
+  if (Hls.isSupported()) {
+    const hls = new Hls({
+      maxBufferLength: 30,
+      maxMaxBufferLength: 60,
+      enableWorker: true,
+      lowLatencyMode: true,
+      // Mobile-specific HLS settings
+      abrEwmaDefaultEstimate: 1000000,
+      maxBufferSize: 60 * 1000 * 1000,
+    });
+    hls.loadSource(streamUrl);
+    hls.attachMedia(video);
+
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      console.log("HLS manifest parsed");
+      video.play();
+      logVideoStates();
+    });
+
+    hls.on(Hls.Events.ERROR, (event, data) => {
+      console.error("HLS error:", data);
+      if (data.fatal) {
+        switch (data.type) {
+          case Hls.ErrorTypes.NETWORK_ERROR:
+            console.error("Network error, trying to recover...");
+            hls.startLoad();
+            break;
+          case Hls.ErrorTypes.MEDIA_ERROR:
+            console.error("Media error, trying to recover...");
+            hls.recoverMediaError();
+            break;
+          default:
+            console.error("Fatal error, cannot recover");
+            hls.destroy();
+            break;
+        }
+      }
+    });
+  } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    video.src = streamUrl;
+  }
+
+  // Mobile-specific video settings
+  video.preload = "metadata";
+  video.playsInline = true;
+  video.muted = true;
+  video.autoplay = true;
+  video.loop = true;
+  video.style.display = "none";
+
+  video.addEventListener("ended", () => {
+    console.log("Video ended, restarting...");
+    video.currentTime = 0;
+    video.play().catch((e) => console.error("Error restarting video:", e));
+  });
+
+  video.addEventListener("error", (e) => {
+    console.error("Video error:", e);
+  });
+
+  document.body.appendChild(video);
+
+  videoCache.set(url, video);
+  videoPool.push(video);
+  activeVideoCount++;
+  logVideoStates();
+
+  return video;
+};
+
+// Update the cleanupVideo function to handle cache
+const cleanupVideo = (video) => {
+  if (video) {
+    video.pause();
+    video.inUse = false;
+    // Don't remove from cache, just mark as not in use
+  }
 };
 
 onBeforeUnmount(() => {
+  stop(); // Stop the intersection observer
   window.removeEventListener("resize", handleResize);
   if (resizeRAF) cancelAnimationFrame(resizeRAF);
   if (resizeObserver) resizeObserver.disconnect();
@@ -301,23 +750,8 @@ onBeforeUnmount(() => {
     }
   });
 
-  // Cleanup labels
-  labels.forEach((label) => {
-    if (label.element instanceof HTMLVideoElement) {
-      label.element.pause();
-      label.element.src = "";
-    }
-  });
-
   // Properly cleanup renderers
   renderer.dispose();
-  if (
-    labelRenderer &&
-    labelRenderer.domElement &&
-    labelRenderer.domElement.parentNode
-  ) {
-    labelRenderer.domElement.parentNode.removeChild(labelRenderer.domElement);
-  }
 });
 
 // Optimize resize handler with RAF
@@ -332,28 +766,18 @@ const handleResize = () => {
     canvas.value.style.width = `${size}px`;
     canvas.value.style.height = `${size}px`;
 
-    // Update camera and renderer
+    // Update camera and renderer with high quality settings
     camera.aspect = 1; // Keep it square
     camera.updateProjectionMatrix();
-    renderer.setSize(size, size);
-    labelRenderer.setSize(size, size);
+
+    // Use device pixel ratio for better quality
+    const pixelRatio = Math.min(window.devicePixelRatio, 2);
+    renderer.setSize(size * pixelRatio, size * pixelRatio, false);
+    renderer.setPixelRatio(pixelRatio);
 
     // Update ring size based on breakpoints
     if (ring) {
       let ringSize;
-      // if (size <= 640) {
-      //   ringSize = 3.0;
-      // } else if (size <= 720) {
-      //   ringSize = 3.0;
-      // } else if (size <= 1024) {
-      //   ringSize = 3.0;
-      // } else if (size <= 1280) {
-      //   ringSize = 3.0;
-      // } else if (size <= 1440) {
-      //   ringSize = 3.0;
-      // } else if (size > 1440) {
-      //   ringSize = 3.0;
-      // }
       ringSize = 3.0;
 
       const newGeometry = new THREE.TorusGeometry(ringSize, 0.1, 32, 32);
@@ -389,7 +813,6 @@ let resizeObserver;
 onMounted(() => {
   init();
   window.addEventListener("resize", handleResize);
-  // Initial size update
   handleResize();
 });
 </script>
@@ -423,5 +846,20 @@ canvas {
 
 canvas:active {
   cursor: grabbing;
+}
+
+.performance-monitor {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #00ff00;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+  z-index: 1000;
+  line-height: 1.4;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 }
 </style>
