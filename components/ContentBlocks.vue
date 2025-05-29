@@ -67,6 +67,13 @@
     <ToolsCircleTwo
       v-if="block._type === 'customBlock' && block.type === 'toolsGallery'"
     />
+
+    <ToolsFeaturedGallery
+      v-if="
+        block._type === 'customBlock' &&
+        block.type === 'blockToolsFeaturedGallery'
+      "
+    />
   </div>
 </template>
 

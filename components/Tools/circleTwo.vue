@@ -111,17 +111,17 @@ let fps = 0;
 const CONFIG = {
   desktop: {
     ringSize: 3,
-    pointSize: 144,
+    pointSize: 124,
     rotation: {
       initial: {
-        x: -1,
-        y: 1,
+        x: 0,
+        y: 0,
         z: 0,
       },
       animation: {
-        x: 0.001,
-        y: -0.001,
-        z: 0.002,
+        x: 0,
+        y: 0.001,
+        z: 0.005,
       },
     },
   },
