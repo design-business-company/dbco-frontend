@@ -20,6 +20,14 @@
         </li>
         <li>
           <HeaderMobileNavLink
+            to="/tools"
+            :current-path="routerLinkActive"
+            @link-click="handleLinkClick"
+            >Tools</HeaderMobileNavLink
+          >
+        </li>
+        <li>
+          <HeaderMobileNavLink
             to="/contact"
             :current-path="routerLinkActive"
             @link-click="handleLinkClick"
