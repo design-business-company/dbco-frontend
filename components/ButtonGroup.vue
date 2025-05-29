@@ -6,7 +6,7 @@
       :size="button.buttonSize"
       :style="button.buttonStyle"
       :icon="button.iconStyle"
-      :to="button.link.slug"
+      :to="button.link.slug === '/' ? '/' : `/${button.link.slug}`"
     >
       {{ button.text }}
     </Button>
