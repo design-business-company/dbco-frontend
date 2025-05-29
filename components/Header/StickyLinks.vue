@@ -2,7 +2,7 @@
   <nav>
     <ul>
       <li v-for="link in links">
-        <nuxt-link :to="link.slug === null ? '/' : link.slug">{{
+        <nuxt-link :to="link.slug === null ? '/' : `/${link.slug}`">{{
           link.title
         }}</nuxt-link>
       </li>
