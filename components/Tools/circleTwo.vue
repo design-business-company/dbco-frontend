@@ -510,8 +510,16 @@ let resizeObserver;
   align-items: center;
   aspect-ratio: 1/1;
 
+  @include phablet {
+    margin-top: calc(-1 * var(--small));
+  }
+
+  @include tablet {
+    margin-top: calc(-1 * var(--bigger));
+  }
+
   @include desktop {
-    aspect-ratio: 6/4;
+    aspect-ratio: 5/4;
   }
 
   // @include ultrawide {
