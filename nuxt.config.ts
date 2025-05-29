@@ -33,6 +33,7 @@ export default defineNuxtConfig({
     "/": { prerender: true },
     "/about": { prerender: true },
     "/contact": { prerender: true },
+    "/tools": { prerender: true },
   },
 
   app: {
