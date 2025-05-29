@@ -106,6 +106,7 @@ let activeVideoCount = 0;
 let frameCount = 0;
 let lastTime = performance.now();
 let fps = 0;
+const FIXED_TIME_STEP = 1000 / 60; // 60fps
 
 // Update the configuration with separate desktop and mobile settings
 const CONFIG = {
@@ -338,21 +339,26 @@ const init = () => {
   animate();
 };
 
-// Update animate function to handle visibility properly
+// Update animate function
 const animate = () => {
   animationFrameId = requestAnimationFrame(animate);
+
+  const currentTime = performance.now();
+  const deltaTime = currentTime - lastTime;
+  lastTime = currentTime;
 
   // Update controls
   if (controls) controls.update();
 
-  // Add rotation based on device
+  // Add rotation based on device with fixed time step
   if (ring) {
     const isMobile = window.innerWidth <= 1024;
     const config = isMobile ? CONFIG.mobile : CONFIG.desktop;
+    const timeScale = deltaTime / FIXED_TIME_STEP;
 
-    ring.rotation.x += config.rotation.animation.x;
-    ring.rotation.y += config.rotation.animation.y;
-    ring.rotation.z += config.rotation.animation.z;
+    ring.rotation.x += config.rotation.animation.x * timeScale;
+    ring.rotation.y += config.rotation.animation.y * timeScale;
+    ring.rotation.z += config.rotation.animation.z * timeScale;
   }
 
   // Render scene
