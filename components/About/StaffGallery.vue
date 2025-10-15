@@ -6,7 +6,7 @@
     once
   >
     <Grid>
-      <Column span="12" span-tablet="4" v-for="person in staff" ref="col">
+      <Column span="12" span-tablet="6" v-for="person in staff" ref="col">
         <AboutStaffBio
           :name="person.name"
           :role="person.role"
