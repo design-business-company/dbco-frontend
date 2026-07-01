@@ -80,7 +80,7 @@ const normalizedMedia = computed(() => {
   }
 
   &__caption {
-    margin-top: var(--tiniest);
+    margin-top: var(--tinier);
     transform-origin: 0 100%;
     pointer-events: none;
   }

@@ -68,6 +68,7 @@ export default defineNuxtConfig({
     encryptionKey: process.env.ENCRYPTION_KEY,
     public: {
       muxEnvKey: process.env.MUX_ENV_KEY,
+      bypassPasswordGate: process.env.BYPASS_PASSWORD_GATE === "true",
     },
   },
 
@@ -93,7 +94,6 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          api: "modern",
           additionalData: `
             @use "~/assets/styles/_global.scss" as *;
           `,

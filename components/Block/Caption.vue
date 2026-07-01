@@ -1,5 +1,5 @@
 <template>
-  <Text element="div" size="micro" class="caption">
+  <Text element="div" size="caption-2" class="caption">
     <SanityContent :blocks="caption" :serializers="serializers" />
   </Text>
 </template>
@@ -25,6 +25,7 @@ const serializers = {
 .caption {
   max-width: 60ch;
   text-indent: 0;
+  padding-right: var(--small);
   color: var(--foreground-secondary);
 }
 </style>

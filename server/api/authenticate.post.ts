@@ -14,10 +14,10 @@ export default defineEventHandler(async (event) => {
     'Access-Control-Allow-Methods': 'POST',
   });
 
-  const query = getQuery(event)
+  const body = await readBody(event)
 
-  const password = query.password as string;
-  const slug = query.slug as string;
+  const password = body?.password as string;
+  const slug = body?.slug as string;
 
   if (!password || !slug) {
     throw createError({
@@ -26,7 +26,10 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const encryptedPassword = await client.fetch(`*[_type == "page" && slug.current == "${slug}"][0].password.password`)
+  const encryptedPassword = await client.fetch(
+    `*[_type == "page" && slug.current == $slug][0].password.password`,
+    { slug }
+  )
 
   const isAuthenticated = comparePasswords({ password, encryptedPassword });
 
