@@ -73,7 +73,7 @@ const emblaPlugins = computed(() => {
       AutoScroll({
         speed: 0.9,
         startDelay: 0,
-        stopOnInteraction: false,
+        stopOnInteraction: true,
         stopOnMouseEnter: true,
       }),
     ];
@@ -97,9 +97,20 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
     },
     containScroll: false,
     inViewThreshold: 0.01,
+    dragFree: true,
+    dragThreshold: 50,
   },
   emblaPlugins.value
 );
+
+if (process.client) {
+  watch(emblaApi, (api) => {
+    if (api) {
+      window.__emblaApi = api;
+      window.__autoScroll = emblaPlugins.value[0];
+    }
+  }, { immediate: true });
+}
 
 const calculateSlideSizes = (aspectRatio) => {
   if (!aspectRatio) return `(min-width: ${DEVICE_SIZES.tablet}px) 60vw, 90vw`;
@@ -151,6 +162,7 @@ onKeyStroke("ArrowLeft", (e) => {
     flex: 0 0 calc(100% - calc(var(--smallest) * 2));
     margin-right: var(--grid-gap);
     display: flex;
+    align-items: flex-start;
 
     &.--center {
       align-items: center;
@@ -176,14 +188,23 @@ onKeyStroke("ArrowLeft", (e) => {
   &.variable-width {
     .spotlight-media-carousel__slide {
       width: auto;
-      height: 40vh;
-      aspect-ratio: var(--slide-aspect-ratio);
       flex: unset;
+
+      :deep(.pic),
+      :deep(.vid-container) {
+        width: auto;
+        height: 40vh;
+        aspect-ratio: var(--slide-aspect-ratio);
+        flex-shrink: 0;
+      }
 
       @include tablet {
         flex: unset;
-        height: clamp(350px, 60vh, 1024px);
-        aspect-ratio: var(--slide-aspect-ratio);
+
+        :deep(.pic),
+        :deep(.vid-container) {
+          height: clamp(350px, 60vh, 1024px);
+        }
       }
     }
   }

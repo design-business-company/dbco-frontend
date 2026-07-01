@@ -1,6 +1,6 @@
 <template>
   <Grid :class="['content', { '--indented': settings.indent }]">
-    <Space size="small" />
+    <Space size="big" />
     <Column
       v-if="settings.alignment === 'center'"
       span-laptop="8"
@@ -33,7 +33,7 @@
         <PortableText :value="blocks" :components="serializers" />
       </Observer>
     </Column>
-    <Space size="small" />
+    <Space size="big" />
   </Grid>
 </template>
 
@@ -220,6 +220,10 @@ const onLeave = (ev) => {
     & + [class*="text-"] {
       margin-top: var(--bigger);
     }
+  }
+
+  :deep([class*="text-"]) + .media {
+    margin-top: var(--bigger);
   }
 
   :deep(.text-body-1) {

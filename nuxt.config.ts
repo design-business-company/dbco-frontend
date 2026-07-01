@@ -44,18 +44,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // remove entry.css file from manifest in favor of inlining styles in app.vue
-  hooks: {
-    "build:manifest": (manifest: any) => {
-      const css = manifest["node_modules/nuxt/dist/app/entry.js"]?.css;
-      if (css) {
-        for (let i = css.length - 1; i >= 0; i--) {
-          if (css?.[i]?.startsWith("entry")) css.splice(i, 1);
-        }
-      }
-    },
-  },
-
   nitro: {
     preset: "netlify",
   },
@@ -68,6 +56,7 @@ export default defineNuxtConfig({
     encryptionKey: process.env.ENCRYPTION_KEY,
     public: {
       muxEnvKey: process.env.MUX_ENV_KEY,
+      bypassPasswordGate: process.env.BYPASS_PASSWORD_GATE === "true",
     },
   },
 
@@ -93,7 +82,6 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          api: "modern",
           additionalData: `
             @use "~/assets/styles/_global.scss" as *;
           `,

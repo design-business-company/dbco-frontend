@@ -1,6 +1,12 @@
 import { useAuthStore } from "~/stores/auth";
 
 export default defineNuxtRouteMiddleware((to) => {
+  const { public: { bypassPasswordGate } } = useRuntimeConfig();
+
+  if (bypassPasswordGate) {
+    return;
+  }
+
   const authStore = useAuthStore();
 
   const slug = to.params.id as string;
