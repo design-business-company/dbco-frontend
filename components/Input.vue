@@ -1,5 +1,6 @@
 <template>
   <Text
+    element="div"
     size="caption-1"
     class="input"
     :class="{ 'input--invalid': props.invalid, 'input--valid': props.valid }"
@@ -35,7 +36,7 @@ const updateValue = (event: Event) => {
     border: 1px solid var(--gray-150);
     border-radius: var(--tiniest);
     padding: var(--tiny) var(--smallest);
-    color: var(--foreground-primary);
+    color: var(--background-primary);
     transition: border-color var(--transition);
     font-size: inherit;
     line-height: inherit;

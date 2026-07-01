@@ -28,15 +28,11 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async authenticateUser({ slug, password }: AuthPayloadInterface) {
-      const env = process.env.NODE_ENV;
       this.loading = true;
 
-      const baseUrl = env === 'development' ? 'http://localhost:3000' : 'https://dbco.online';
-
       try {
-        const { data, error }: any = await useFetch(`${baseUrl}/api/authenticate?slug=${slug}&password=${password}`, {
+        const data = await $fetch('/api/authenticate', {
           method: 'post',
-          headers: { 'Content-Type': 'application/json' },
           body: {
             slug,
             password,
@@ -44,34 +40,18 @@ export const useAuthStore = defineStore('auth', {
         });
 
         this.loading = false;
-
-        if (error?.value) {
-          return {
-            ok: false,
-            message: error.value?.data?.statusMessage
-          }
-        }
-
-        if (data?.value) {
-          this.authenticated = true;
-
-          return {
-            ok: true,
-            ...data?.value,
-          }
-        }
+        this.authenticated = true;
 
         return {
-          ok: false,
-          error: 'Something went wrong',
+          ok: true,
+          ...data,
         }
-      } catch (error) {
-        console.error(error)
+      } catch (error: any) {
         this.loading = false;
 
         return {
           ok: false,
-          error: 'Something went wrong',
+          message: error?.data?.statusMessage || 'Something went wrong',
         }
       }
     },

@@ -9,7 +9,7 @@
         :type="passwordVisible ? 'text' : 'password'"
         @update:modelValue="updatePassword"
         placeholder="Password"
-        :invalid="error"
+        :invalid="!!error"
         :valid="success"
       >
         <template #icon>
