@@ -66,26 +66,26 @@ const spaceStyle = computed(() => {
 @use "~/assets/styles/mixins";
 
 .space {
-  height: var(--margin-top);
+  margin-top: var(--margin-top);
 
   // Apply breakpoint-specific styles
   @include mobile {
-    height: var(--mobile-margin-top, var(--margin-top));
+    margin-top: var(--mobile-margin-top, var(--margin-top));
   }
   @include phablet {
-    height: var(--phablet-margin-top, var(--margin-top));
+    margin-top: var(--phablet-margin-top, var(--margin-top));
   }
   @include tablet {
-    height: var(--tablet-margin-top, var(--margin-top));
+    margin-top: var(--tablet-margin-top, var(--margin-top));
   }
   @include laptop {
-    height: var(--laptop-margin-top, var(--margin-top));
+    margin-top: var(--laptop-margin-top, var(--margin-top));
   }
   @include desktop {
-    height: var(--desktop-margin-top, var(--margin-top));
+    margin-top: var(--desktop-margin-top, var(--margin-top));
   }
   @include ultrawide {
-    height: var(--ultrawide-margin-top, var(--margin-top));
+    margin-top: var(--ultrawide-margin-top, var(--margin-top));
   }
 }
 </style>
