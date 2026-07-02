@@ -15,14 +15,12 @@ export default defineNuxtRouteMiddleware((to) => {
     return;
   }
 
-  if (!authStore.authenticated) {
+  if (!authStore.authenticatedRoutes.includes(slug)) {
     return navigateTo({
       path: '/password',
       query: {
         slug
       }
     });
-  } else {
-    authStore.authenticated = false;
   }
 })

@@ -8,14 +8,14 @@ interface AuthPayloadInterface {
 
 interface AuthState {
   routes: string[];
-  authenticated: boolean;
+  authenticatedRoutes: string[];
   loading: boolean;
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     routes: [],
-    authenticated: false,
+    authenticatedRoutes: [],
     loading: false,
   }),
   actions: {
@@ -40,7 +40,10 @@ export const useAuthStore = defineStore('auth', {
         });
 
         this.loading = false;
-        this.authenticated = true;
+
+        if (!this.authenticatedRoutes.includes(slug)) {
+          this.authenticatedRoutes.push(slug);
+        }
 
         return {
           ok: true,
@@ -57,7 +60,7 @@ export const useAuthStore = defineStore('auth', {
     },
     logUserOut() {
       const token = useCookie('token');
-      this.authenticated = false;
+      this.authenticatedRoutes = [];
       token.value = null;
     },
   },
