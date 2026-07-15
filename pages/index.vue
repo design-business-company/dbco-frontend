@@ -4,6 +4,7 @@
     :class="['page', 'home']"
     v-if="data"
   >
+    <header class="sr-only"><h1>Design Business Company</h1></header>
     <ContentBlocks :content="data.content" />
   </section>
 </template>

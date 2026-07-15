@@ -17,6 +17,11 @@ const { $urlFor } = useNuxtApp();
 
 const { data, error, status, refresh } = await useSanityQuery(settingsSeoQuery);
 
+// Editor-controlled social/profile URLs for Organization JSON-LD sameAs
+const { data: footerLinks } = await useSanityQuery(
+  `*[_type=="settingsFooter"][0].links.content[].url`
+);
+
 const title = computed(() => data.value?.title);
 const description = computed(() => data.value?.description);
 
@@ -54,7 +59,7 @@ const ogImage = computed(() => {
 });
 
 const route = useRoute();
-const url = computed(() => `https://dbco.online${route.path}`); // Reactive URL
+const url = computed(() => canonicalUrl(route.path)); // Reactive URL
 
 useLenis();
 
@@ -70,13 +75,40 @@ const lenisOptions = {
   touchMultiplier: 2,
 };
 
+const logo = computed(() => {
+  if (!data.value?.favicon) return undefined;
+
+  return $urlFor(data.value.favicon).format("png").width(512).height(512).url();
+});
+
+const sameAs = computed(() =>
+  (footerLinks.value || []).filter((link) => /^https?:\/\//.test(link))
+);
+
+const organizationJsonLd = computed(() =>
+  JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: title?.value || "Design Business Company",
+    url: `${SITE_URL}/`,
+    ...(logo.value ? { logo: logo.value } : {}),
+    ...(sameAs.value.length ? { sameAs: sameAs.value } : {}),
+  })
+);
+
 useHead({
   templateParams: {
     siteName: () => title?.value ?? "Design Business Company",
   },
   titleTemplate: (pageTitle) =>
     pageTitle ? `${pageTitle} • ${title?.value}` : title?.value,
-  link: icons.value,
+  link: () => [...icons.value, { rel: "canonical", href: url.value }],
+  script: () => [
+    {
+      type: "application/ld+json",
+      innerHTML: organizationJsonLd.value,
+    },
+  ],
 });
 
 const seoMeta = computed(() =>
@@ -84,11 +116,7 @@ const seoMeta = computed(() =>
     description: description?.value,
     image: ogImage?.value,
     url: url.value,
-    logo: $urlFor(data.value.favicon)
-      .format("png")
-      .width(512)
-      .height(512)
-      .url(),
+    logo: logo.value,
     siteName: title?.value || "Design Business Company",
   })
 );

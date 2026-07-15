@@ -1,16 +1,16 @@
 <template>
-  <h1>
+  <p class="logo">
     <span class="name-full"
       ><nuxt-link to="/">Design Business Company</nuxt-link></span
     >
     <abbr class="name-abbr" aria-label="Design Business Company"
       ><nuxt-link to="/">DBCo</nuxt-link></abbr
     >
-  </h1>
+  </p>
 </template>
 
 <style lang="scss" scoped>
-h1 {
+.logo {
   cursor: pointer;
   overflow: visible;
   white-space: nowrap;

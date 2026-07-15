@@ -6,7 +6,7 @@ export const SITE_URL = "https://dbco.online";
 export const PRERENDERED_ROUTES = ["/", "/about", "/contact", "/tools"];
 
 export const canonicalUrl = (path: string) => {
-  const bare = path.split(/[?#]/)[0].replace(/\/+$/, "") || "/";
+  const bare = (path.split(/[?#]/)[0] ?? "").replace(/\/+$/, "") || "/";
   const trailing =
     bare !== "/" && PRERENDERED_ROUTES.includes(bare) ? `${bare}/` : bare;
   return `${SITE_URL}${trailing}`;

@@ -1,5 +1,5 @@
 <template>
-  <h1>
+  <p class="wordmark">
     <span
       @mouseenter="() => shuffle(line[0])"
       @click="() => shuffle(line[0])"
@@ -15,11 +15,11 @@
       @click="() => shuffle(line[2])"
       >{{ line[2].val }}</span
     >
-  </h1>
+  </p>
 </template>
 
 <style scoped>
-h1 {
+.wordmark {
   display: grid;
 }
 

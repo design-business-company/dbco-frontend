@@ -5,12 +5,14 @@
 </template>
 
 <script setup>
+import { h } from "vue";
 import { PortableText } from "@portabletext/vue";
-import BlockCopyHeading from "~/components/Block/CopyHeading.vue";
 
+// Visual size comes from the wrapping Text class, not the tag — headings
+// authored with the "h1" style render as h2 so pages keep a single h1.
 const serializers = {
-  blocks: {
-    normal: BlockCopyHeading,
+  block: {
+    h1: (_, { slots }) => h("h2", slots.default?.()),
   },
 };
 </script>

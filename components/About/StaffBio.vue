@@ -7,7 +7,7 @@
     />
     <div class="bio">
       <header>
-        <Text element="h1" size="caption-2">{{ name }}</Text>
+        <Text element="h2" size="caption-2">{{ name }}</Text>
       </header>
       <BlockTextBody :blocks="bio.text" />
     </div>

@@ -4,6 +4,7 @@
     ref="pageRef"
     :class="['page', 'about']"
   >
+    <header class="sr-only"><h1>About Design Business Company</h1></header>
     <AboutContentBlocks :content="data.content" />
   </section>
 </template>
