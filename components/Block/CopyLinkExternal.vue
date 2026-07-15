@@ -8,11 +8,15 @@
     >
       <slot />
     </a>
-    <span class="link__tooltip" :class="{ '--visible': copied }" aria-hidden="true">
-      <span class="link__tooltip-pill text-caption-2">Copied to clipboard!</span>
-      <span class="link__tooltip-caret"></span>
-    </span>
-    <span role="status" class="sr-only">{{ copied ? "Email address copied to clipboard" : "" }}</span>
+    <template v-if="isMailto">
+      <span class="link__tooltip" :class="{ '--visible': copied }" aria-hidden="true">
+        <span class="link__tooltip-pill text-caption-2">Copied to clipboard!</span>
+        <span class="link__tooltip-caret"></span>
+      </span>
+      <span role="status" class="sr-only">
+        <span v-if="copied">Email address copied to clipboard</span>
+      </span>
+    </template>
   </span>
 </template>
 
