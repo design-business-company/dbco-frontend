@@ -20,7 +20,7 @@ import { contactQuery } from "~/queries/pages/contact";
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
 const { data, error, status, refresh } = await useSanityQuery(contactQuery);
-if (error.value) await navigateTo("/error");
+if (error.value) throw createError({ statusCode: 500, fatal: true });
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
@@ -34,7 +34,7 @@ usePageSetup({ seoMeta: data.value?.seo, pageRef });
  * --------------------------------------------------------------------------*/
 const { setPageTheme } = useTheme();
 
-setPageTheme(data.value.pageTheme);
+setPageTheme(data.value?.pageTheme);
 
 /* ----------------------------------------------------------------------------
  * Define page transitions or other page meta

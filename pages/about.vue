@@ -18,7 +18,7 @@ import { aboutQuery } from "~/queries/pages/about";
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
 const { data, error } = await useSanityQuery(aboutQuery);
-if (error.value) await navigateTo("/error");
+if (error.value) throw createError({ statusCode: 500, fatal: true });
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
@@ -32,7 +32,7 @@ usePageSetup({ seoMeta: data.value?.seo, pageRef });
  * --------------------------------------------------------------------------*/
 const { setPageTheme } = useTheme();
 
-setPageTheme(data.value.pageTheme);
+setPageTheme(data.value?.pageTheme);
 
 // onMounted(() => {
 //   // tell the app that the page has successfully mounted

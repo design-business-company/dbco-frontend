@@ -18,7 +18,13 @@ import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
  * Fetch data from sanity
  * --------------------------------------------------------------------------*/
 const { data, error, status } = await useSanityQuery(homeQuery);
-if (error.value) await navigateTo("/error");
+if (error.value) throw createError({ statusCode: 500, fatal: true });
+if (!data.value)
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Page not found",
+    fatal: true,
+  });
 
 /* ----------------------------------------------------------------------------
  * Handle SEO Shit
@@ -32,7 +38,7 @@ usePageSetup({ seoMeta: data.value?.seo, pageRef });
  * --------------------------------------------------------------------------*/
 const { setPageTheme } = useTheme();
 
-setPageTheme(data.value.pageTheme);
+setPageTheme(data.value?.pageTheme);
 
 // onMounted(() => {
 //   // tell the app that the page has successfully mounted

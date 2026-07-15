@@ -13,12 +13,12 @@
           <Column span-tablet="6">
             <Text size="body-1" style="margin-top: var(--tiniest)"
               >For one reason or another, this page returned a
-              <BlockCopyCode>{{ $attrs.error.statusCode }}</BlockCopyCode>
+              <BlockCopyCode>{{ statusCode }}</BlockCopyCode>
               error and isn't accessible at the moment. We've gone ahead and
               notified Jordan — if something busted, he'll sort it out. In the
               meantime, you can head
               <nuxt-link to="/">home</nuxt-link> or enjoy watching each of the
-              <BlockCopyCode>{{ $attrs.error.statusCode }}</BlockCopyCode> error
+              <BlockCopyCode>{{ statusCode }}</BlockCopyCode> error
               codes dance below.
             </Text>
             <!-- </Text> -->
@@ -26,7 +26,7 @@
           <Space size="huge" />
         </Grid>
 
-        <ErrorArtwork :code="$attrs.error.statusCode" />
+        <ErrorArtwork :code="statusCode" />
         <!-- <pre>{{ $attrs }}</pre> -->
       </NuxtLayout>
     </div>
@@ -41,6 +41,8 @@ import { useRoute } from "vue-router";
 const { $urlFor } = useNuxtApp();
 
 const { data, error, status, refresh } = await useSanityQuery(settingsSeoQuery);
+
+const statusCode = computed(() => useError().value?.statusCode ?? 500);
 
 const title = computed(() => data.value?.title);
 const description = computed(() => data.value?.description);
@@ -78,6 +80,12 @@ const ogImage = computed(() => {
   return "";
 });
 
+const logo = computed(() => {
+  if (!data.value?.favicon) return undefined;
+
+  return $urlFor(data.value.favicon).format("png").width(512).height(512).url();
+});
+
 const route = useRoute();
 const url = computed(() => `https://dbco.online${route.path}`); // Reactive URL
 
@@ -109,11 +117,7 @@ useServerSeoMeta(
     description: description?.value,
     image: ogImage?.value,
     url: url.value,
-    logo: $urlFor(data.value.favicon)
-      .format("png")
-      .width(512)
-      .height(512)
-      .url(),
+    logo: logo.value,
   })
 );
 </script>
