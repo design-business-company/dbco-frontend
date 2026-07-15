@@ -9,7 +9,7 @@
       <slot />
     </a>
     <span class="link__tooltip" :class="{ '--visible': copied }" aria-hidden="true">
-      <span class="link__tooltip-pill">Copied to clipboard!</span>
+      <span class="link__tooltip-pill text-caption-2">Copied to clipboard!</span>
       <span class="link__tooltip-caret"></span>
     </span>
     <span role="status" class="sr-only">{{ copied ? "Email address copied to clipboard" : "" }}</span>
@@ -88,7 +88,7 @@ onUnmounted(() => clearTimeout(copiedTimer));
 
 .link__tooltip {
   position: absolute;
-  bottom: calc(100% + 4px);
+  bottom: calc(100% + var(--tiniest));
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -101,10 +101,8 @@ onUnmounted(() => clearTimeout(copiedTimer));
 }
 
 .link__tooltip-pill {
-  padding: 8px;
+  padding: var(--tinier);
   border-radius: 6px;
-  font-size: 12px;
-  line-height: normal;
   color: var(--background-primary);
   background-color: var(--foreground-primary);
   white-space: nowrap;
