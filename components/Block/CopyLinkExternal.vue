@@ -90,14 +90,16 @@ onUnmounted(() => clearTimeout(copiedTimer));
   position: absolute;
   bottom: calc(100% + var(--tiniest));
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -4px);
   display: flex;
   flex-direction: column;
   align-items: center;
   filter: drop-shadow(0 0 2.5px var(--background-primary));
   pointer-events: none;
   opacity: 0;
-  transition: opacity 150ms ease;
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
 }
 
 .link__tooltip-pill {
@@ -117,6 +119,7 @@ onUnmounted(() => clearTimeout(copiedTimer));
 
 .link__tooltip.--visible {
   opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 @media (prefers-reduced-motion: reduce) {
