@@ -1,5 +1,5 @@
 <template>
-  <div class="spotlight">
+  <div class="spotlight" ref="spotlightRef">
     <BlockThemeSwitcher
       :theme="theme.theme"
       :background-primary="theme.backgroundPrimary"
@@ -90,8 +90,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { gsap } from "gsap";
+import observe from "~/composables/Observer";
 
 const name = ref(null);
 const role = ref(null);
@@ -181,6 +182,32 @@ const props = defineProps({
     required: false,
   },
 });
+
+/*--------------------------------------------------------
+  Dwell-based "Project view": fires once per page load after
+  the spotlight has been ≥35% visible for 1.5s. Manual latch
+  instead of `once: true` so a quick scroll-past (enter →
+  leave before the timer fires) doesn't consume the one shot.
+--------------------------------------------------------*/
+const spotlightRef = ref(null);
+let hasTrackedView = false;
+let viewTimer = null;
+
+observe({
+  element: spotlightRef,
+  options: { threshold: 0.35 },
+  onEnter: () => {
+    if (hasTrackedView) return;
+    clearTimeout(viewTimer);
+    viewTimer = setTimeout(() => {
+      hasTrackedView = true;
+      useTrackEvent("Project view", { props: { project: props.title } });
+    }, 1500);
+  },
+  onLeave: () => clearTimeout(viewTimer),
+});
+
+onUnmounted(() => clearTimeout(viewTimer));
 </script>
 
 <style lang="scss">

@@ -103,14 +103,9 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
   emblaPlugins.value
 );
 
-if (process.client) {
-  watch(emblaApi, (api) => {
-    if (api) {
-      window.__emblaApi = api;
-      window.__autoScroll = emblaPlugins.value[0];
-    }
-  }, { immediate: true });
-}
+const route = useRoute();
+// Carousel blocks have no title in the schema — track by page path
+const { trackInteract } = useCarouselTracking(emblaApi, () => route.path);
 
 const calculateSlideSizes = (aspectRatio) => {
   if (!aspectRatio) return `(min-width: ${DEVICE_SIZES.tablet}px) 60vw, 90vw`;
@@ -138,12 +133,14 @@ onKeyStroke("ArrowRight", (e) => {
   if (!isFocused.value) return; // Only respond if this carousel is focused
   e.preventDefault();
   emblaApi.value.scrollNext();
+  trackInteract();
 });
 
 onKeyStroke("ArrowLeft", (e) => {
   if (!isFocused.value) return; // Only respond if this carousel is focused
   e.preventDefault();
   emblaApi.value.scrollPrev();
+  trackInteract();
 });
 </script>
 
