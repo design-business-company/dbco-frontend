@@ -11,6 +11,8 @@
         '--grid-cols': items.length,
       }"
       tabindex="0"
+      @focus="handleFocus"
+      @blur="handleBlur"
     >
       <div class="spotlight-media-carousel__container">
         <BlockMedia
@@ -50,6 +52,16 @@ const props = defineProps({
     required: false,
   },
 });
+
+const isFocused = ref(false); // Track if this carousel is focused
+
+const handleFocus = () => {
+  isFocused.value = true;
+};
+
+const handleBlur = () => {
+  isFocused.value = false;
+};
 
 const emblaPlugins = computed(() => {
   if (props.settings && props.settings.autoplay) {
@@ -106,12 +118,14 @@ const calculateSlideSizes = (aspectRatio) => {
 }
 
 onKeyStroke("ArrowRight", (e) => {
+  if (!isFocused.value) return; // Only respond if this carousel is focused
   e.preventDefault();
   emblaApi.value.scrollNext();
   trackInteract();
 });
 
 onKeyStroke("ArrowLeft", (e) => {
+  if (!isFocused.value) return; // Only respond if this carousel is focused
   e.preventDefault();
   emblaApi.value.scrollPrev();
   trackInteract();

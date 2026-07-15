@@ -184,30 +184,84 @@ const props = defineProps({
 });
 
 /*--------------------------------------------------------
-  Dwell-based "Project view": fires once per page load after
-  the spotlight has been ≥35% visible for 1.5s. Manual latch
-  instead of `once: true` so a quick scroll-past (enter →
-  leave before the timer fires) doesn't consume the one shot.
+  Attention tracking: accumulates the total time this
+  spotlight is ≥35% visible across the whole page visit
+  (clock pauses while it's out of view or the tab is
+  hidden). As cumulative dwell crosses each milestone we
+  fire an event immediately — Plausible can only count
+  events, so per-project interest reads as a funnel:
+  "Project view" (2s) → "Project dwell" 10s → 30s.
 --------------------------------------------------------*/
 const spotlightRef = ref(null);
-let hasTrackedView = false;
-let viewTimer = null;
+
+const DWELL_MILESTONES = [
+  { ms: 2000, event: "Project view", props: {} },
+  { ms: 10000, event: "Project dwell", props: { milestone: "10s" } },
+  { ms: 30000, event: "Project dwell", props: { milestone: "30s" } },
+];
+
+let accumulatedMs = 0;
+let visibleSince = null;
+let milestoneIndex = 0;
+let milestoneTimer = null;
+let elementInView = false;
+
+const currentDwell = () =>
+  accumulatedMs + (visibleSince !== null ? performance.now() - visibleSince : 0);
+
+const scheduleNextMilestone = () => {
+  clearTimeout(milestoneTimer);
+  const next = DWELL_MILESTONES[milestoneIndex];
+  if (!next || visibleSince === null) return;
+
+  milestoneTimer = setTimeout(() => {
+    useTrackEvent(next.event, {
+      props: { project: props.title, ...next.props },
+    });
+    milestoneIndex += 1;
+    scheduleNextMilestone();
+  }, Math.max(0, next.ms - currentDwell()));
+};
+
+const startDwell = () => {
+  if (visibleSince !== null) return;
+  visibleSince = performance.now();
+  scheduleNextMilestone();
+};
+
+const pauseDwell = () => {
+  if (visibleSince === null) return;
+  accumulatedMs += performance.now() - visibleSince;
+  visibleSince = null;
+  clearTimeout(milestoneTimer);
+};
 
 observe({
   element: spotlightRef,
   options: { threshold: 0.35 },
   onEnter: () => {
-    if (hasTrackedView) return;
-    clearTimeout(viewTimer);
-    viewTimer = setTimeout(() => {
-      hasTrackedView = true;
-      useTrackEvent("Project view", { props: { project: props.title } });
-    }, 1500);
+    elementInView = true;
+    if (!document.hidden) startDwell();
   },
-  onLeave: () => clearTimeout(viewTimer),
+  onLeave: () => {
+    elementInView = false;
+    pauseDwell();
+  },
 });
 
-onUnmounted(() => clearTimeout(viewTimer));
+const onVisibilityChange = () => {
+  if (document.hidden) pauseDwell();
+  else if (elementInView) startDwell();
+};
+
+onMounted(() => {
+  document.addEventListener("visibilitychange", onVisibilityChange);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("visibilitychange", onVisibilityChange);
+  pauseDwell();
+});
 </script>
 
 <style lang="scss">
