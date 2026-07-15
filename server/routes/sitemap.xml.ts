@@ -11,28 +11,50 @@ const client = createClient({
   useCdn: true,
 });
 
-// Password-gated and noindex pages are intentionally excluded.
-const sitemapQuery = `*[_type == "page" && defined(slug.current) && password.enabled != true && seo.noIndexNoFollow != true]{ "slug": slug.current, _updatedAt }`;
+// Password-gated and noindex pages are intentionally excluded. The
+// prerendered routes are backed by singleton docs (homepage/about/contact)
+// or a page doc (tools) — fetch their _updatedAt for <lastmod> too.
+const sitemapQuery = `{
+  "pages": *[_type == "page" && defined(slug.current) && password.enabled != true && seo.noIndexNoFollow != true]{ "slug": slug.current, _updatedAt },
+  "singletons": {
+    "/": *[_type == "homepage"][0]._updatedAt,
+    "/about": *[_type == "about"][0]._updatedAt,
+    "/contact": *[_type == "contact"][0]._updatedAt
+  }
+}`;
 
 export default defineEventHandler(async (event) => {
   let pages: { slug: string; _updatedAt?: string }[] = [];
+  let singletons: Record<string, string | null> = {};
 
   try {
-    pages = await client.fetch(sitemapQuery);
+    const result = await client.fetch(sitemapQuery);
+    pages = result.pages ?? [];
+    singletons = result.singletons ?? {};
   } catch {
     // On a Sanity outage still serve the prerendered routes.
   }
 
+  const lastmodByPath = new Map<string, string | undefined>();
+
+  for (const [path, updatedAt] of Object.entries(singletons)) {
+    lastmodByPath.set(path, updatedAt ?? undefined);
+  }
+
+  for (const page of pages) {
+    lastmodByPath.set(`/${page.slug}`, page._updatedAt);
+  }
+
   const entries = PRERENDERED_ROUTES.map((path) => ({
     loc: canonicalUrl(path),
-    lastmod: undefined as string | undefined,
+    lastmod: lastmodByPath.get(path),
   }));
 
   for (const page of pages) {
     if (PRERENDERED_ROUTES.includes(`/${page.slug}`)) continue;
     entries.push({
       loc: canonicalUrl(`/${page.slug}`),
-      lastmod: page._updatedAt?.split("T")[0],
+      lastmod: page._updatedAt,
     });
   }
 
@@ -40,7 +62,7 @@ export default defineEventHandler(async (event) => {
     .map(
       ({ loc, lastmod }) =>
         `  <url>\n    <loc>${loc}</loc>${
-          lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ""
+          lastmod ? `\n    <lastmod>${lastmod.split("T")[0]}</lastmod>` : ""
         }\n  </url>`
     )
     .join("\n");
