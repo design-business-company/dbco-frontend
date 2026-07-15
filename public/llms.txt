@@ -1,0 +1,44 @@
+# Design Business Company
+
+> Design Business Company (DBCo) is an independent design and technology studio led by Stewart Scott-Curran and Jordan Egstad. DBCo designs and engineers brands, websites, product interfaces, and custom tooling — including AI-assisted brand systems — for technology companies. Clients include Anthropic, GitHub, Nike, Figma, Loom, Front, Replit, Render, and Antimetal.
+
+DBCo works as an embedded, co-creation partner rather than a traditional agency, spanning brand strategy and identity, marketing sites, product UI, and the internal tools that keep a brand consistent after handoff. The studio is senior-led and intentionally selective, taking on a small number of engagements at a time.
+
+Project inquiries: business@dbco.online. Careers and portfolio submissions: jobs@dbco.online.
+
+## Studio
+
+- [Home](https://dbco.online/): Studio overview and selected work
+- [About](https://dbco.online/about/): The studio's approach and the people behind it — Stewart Scott-Curran (brand and creative direction; previously Intercom, Loom, Nike, The Coca-Cola Company, CNN) and Jordan Egstad (design, creative direction, and development; previously Instrument)
+- [Tools index](https://dbco.online/tools/): Full catalog of DBCo's brand tools, AI tooling, and experiments
+- [Contact](https://dbco.online/contact/): Start a project
+- [Hiring](https://dbco.online/hiring/): Open roles and how to apply
+- [Sitemap](https://dbco.online/sitemap.xml): Complete list of site URLs
+
+## Selected work
+
+- Anthropic: Vision and design-system work for anthropic.com, the website of one of the world's leading AI research companies. DBCo created the site's creative vision and handled the build of its design system, running daily and weekly sprints alongside the Anthropic team to keep pace with a fast-moving roadmap.
+- Claude: Design and development of claude.com and its marketing pages, the home of Anthropic's AI assistant. DBCo built a design system expressing the Claude brand as human and warm — an approachable counterpoint to the more clinical tone common among frontier AI labs — brought to life with rich animation and interactive demos, including live examples of Claude Code.
+- GitHub Shop: Redesigned GitHub's ecommerce experience end to end — brand system, storefront, merchandise, and packaging. Built on Shopify with a ground-up design system and art-directed product photography. The details are developer-native: a command-line-style search field, and a Konami code that turns product photos into ASCII art.
+- GitHub Universe: A premium printed leave-behind for GitHub's Universe conference, translating the event's thinking on AI in software development into a physical object — produced with metallic ink, die cuts, and a perforated bookmark.
+- Figma Buzz: Designed the launch template library for Figma Buzz, Figma's tool for creating on-brand marketing assets, debuted at Config 2025. DBCo produced hundreds of templates — email headers, display ads, flyers, posters, social, and more — and helped train the models that generate on-brand assets on the fly.
+- Front: Led brand identity for the customer-communication platform, then created a design system for its marketing site and designed several of its key pages.
+- Antimetal: Partnered on brand strategy and identity for the infrastructure startup — helping them see themselves clearly and find an ownable creative idea to build from. We built a design system around a single core concept, the atom, threaded through the logo, brand key art, and UI.
+- Nike: An interactive visual centerpiece for a Nike event at the 2024 Paris Olympics, built on a campaign concept called "The Art of Victory" that reframes ordinary people as champions. The piece opens on a single portrait, then pulls back to reveal four, then sixteen, then thousands — a tapestry that resolves into a new image and shows that victory is built from countless small moments, powered in part by Nike.
+
+## Tools and experiments
+
+- Construct: DBCo's internal design system connecting identity, UI, copy, and code through shared variables; also released publicly as a dark Visual Studio Code theme
+- [Pal(ette)](https://pal.dbco.online): Color tool that generates perceptually uniform color scales while ensuring accessible contrast
+- [Kala](https://kala.watch): Interactive tool that visualizes the passing of time ([source](https://github.com/egstad/kala))
+- Peg: Variable font inspired by embroidered typefaces made by Jordan's grandmother; axes shift from sharp to smooth edges. Free on request
+- [DetectScroll.js](https://github.com/egstad-construct/detect-scroll): Open-source JavaScript library for precise scroll direction and position detection, used across thousands of sites
+- Are.na Batch Uploader: Open-source tool for programmatically adding large datasets to Are.na channels
+
+## Connect
+
+- [Instagram](https://www.instagram.com/designbusinesscompany/): @designbusinesscompany
+- [X](https://x.com/designbizco): @designbizco
+- [LinkedIn](https://www.linkedin.com/company/design-business-company): Company updates and hiring
+- [Github](https://github.com/design-business-company/): design-business-company
+- [Substack](https://designbusinessco.substack.com/): Essays on the studio's approach to design, tooling, and working with AI

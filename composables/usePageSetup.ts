@@ -44,6 +44,30 @@ export default function usePageSetup(options?: PageSetupOptions) {
         { name: "twitter:creator", content: seoData.twitterCreator },
       ].filter((meta) => meta.content), // Filter out empty values
     });
+
+    // Dormant until a page passes seoMeta.type === "article" (planned for
+    // case-study pages) — emits Article JSON-LD alongside the meta tags.
+    if (options.seoMeta.type === "article") {
+      useHead({
+        script: [
+          {
+            type: "application/ld+json",
+            innerHTML: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: seoData.title,
+              description: seoData.description,
+              image: seoData.ogImage,
+              url: seoData.ogUrl,
+              publisher: {
+                "@type": "Organization",
+                name: "Design Business Company",
+              },
+            }),
+          },
+        ],
+      });
+    }
   }
 
   onMounted(() => {

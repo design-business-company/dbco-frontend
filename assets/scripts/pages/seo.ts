@@ -6,6 +6,7 @@ export interface SEOData {
   noIndexNoFollow?: boolean;
   logo?: string;
   siteName?: string;
+  type?: "website" | "article";
 }
 
 export default function pageSEO(seoData: SEOData) {
@@ -22,7 +23,7 @@ export default function pageSEO(seoData: SEOData) {
     ogTitle: seoData.title ? `${siteName} • ${seoData.title}` : siteName,
     ogDescription: seoData.description,
     ogImage: seoData.image,
-    ogType: "website",
+    ogType: seoData.type || "website",
     ogUrl: seoData.url,
     ogLogo: seoData.logo,
 

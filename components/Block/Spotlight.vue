@@ -1,5 +1,5 @@
 <template>
-  <div class="spotlight">
+  <div class="spotlight" ref="spotlightRef">
     <BlockThemeSwitcher
       :theme="theme.theme"
       :background-primary="theme.backgroundPrimary"
@@ -90,8 +90,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { gsap } from "gsap";
+import observe from "~/composables/Observer";
 
 const name = ref(null);
 const role = ref(null);
@@ -180,6 +181,86 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+});
+
+/*--------------------------------------------------------
+  Attention tracking: accumulates the total time this
+  spotlight is ≥35% visible across the whole page visit
+  (clock pauses while it's out of view or the tab is
+  hidden). As cumulative dwell crosses each milestone we
+  fire an event immediately — Plausible can only count
+  events, so per-project interest reads as a funnel:
+  "Project view" (2s) → "Project dwell" 10s → 30s.
+--------------------------------------------------------*/
+const spotlightRef = ref(null);
+
+const DWELL_MILESTONES = [
+  { ms: 2000, event: "Project view", props: {} },
+  { ms: 10000, event: "Project dwell", props: { milestone: "10s" } },
+  { ms: 30000, event: "Project dwell", props: { milestone: "30s" } },
+];
+
+let accumulatedMs = 0;
+let visibleSince = null;
+let milestoneIndex = 0;
+let milestoneTimer = null;
+let elementInView = false;
+
+const currentDwell = () =>
+  accumulatedMs + (visibleSince !== null ? performance.now() - visibleSince : 0);
+
+const scheduleNextMilestone = () => {
+  clearTimeout(milestoneTimer);
+  const next = DWELL_MILESTONES[milestoneIndex];
+  if (!next || visibleSince === null) return;
+
+  milestoneTimer = setTimeout(() => {
+    useTrackEvent(next.event, {
+      props: { project: props.title, ...next.props },
+    });
+    milestoneIndex += 1;
+    scheduleNextMilestone();
+  }, Math.max(0, next.ms - currentDwell()));
+};
+
+const startDwell = () => {
+  if (visibleSince !== null) return;
+  visibleSince = performance.now();
+  scheduleNextMilestone();
+};
+
+const pauseDwell = () => {
+  if (visibleSince === null) return;
+  accumulatedMs += performance.now() - visibleSince;
+  visibleSince = null;
+  clearTimeout(milestoneTimer);
+};
+
+observe({
+  element: spotlightRef,
+  options: { threshold: 0.35 },
+  onEnter: () => {
+    elementInView = true;
+    if (!document.hidden) startDwell();
+  },
+  onLeave: () => {
+    elementInView = false;
+    pauseDwell();
+  },
+});
+
+const onVisibilityChange = () => {
+  if (document.hidden) pauseDwell();
+  else if (elementInView) startDwell();
+};
+
+onMounted(() => {
+  document.addEventListener("visibilitychange", onVisibilityChange);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("visibilitychange", onVisibilityChange);
+  pauseDwell();
 });
 </script>
 

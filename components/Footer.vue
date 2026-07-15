@@ -15,7 +15,9 @@
               link.cta
             }}</span
             ><br />
-            <a :href="link.url" target="_blank">{{ link.title }}</a
+            <BlockCopyLinkExternal :href="link.url">{{
+              link.title
+            }}</BlockCopyLinkExternal
             ><br /><br
           /></Text>
         </div>
