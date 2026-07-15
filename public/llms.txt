@@ -1,0 +1,18 @@
+# Design Business Company
+
+> Design Business Company (DBCo) is an independent design and technology studio led by Stewart Scott-Curran and Jordan Egstad. DBCo engineers brands, software, websites, and digital experiences for technology companies — partnering with teams including Anthropic, GitHub, Nike, Figma, Loom, Replit, Front, and Render.
+
+DBCo works end to end: brand identity and design systems, marketing sites and product UI, and custom tooling including AI-assisted workflows. Engagements range from full brand builds to focused design-and-engineering partnerships. New project inquiries: business@dbco.online. Careers and portfolio submissions: jobs@dbco.online.
+
+## Pages
+- [Home](https://dbco.online/): studio overview and selected work
+- [About](https://dbco.online/about/): the studio, its approach, and the people behind it
+- [Contact](https://dbco.online/contact/): start a project — business@dbco.online
+- [Tools](https://dbco.online/tools/): brand systems, AI tooling, and experiments
+
+## Work
+- Case studies and project pages are published at https://dbco.online/{slug}
+- Selected clients: Anthropic, GitHub, Nike, Figma, Loom, Replit, Front, Render
+
+## More
+- Sitemap: https://dbco.online/sitemap.xml
