@@ -8,9 +8,10 @@
     >
       <slot />
     </a>
-    <span class="link__tooltip" :class="{ '--visible': copied }" aria-hidden="true"
-      >Copied</span
-    >
+    <span class="link__tooltip" :class="{ '--visible': copied }" aria-hidden="true">
+      <span class="link__tooltip-pill">Copied to clipboard!</span>
+      <span class="link__tooltip-caret"></span>
+    </span>
     <span role="status" class="sr-only">{{ copied ? "Email address copied to clipboard" : "" }}</span>
   </span>
 </template>
@@ -87,16 +88,33 @@ onUnmounted(() => clearTimeout(copiedTimer));
 
 .link__tooltip {
   position: absolute;
-  bottom: calc(100% + var(--tiniest));
+  bottom: calc(100% + 4px);
   left: 50%;
   transform: translateX(-50%);
-  padding: var(--tiniest) var(--tinier);
-  color: var(--background-primary);
-  background-color: var(--foreground-primary);
-  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: drop-shadow(0 0 2.5px var(--background-primary));
   pointer-events: none;
   opacity: 0;
   transition: opacity 150ms ease;
+}
+
+.link__tooltip-pill {
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: normal;
+  color: var(--background-primary);
+  background-color: var(--foreground-primary);
+  white-space: nowrap;
+}
+
+.link__tooltip-caret {
+  width: 14px;
+  height: 7px;
+  background-color: var(--foreground-primary);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
 
 .link__tooltip.--visible {
