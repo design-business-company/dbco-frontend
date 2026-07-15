@@ -11,6 +11,9 @@ import pageTransitionDefault from "~/assets/scripts/pages/transitionDefault";
 
 const slug = useRoute().query.slug;
 
+// Utility route — never index the password prompt
+useSeoMeta({ robots: "noindex, nofollow" });
+
 definePageMeta({
   pageTransition: pageTransitionDefault(),
 });
