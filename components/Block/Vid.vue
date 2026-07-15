@@ -19,6 +19,7 @@
       </div>
     </button>
     <mux-player
+      v-if="showPlayer"
       :playback-id="playbackId"
       :controls="false"
       :muted="settings.mute"
@@ -121,7 +122,16 @@ const formattedAspectRatio = computed(() => {
   return props.aspectRatio?.replaceAll(":", "/").trim() ?? "auto";
 });
 
-onMounted(() => {
+// On SSR/hydration the player is in the initial HTML as usual. On client-side
+// navigation the page tree is built detached (Suspense + out-in transition),
+// and media-chrome warns "No style sheet found" when the player's internals
+// run before being connected — so defer creating the element until mounted.
+const showPlayer = ref(process.server || useNuxtApp().isHydrating);
+
+onMounted(async () => {
+  showPlayer.value = true;
+  await nextTick();
+
   vid.value?.addEventListener("loadedmetadata", handleVideoLoaded);
   vid.value?.addEventListener("error", handleVideoError);
 });
