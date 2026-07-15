@@ -12,6 +12,7 @@ Project inquiries: business@dbco.online. Careers and portfolio submissions: jobs
 - [About](https://dbco.online/about/): The studio's approach and the people behind it — Stewart Scott-Curran (brand and creative direction; previously Intercom, Loom, Nike, The Coca-Cola Company, CNN) and Jordan Egstad (design, creative direction, and development; previously Instrument)
 - [Tools index](https://dbco.online/tools/): Full catalog of DBCo's brand tools, AI tooling, and experiments
 - [Contact](https://dbco.online/contact/): Start a project
+- [Hiring](https://dbco.online/hiring/): Open roles and how to apply
 - [Sitemap](https://dbco.online/sitemap.xml): Complete list of site URLs
 
 ## Selected work
@@ -29,7 +30,7 @@ Project inquiries: business@dbco.online. Careers and portfolio submissions: jobs
 
 - Construct: DBCo's internal design system connecting identity, UI, copy, and code through shared variables; also released publicly as a dark Visual Studio Code theme
 - [Pal(ette)](https://pal.dbco.online): Color tool that generates perceptually uniform color scales while ensuring accessible contrast
-- [Kala](https://kala.watch): A DBCo-built product and experiment
+- [Kala](https://kala.watch): Interactive tool that visualizes the passing of time ([source](https://github.com/egstad/kala))
 - Peg: Variable font inspired by embroidered typefaces made by Jordan's grandmother; axes shift from sharp to smooth edges. Free on request
 - [DetectScroll.js](https://github.com/egstad-construct/detect-scroll): Open-source JavaScript library for precise scroll direction and position detection, used across thousands of sites
 - Are.na Batch Uploader: Open-source tool for programmatically adding large datasets to Are.na channels
