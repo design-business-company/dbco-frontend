@@ -17,9 +17,17 @@ export default function usePageSetup(options?: PageSetupOptions) {
   const nuxt = useNuxtApp();
 
   if (options?.seoMeta) {
+    // Falls back to the sitewide title/description (set in app.vue) instead
+    // of a hardcoded default when a page doesn't supply its own — otherwise
+    // an incomplete page-level seoMeta silently drops tags rather than
+    // inheriting the sitewide value.
+    const siteTitleState = useState<string | undefined>("siteSeoTitle");
+    const siteDescriptionState = useState<string | undefined>("siteSeoDescription");
+
     const seoData = pageSEO({
       ...options.seoMeta,
-      siteName: options.seoMeta.siteName || "Design Business Company",
+      siteName: options.seoMeta.siteName || siteTitleState.value || "Design Business Company",
+      description: options.seoMeta.description || siteDescriptionState.value,
     });
 
     // Use useHead for both title and meta tags to ensure they update during routing
@@ -34,6 +42,7 @@ export default function usePageSetup(options?: PageSetupOptions) {
         { property: "og:image", content: seoData.ogImage },
         { property: "og:type", content: seoData.ogType },
         { property: "og:url", content: seoData.ogUrl },
+        { property: "og:site_name", content: seoData.ogSiteName },
         // Twitter
         { name: "twitter:card", content: seoData.twitterCard },
         { name: "twitter:title", content: seoData.twitterTitle },
