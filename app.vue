@@ -25,6 +25,15 @@ const { data: footerLinks } = await useSanityQuery(
 const title = computed(() => data.value?.title);
 const description = computed(() => data.value?.description);
 
+// Shared with usePageSetup so per-page SEO can fall back to the sitewide
+// title/description instead of a hardcoded literal when a page omits one.
+const siteTitleState = useState("siteSeoTitle", () => title.value);
+const siteDescriptionState = useState("siteSeoDescription", () => description.value);
+watchEffect(() => {
+  siteTitleState.value = title.value;
+  siteDescriptionState.value = description.value;
+});
+
 const icons = computed(() => {
   if (!data.value?.favicon) return [];
 
