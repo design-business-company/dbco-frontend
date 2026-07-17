@@ -4,7 +4,7 @@ Nuxt 3 frontend for Design Business Company's marketing site. Content is authore
 
 ## Runtime
 
-- Node version pinned in `.nvmrc`: **22.7.0**.
+- Node version pinned in `.nvmrc`: **22.23.1** (bumped July 2026 — the Nuxt/Vite toolchain's native bindings, e.g. `oxc-parser`, now require Node `^20.19.0 || >=22.12.0`; below that floor npm silently fails to install the platform-specific optional binary instead of erroring, see npm/cli#4828).
 - `npm run dev` / `build` / `preview` / `generate` — standard Nuxt scripts, nothing custom.
 - `.npmrc` points the `@gsap` scope at GreenSock's private registry using a `GSAP_TOKEN` env var — `npm install` will fail without it configured (GSAP Club GreenSock license). GSAP itself is actually installed from a **local tarball** (`gsap-bonus.tgz`, checked into the repo) per `package.json`'s `"gsap": "file:gsap-bonus.tgz"` — the registry auth is seemingly vestigial/for a different bonus plugin, not the base gsap install.
 - Env vars read via `runtimeConfig` in `nuxt.config.ts`:
