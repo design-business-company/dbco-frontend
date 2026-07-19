@@ -50,6 +50,9 @@ export function useGsapPulse(selector) {
   };
 
   onMounted(() => {
+    // Reduced motion: leave the text static
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const elements = document.querySelectorAll(selector);
     if (elements.length) {
       elements.forEach((element) => {

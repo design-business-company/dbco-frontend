@@ -11,6 +11,10 @@
         '--grid-cols': items.length,
       }"
       tabindex="0"
+      role="region"
+      aria-roledescription="carousel"
+      :aria-label="`${title} media carousel — use left and right arrow keys to scroll`"
+      data-carousel
       @focus="handleFocus"
       @blur="handleBlur"
     >
@@ -28,6 +32,11 @@
           :sizes="calculateSlideSizes(item.aspectRatio)"
         />
       </div>
+      <CarouselPauseButton
+        v-if="settings?.autoplay"
+        :playing="autoScrollControl.playing.value"
+        @toggle="autoScrollControl.toggle"
+      />
     </div>
   </Observer>
 </template>
@@ -69,15 +78,22 @@ const emblaPlugins = computed(() => {
       AutoScroll({
         speed: 0.75,
         startDelay: 0,
+        // Started from the in-view Observer via useAutoScrollControl so
+        // reduced-motion users never get auto-scroll started for them.
+        playOnInit: false,
         stopOnInteraction: false,
         stopOnMouseEnter: true,
-        stopOnFocusIn: false,
+        // Default (true): pause while keyboard focus is inside, mirroring
+        // the mouse-hover pause (WCAG 2.2.2).
+        stopOnFocusIn: true,
       }),
     ];
   }
 
   return [];
 });
+
+const autoScrollControl = useAutoScrollControl(() => emblaPlugins.value[0]);
 
 const [emblaRef, emblaApi] = emblaCarouselVue(
   {
@@ -95,18 +111,10 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
 );
 
 const handleEnter = () => {
-  if (props.settings && props.settings.autoplay) {
-    const instance = emblaPlugins.value[0];
-
-    if (!instance.isPlaying()) instance.play();
-  }
+  autoScrollControl.play();
 };
 const handleExit = () => {
-  if (props.settings && props.settings.autoplay) {
-    const instance = emblaPlugins.value[0];
-
-    if (instance.isPlaying()) instance.stop();
-  }
+  autoScrollControl.stop();
 };
 
 const { trackInteract } = useCarouselTracking(emblaApi, () => props.title);
@@ -137,6 +145,12 @@ onKeyStroke("ArrowLeft", (e) => {
   width: 100%;
   overflow: hidden;
   outline: none;
+  position: relative;
+
+  &:focus-visible {
+    outline: solid;
+    outline-offset: -2px;
+  }
 
   &__container {
     display: flex;

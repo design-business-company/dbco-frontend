@@ -25,11 +25,10 @@ const AI_CRAWLERS = [
 ];
 
 export default defineEventHandler(async (event) => {
+  // Single `User-agent: *` group — RFC 9309 merges duplicate same-UA groups,
+  // but some parsers only honor the first matching group, which would
+  // silently drop Disallow lines living in a second `*` group.
   const lines: string[] = ["User-agent: *", "Allow: /"];
-
-  for (const bot of AI_CRAWLERS) {
-    lines.push("", `User-agent: ${bot}`, "Allow: /");
-  }
 
   try {
     const pages: { slug: string }[] = await client.fetch(noindexQuery);
@@ -37,11 +36,13 @@ export default defineEventHandler(async (event) => {
       .filter((page) => page.slug)
       .map((page) => `Disallow: /${page.slug}`);
 
-    if (disallows.length) {
-      lines.push("", "User-agent: *", ...disallows);
-    }
+    lines.push(...disallows);
   } catch {
     // On a Sanity outage stay allow-all rather than failing the route.
+  }
+
+  for (const bot of AI_CRAWLERS) {
+    lines.push("", `User-agent: ${bot}`, "Allow: /");
   }
 
   lines.push("", `Sitemap: ${SITE_URL}/sitemap.xml`, "");

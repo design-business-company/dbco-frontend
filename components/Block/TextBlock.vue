@@ -134,6 +134,9 @@ const onEnter = (ev) => {
 const onLeave = (ev) => {
   if (!ev) return;
 
+  // Reduced motion: the enter animations were skipped, so never dim back down
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
   const domElements = ev.children;
 
   if (!domElements) return;
