@@ -29,6 +29,25 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
+  // Always ship global/component CSS as linked stylesheets. Under
+  // compatibilityVersion 4, Nuxt 3.21 inlines all .vue styles into the SSR'd
+  // HTML and (new since 3.17) strips the entry stylesheet from the client
+  // manifest when all of its sources were inlined — since our design tokens
+  // (:root vars in theme.scss) lived in app.vue's style block, they vanished
+  // on the first client-side navigation (see removed build:manifest hook,
+  // commit 1a09f66, for the previous incarnation of this same bug).
+  features: {
+    inlineStyles: false,
+  },
+
+  // Global styles (order matters: theme tokens → reset → grid → typography).
+  css: [
+    "~/assets/styles/theme.scss",
+    "~/assets/styles/reset.scss",
+    "~/assets/styles/grid.scss",
+    "~/assets/styles/typography.scss",
+  ],
+
   routeRules: {
     "/": { prerender: true },
     "/about": { prerender: true },

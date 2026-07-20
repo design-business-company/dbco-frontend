@@ -132,10 +132,3 @@ const seoMeta = computed(() =>
 
 useServerSeoMeta(seoMeta);
 </script>
-
-<style>
-@import "~/assets/styles/theme.scss";
-@import "~/assets/styles/reset.scss";
-@import "~/assets/styles/grid.scss";
-@import "~/assets/styles/typography.scss";
-</style>
