@@ -6,7 +6,7 @@ Nuxt 3 frontend for Design Business Company's marketing site. Content is authore
 
 - Node version pinned in `.nvmrc`: **22.23.1** (bumped July 2026 — the Nuxt/Vite toolchain's native bindings, e.g. `oxc-parser`, now require Node `^20.19.0 || >=22.12.0`; below that floor npm silently fails to install the platform-specific optional binary instead of erroring, see npm/cli#4828).
 - `npm run dev` / `build` / `preview` / `generate` — standard Nuxt scripts, nothing custom.
-- `.npmrc` points the `@gsap` scope at GreenSock's private registry using a `GSAP_TOKEN` env var — `npm install` will fail without it configured (GSAP Club GreenSock license). GSAP itself is actually installed from a **local tarball** (`gsap-bonus.tgz`, checked into the repo) per `package.json`'s `"gsap": "file:gsap-bonus.tgz"` — the registry auth is seemingly vestigial/for a different bonus plugin, not the base gsap install.
+- GSAP is installed from the **public** `gsap` npm package (`^3.15.0`), plain `npm install`, no token or private registry required. (Historical: before GSAP 3.13 (April 2025), the former Club GreenSock bonus plugins — `SplitText`, `MorphSVGPlugin`, etc. — required a private-registry tarball and a `GSAP_TOKEN`/`.npmrc` setup; both were removed July 2026 once GSAP made all plugins free and public. If you see references to `gsap-bonus.tgz` or `GSAP_TOKEN` anywhere outside git history, they're stale.)
 - Env vars read via `runtimeConfig` in `nuxt.config.ts`:
   - `ENCRYPTION_KEY` — server-only, used by `server/helpers.ts` (Cryptr) to encrypt/decrypt page passwords.
   - `MUX_ENV_KEY` — public, for Mux video analytics.
@@ -62,7 +62,7 @@ Theme reads/writes should generally go through the `useTheme()` composable (`set
 
 ## Notable libraries and where they show up
 
-- **GSAP** (+ local `gsap-bonus.tgz`) — text/scroll animation, see `Hypertext/*` composables and animation utils in `assets/scripts/utils/`.
+- **GSAP** (public `gsap` package, `^3.15.0`) — text/scroll animation, see `Hypertext/*` composables and animation utils in `assets/scripts/utils/`. Plugin imports in use: `gsap/ScrollTrigger` (always free), plus the formerly-Club-only `gsap/SplitText` (`composables/SplitText.ts`) and `gsap/MorphSVGPlugin` (`components/Contact/TextOnPath.vue`) — both now ship in the public package at the same import paths, no code changes needed when GSAP made them free.
 - **Lenis** (`nuxt3-lenis`) — smooth scroll, wired up globally in `app.vue`/`error.vue` (`<Lenis>` wrapping `<NuxtLayout>`, `useLenis()`).
 - **nuxt-viewport** — breakpoint system, custom breakpoints defined in `nuxt.config.ts` (`mobile/phablet/tablet/laptop/desktop/ultrawide`).
 - **Mux** (`@mux/mux-player`, `@mux/blurup`) — video hosting/playback; `vue.compilerOptions.isCustomElement` in `nuxt.config.ts` whitelists the `mux-player` custom element so Vue doesn't warn on it. `Block/Vid.vue` defers creating `<mux-player>` until mounted on client-side navigations (`showPlayer`) — SSR/hydration renders it in the initial HTML as before; keep that split or hydration mismatches / media-chrome warnings return.
