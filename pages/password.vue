@@ -1,5 +1,6 @@
 <template>
   <Grid class="password-page">
+    <header class="sr-only"><h1>Password required</h1></header>
     <Column span-laptop="6" start-laptop="4">
       <GatedPagePasswordForm :slug="slug" />
     </Column>
@@ -13,6 +14,7 @@ const slug = useRoute().query.slug;
 
 // Utility route — never index the password prompt
 useSeoMeta({ robots: "noindex, nofollow" });
+useHead({ title: "Enter password" });
 
 definePageMeta({
   pageTransition: pageTransitionDefault(),

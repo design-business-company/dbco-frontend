@@ -8,9 +8,12 @@
       '--aspect-ratio': formattedAspectRatio,
     }"
     @click="manualToggle"
-    :aria-label="`${!isPlaying ? 'Play video' : 'Pause video'}`"
   >
-    <button class="vid-button">
+    <button
+      type="button"
+      class="vid-button"
+      :aria-label="!isPlaying ? 'Play video' : 'Pause video'"
+    >
       <div class="content">
         <transition name="fade" mode="out-in">
           <Icon v-if="!isPlaying" name="Play" />

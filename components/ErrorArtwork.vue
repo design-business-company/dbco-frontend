@@ -17,6 +17,9 @@
 <script setup>
 import { onBeforeUnmount } from "vue";
 import { gsap } from "gsap";
+import { useDeviceStore } from "~/stores/device";
+
+const deviceStore = useDeviceStore();
 
 const props = defineProps({
   code: {
@@ -32,6 +35,9 @@ const formatIndex = (index) => {
 const timelines = new Map(); // Store timelines for each element
 
 const onEnter = (el, index) => {
+  // Reduced motion: leave the numbers static (WCAG 2.2.2)
+  if (deviceStore.userMotionReduced) return;
+
   const colors = [
     "#ffffff",
     "#ffffff",

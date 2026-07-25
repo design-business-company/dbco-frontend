@@ -13,6 +13,10 @@
 </template>
 
 <script setup lang="ts">
+// Attrs (id, type, aria-*, autocomplete, …) belong on the <input> only —
+// without this they'd also be duplicated onto the root element.
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   invalid?: boolean;
   valid?: boolean;

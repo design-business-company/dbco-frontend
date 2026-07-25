@@ -6,7 +6,10 @@
           <Space size="huge" />
 
           <Column span-tablet="6" span-laptop="4" span-desktop="3">
-            <Text style="padding-bottom: var(--smallest)" size="headline-1"
+            <Text
+              element="h1"
+              style="padding-bottom: var(--smallest)"
+              size="headline-1"
               >Dammit!</Text
             >
           </Column>
@@ -42,7 +45,10 @@ const { $urlFor } = useNuxtApp();
 
 const { data, error, status, refresh } = await useSanityQuery(settingsSeoQuery);
 
-const statusCode = computed(() => useError().value?.statusCode ?? 500);
+// Capture the error ref once in setup — useHead's reactive getters run
+// outside the component context, where calling useError() lazily would throw.
+const nuxtError = useError();
+const statusCode = computed(() => nuxtError.value?.statusCode ?? 500);
 
 const title = computed(() => data.value?.title);
 const description = computed(() => data.value?.description);
@@ -104,6 +110,7 @@ const lenisOptions = {
 };
 
 useHead({
+  title: () => (statusCode.value === 404 ? "Page not found" : "Error"),
   templateParams: {
     siteName: () => title?.value ?? "Design Business Company",
   },

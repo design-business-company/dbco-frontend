@@ -6,6 +6,10 @@
           class="clients__container"
           ref="emblaRef"
           tabindex="0"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Client logos — use left and right arrow keys to scroll"
+          data-carousel
           @focus="handleFocus"
           @blur="handleBlur"
         >
@@ -24,6 +28,10 @@
               </figure>
             </div>
           </div>
+          <CarouselPauseButton
+            :playing="autoScrollControl.playing.value"
+            @toggle="autoScrollControl.toggle"
+          />
         </div>
       </Observer>
     </Column>
@@ -58,6 +66,12 @@
     padding-inline: var(--grid-margin);
     outline: none;
     user-select: none;
+    position: relative;
+
+    &:focus-visible {
+      outline: solid;
+      outline-offset: -2px;
+    }
   }
 
   &__wrapper {
@@ -125,6 +139,9 @@ import AutoScroll from "embla-carousel-auto-scroll";
 import { onKeyStroke } from "@vueuse/core";
 import { ref } from "vue";
 import { gsap } from "gsap";
+import { useDeviceStore } from "~/stores/device";
+
+const deviceStore = useDeviceStore();
 
 const query = groq`*[_type=="client"]`;
 const { data } = useSanityQuery(query);
@@ -132,9 +149,14 @@ const { data } = useSanityQuery(query);
 const autoScrollInstance = AutoScroll({
   speed: 0.55,
   startDelay: 0,
+  // Started from the in-view Observer via useAutoScrollControl so
+  // reduced-motion users never get auto-scroll started for them.
+  playOnInit: false,
   stopOnInteraction: false,
   stopOnMouseEnter: true,
 });
+
+const autoScrollControl = useAutoScrollControl(() => autoScrollInstance);
 
 const [emblaRef, emblaApi] = emblaCarouselVue(
   {
@@ -153,6 +175,14 @@ const componentHasFadedIntoView = ref(false);
 const onEnter = (node) => {
   if (!node) return;
 
+  // Reduced motion: skip the entrance fades, show everything settled
+  if (deviceStore.userMotionReduced) {
+    gsap.set(node, { opacity: 1 });
+    componentHasFadedIntoView.value = true;
+    autoScrollControl.play(); // no-op unless the user opted in via the button
+    return;
+  }
+
   gsap.fromTo(
     node,
     {
@@ -163,8 +193,8 @@ const onEnter = (node) => {
     }
   );
 
-  if (autoScrollInstance && emblaApi.value) {
-    autoScrollInstance.play(); // Start autoscrolling
+  if (emblaApi.value) {
+    autoScrollControl.play(); // Start autoscrolling
   }
 
   const els = emblaRef.value?.querySelectorAll(".clients__slide");
@@ -189,13 +219,13 @@ const onEnter = (node) => {
 const onExit = (node) => {
   if (!node) return;
 
-  gsap.set(node, {
-    opacity: 0.2,
-  });
-
-  if (autoScrollInstance && emblaApi.value) {
-    autoScrollInstance.stop(); // Stop autoscrolling
+  if (!deviceStore.userMotionReduced) {
+    gsap.set(node, {
+      opacity: 0.2,
+    });
   }
+
+  autoScrollControl.stop(); // Stop autoscrolling
 };
 
 const isFocused = ref(false); // Track if this carousel is focused

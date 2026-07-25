@@ -5,12 +5,18 @@
     </Text>
 
     <div class="password-form__input">
+      <label class="sr-only" for="password-form-input">Password</label>
       <Input
+        id="password-form-input"
+        name="password"
+        autocomplete="current-password"
         :type="passwordVisible ? 'text' : 'password'"
         @update:modelValue="updatePassword"
         placeholder="Password"
         :invalid="!!error"
         :valid="success"
+        :aria-invalid="error ? 'true' : undefined"
+        :aria-describedby="error ? 'password-form-error' : undefined"
       >
         <template #icon>
           <button
@@ -28,10 +34,14 @@
       </Button>
     </div>
 
-    <div class="password-form__messages">
-      <Text v-if="error" size="caption-2" class="password-form__error">{{
-        error
-      }}</Text>
+    <div class="password-form__messages" aria-live="assertive">
+      <Text
+        v-if="error"
+        id="password-form-error"
+        size="caption-2"
+        class="password-form__error"
+        >{{ error }}</Text
+      >
       <Text v-if="success" size="caption-2" class="password-form__success"
         >Success! Redirecting...</Text
       >

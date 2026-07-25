@@ -17,6 +17,12 @@ export function scrollFadeOnEnter(domElements, options = {}) {
 
   const config = { ...defaultOptions, ...options };
 
+  // Reduced motion: skip the reveal, render everything settled
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    gsap.set(Array.from(domElements), { opacity: config.endOpacity });
+    return;
+  }
+
   Array.from(domElements).forEach((node) => {
     gsap.fromTo(
       node,

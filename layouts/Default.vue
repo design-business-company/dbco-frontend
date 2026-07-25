@@ -1,8 +1,15 @@
 <template>
   <div class="site-wrapper" v-if="data?.links">
+    <a class="skip-link text-caption-1" href="#main-content"
+      >Skip to content</a
+    >
     <HeaderSticky :links="data?.links" />
     <HeaderStatic :links="data?.links" />
-    <main :class="['site-content', { 'nav-is-open': app.mobileNavIsVisible }]">
+    <main
+      id="main-content"
+      tabindex="-1"
+      :class="['site-content', { 'nav-is-open': app.mobileNavIsVisible }]"
+    >
       <Scrim />
       <slot />
     </main>
@@ -48,9 +55,33 @@ watch(
   transition: filter 400ms ease-in-out, opacity 400ms ease-in-out;
   flex: 1;
 
+  // Skip-link target — focused programmatically, no outline needed
+  &:focus {
+    outline: none;
+  }
+
   &.nav-is-open {
     overflow: hidden;
     pointer-events: none;
+  }
+}
+
+// First tab stop on every page; visually hidden until focused (the link
+// itself is what receives focus, so it is always visible when it matters).
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  // Above the sticky nav (z-index 9999)
+  z-index: 10000;
+  padding: var(--tiny) var(--smallest);
+  background-color: var(--background-primary);
+  color: var(--foreground-primary);
+  border-radius: 0 0 var(--border-radius) 0;
+  transform: translate3d(0, -150%, 0);
+
+  &:focus-visible {
+    transform: translate3d(0, 0, 0);
   }
 }
 </style>

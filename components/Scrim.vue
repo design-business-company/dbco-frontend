@@ -18,7 +18,31 @@ onMounted(() => {
   app.setRouteIsTransitioning(false);
 });
 
+// GSAP ticks on requestAnimationFrame, which browsers freeze in background
+// tabs — without a non-rAF fallback the scrim (z-index 99999, pointer-
+// blocking) can sit over the page indefinitely on background-tab loads.
+// setTimeout is throttled in hidden tabs but always fires eventually, so it
+// guarantees the transition hook's done() runs and the scrim is removed.
+function withTimeoutFallback(el, done, timeoutMs) {
+  let finished = false;
+
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    clearTimeout(fallback);
+    gsap.killTweensOf(el);
+    done();
+  };
+
+  const fallback = setTimeout(finish, timeoutMs);
+
+  return finish;
+}
+
 function onEnter(el, done) {
+  // duration 1s + delay 0.5s, plus buffer
+  const finish = withTimeoutFallback(el, done, 2000);
+
   gsap.to(el, {
     ease: "expo.out",
     duration: 1,
@@ -26,17 +50,20 @@ function onEnter(el, done) {
     opacity: 1,
     y: 0,
     rotate: 0,
-    onComplete: done,
+    onComplete: finish,
   });
 }
 
 function onLeave(el, done) {
+  // duration 1s + delay 0.125s, plus buffer
+  const finish = withTimeoutFallback(el, done, 1750);
+
   gsap.to(el, {
     ease: "Power2.easeOut",
     duration: 1,
     delay: 0.125,
     opacity: 0,
-    onComplete: done,
+    onComplete: finish,
   });
 
   // const root = document.documentElement;

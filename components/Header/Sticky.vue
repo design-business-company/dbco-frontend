@@ -178,19 +178,26 @@ onClickOutside(nav, (event) => {
     visibility: visible;
     pointer-events: all;
     transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
     will-change: transform, background-color;
+    // Hidden states also flip visibility (delayed until the slide-up
+    // finishes) so the offscreen links leave the tab order — transform
+    // alone kept them tabbable while invisible (WCAG 2.4.3/2.4.7).
+    // Showing again is instant (0s, no delay).
     transition: transform 400ms var(--transition-function),
-      background-color var(--transition);
+      background-color var(--transition), visibility 0s linear 0s;
     background-color: var(--background-primary);
   }
 
   &.is-hidden .wrapper {
     transform: translate3d(0, -100%, 0);
+    visibility: hidden;
+    transition-delay: 0s, 0s, 400ms;
   }
 
   &:hover .wrapper {
     transform: translate3d(0, 0, 0);
+    visibility: visible;
+    transition-delay: 0s, 0s, 0s;
   }
 
   &.is-disabled {
@@ -207,6 +214,8 @@ onClickOutside(nav, (event) => {
 
       .wrapper {
         transform: translate3d(0, -100%, 0);
+        visibility: hidden;
+        transition-delay: 0s, 0s, 400ms;
       }
     }
   }

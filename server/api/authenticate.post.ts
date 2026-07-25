@@ -31,6 +31,17 @@ export default defineEventHandler(async (event) => {
     { slug }
   )
 
+  // Unknown slugs (or pages without a password) have no ciphertext — without
+  // this check Cryptr.decrypt throws and the request 500s. Respond exactly
+  // like a wrong password so the endpoint can't be used to probe which slugs
+  // exist or are gated.
+  if (!encryptedPassword) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Invalid password',
+    })
+  }
+
   const isAuthenticated = comparePasswords({ password, encryptedPassword });
 
   if (!isAuthenticated) {
