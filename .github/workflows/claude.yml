@@ -8,10 +8,13 @@
 # members, repo collaborators, and owners can summon @claude. Random
 # commenters get no run (and no reaction from the workflow).
 #
-# Note: no npm ci pre-bake here (unlike construct-nuxt) — installs need
-# GSAP_TOKEN for the private GreenSock registry, which is only set in
-# Netlify. If @claude ever needs to run builds in CI, add GSAP_TOKEN as a
-# repo secret and restore the setup-node/npm ci steps.
+# Note: no npm ci pre-bake here (unlike construct-nuxt). This used to be
+# required because installs needed GSAP_TOKEN for GreenSock's private
+# registry (only set in Netlify) — as of the July 2026 migration to the
+# public `gsap` package (free since GSAP 3.13), that's no longer true and
+# a plain `npm ci` should work in CI with no extra secrets. Restoring the
+# setup-node/npm ci steps here is a reasonable follow-up, just not done
+# as part of that migration to keep it scoped.
 name: Claude
 
 on:
