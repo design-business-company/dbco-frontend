@@ -66,10 +66,12 @@ const isFocused = ref(false); // Track if this carousel is focused
 
 const handleFocus = () => {
   isFocused.value = true;
+  autoScrollControl.stop();
 };
 
 const handleBlur = () => {
   isFocused.value = false;
+  autoScrollControl.play();
 };
 
 const emblaPlugins = computed(() => {
@@ -83,9 +85,16 @@ const emblaPlugins = computed(() => {
         playOnInit: false,
         stopOnInteraction: false,
         stopOnMouseEnter: true,
-        // Default (true): pause while keyboard focus is inside, mirroring
-        // the mouse-hover pause (WCAG 2.2.2).
-        stopOnFocusIn: true,
+        // Kept false (NOT the plugin default of true): combined with
+        // stopOnInteraction: false + dragFree: true + loop: true, the
+        // plugin's own stopOnFocusIn:true wiring re-arms auto-scroll via a
+        // 'settle'-based resume that races the drag engine's pointer state,
+        // leaving the carousel undraggable while it keeps scrolling itself
+        // — a confirmed upstream bug (embla-carousel #1263), not something
+        // fixable from our options alone. The pause-on-keyboard-focus intent
+        // (WCAG 2.2.2, mirroring the mouse-hover pause) is instead handled
+        // manually below via handleFocus/handleBlur -> autoScrollControl.
+        stopOnFocusIn: false,
       }),
     ];
   }
