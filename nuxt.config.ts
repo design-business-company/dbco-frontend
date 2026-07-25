@@ -29,6 +29,22 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
+  // Canonical form is trailing-slash for every route (utils/seo-constants.ts
+  // canonicalUrl()); <NuxtLink>/<nuxt-link> defaults to stripping trailing
+  // slashes, so without this every internal link (nav, rich-text internal
+  // links, etc.) rendered "/about" while the canonical tag + sitemap said
+  // "/about/" — an avoidable extra 301 hop for both crawlers and users.
+  // Components that render a plain <a> instead of <NuxtLink> (e.g.
+  // components/Header/MobileNavLink.vue) aren't covered by this default and
+  // need the trailing slash written into their `to`/`href` directly.
+  experimental: {
+    defaults: {
+      nuxtLink: {
+        trailingSlash: "append",
+      },
+    },
+  },
+
   // Always ship global/component CSS as linked stylesheets. Under
   // compatibilityVersion 4, Nuxt 3.21 inlines all .vue styles into the SSR'd
   // HTML and (new since 3.17) strips the entry stylesheet from the client
@@ -53,6 +69,7 @@ export default defineNuxtConfig({
     "/about": { prerender: true },
     "/contact": { prerender: true },
     "/tools": { prerender: true },
+    "/hiring": { prerender: true },
   },
 
   app: {
