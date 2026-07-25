@@ -4,6 +4,10 @@
 #
 # Auth: CLAUDE_CODE_OAUTH_TOKEN repo secret (from `claude setup-token`).
 #
+# This repo is PUBLIC — the author_association guard below means only org
+# members, repo collaborators, and owners can summon @claude. Random
+# commenters get no run (and no reaction from the workflow).
+#
 # Note: no npm ci pre-bake here (unlike construct-nuxt) — installs need
 # GSAP_TOKEN for the private GreenSock registry, which is only set in
 # Netlify. If @claude ever needs to run builds in CI, add GSAP_TOKEN as a
@@ -22,12 +26,23 @@ on:
 
 jobs:
   claude:
-    # Only fire when @claude is actually addressed
+    # Only fire when @claude is addressed BY someone with standing on the
+    # repo (org member / collaborator / owner) — this repo is public, so
+    # without the author_association check anyone on the internet could
+    # burn the token by commenting @claude.
     if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
-      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+      (github.event_name == 'issue_comment' &&
+        contains(github.event.comment.body, '@claude') &&
+        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)) ||
+      (github.event_name == 'pull_request_review_comment' &&
+        contains(github.event.comment.body, '@claude') &&
+        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)) ||
+      (github.event_name == 'pull_request_review' &&
+        contains(github.event.review.body, '@claude') &&
+        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.review.author_association)) ||
+      (github.event_name == 'issues' &&
+        (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')) &&
+        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.issue.author_association))
     runs-on: ubuntu-latest
     # write perms let @claude push branches and open PRs — it still cannot
     # merge; a human holds the merge button
