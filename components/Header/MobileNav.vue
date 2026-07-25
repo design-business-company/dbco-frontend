@@ -12,7 +12,7 @@
         </li>
         <li>
           <HeaderMobileNavLink
-            to="/about"
+            to="/about/"
             :current-path="routerLinkActive"
             @link-click="handleLinkClick"
             >About</HeaderMobileNavLink
@@ -20,7 +20,7 @@
         </li>
         <li>
           <HeaderMobileNavLink
-            to="/tools"
+            to="/tools/"
             :current-path="routerLinkActive"
             @link-click="handleLinkClick"
             >Tools</HeaderMobileNavLink
@@ -28,7 +28,15 @@
         </li>
         <li>
           <HeaderMobileNavLink
-            to="/contact"
+            to="/hiring/"
+            :current-path="routerLinkActive"
+            @link-click="handleLinkClick"
+            >Hiring</HeaderMobileNavLink
+          >
+        </li>
+        <li>
+          <HeaderMobileNavLink
+            to="/contact/"
             :current-path="routerLinkActive"
             @link-click="handleLinkClick"
             >Contact</HeaderMobileNavLink

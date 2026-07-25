@@ -1,7 +1,7 @@
 export const SITE_URL = "https://dbco.online";
 
 // Keep in sync with the prerendered routeRules in nuxt.config.ts.
-export const PRERENDERED_ROUTES = ["/", "/about", "/contact", "/tools"];
+export const PRERENDERED_ROUTES = ["/", "/about", "/contact", "/tools", "/hiring"];
 
 // Canonical form is trailing-slash for every route: Netlify 301s the
 // prerendered pages to it, and SSR routes serve both forms (no redirect),
