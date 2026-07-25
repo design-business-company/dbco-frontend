@@ -1,0 +1,53 @@
+# @claude responder — mention @claude in an issue or PR comment and the
+# action spins up Claude Code with this repo checked out (CLAUDE.md is its
+# briefing).
+#
+# Auth: CLAUDE_CODE_OAUTH_TOKEN repo secret (from `claude setup-token`).
+#
+# Note: no npm ci pre-bake here (unlike construct-nuxt) — installs need
+# GSAP_TOKEN for the private GreenSock registry, which is only set in
+# Netlify. If @claude ever needs to run builds in CI, add GSAP_TOKEN as a
+# repo secret and restore the setup-node/npm ci steps.
+name: Claude
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+  issues:
+    types: [opened, assigned]
+
+jobs:
+  claude:
+    # Only fire when @claude is actually addressed
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+    runs-on: ubuntu-latest
+    # write perms let @claude push branches and open PRs — it still cannot
+    # merge; a human holds the merge button
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read # lets @claude read CI results when investigating failures
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # The app install grants workflows:write, but the per-run token
+          # only requests it when listed here — without it, pushing any NEW
+          # branch fails (GitHub counts the repo's existing workflow files
+          # as "created" on a new ref).
+          additional_permissions: |
+            workflows: write
