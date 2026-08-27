@@ -315,10 +315,25 @@ mux-player {
   --media-object-fit: cover;
   --dialog: none;
   // Replace Mux's default hot-pink accent with the brand palette. Fixed
-  // grays, not theme tokens — the chrome overlays the video's dark scrim,
-  // so it must not flip dark on light-themed pages
+  // grays, not theme tokens — the chrome must not flip dark on
+  // light-themed pages
   --media-primary-color: var(--gray-50);
   --media-accent-color: var(--gray-50);
+}
+
+// Mux's default theme puts no backdrop behind the control bar, so the light
+// chrome vanishes over light footage — back it with a gray-950 scrim
+.mux-player::part(control-bar) {
+  background: linear-gradient(
+    to top,
+    rgba(15, 14, 14, 0.7),
+    rgba(15, 14, 14, 0.35) 70%,
+    transparent
+  );
+}
+
+.mux-player::part(control-bar top) {
+  background: linear-gradient(to top, rgba(15, 14, 14, 0.35), transparent);
   aspect-ratio: var(--aspect-ratio);
 }
 
