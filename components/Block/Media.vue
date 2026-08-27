@@ -74,13 +74,12 @@ const normalizedMedia = computed(() => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: var(--tiniest);
+    gap: var(--tinier);
     align-items: flex-start;
     text-indent: 0;
   }
 
   &__caption {
-    margin-top: var(--tinier);
     transform-origin: 0 100%;
     pointer-events: none;
   }

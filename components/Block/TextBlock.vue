@@ -225,6 +225,18 @@ const onLeave = (ev) => {
     }
   }
 
+  // A media block that closes out a textBlock shouldn't stack its trailing
+  // margin on top of the inter-block <Space> spacers
+  :deep(.media:last-child) {
+    margin-bottom: 0;
+  }
+
+  // Captions live inside .media and are spaced by its flex gap — keep the
+  // generic text-* margin rules above from reaching them
+  :deep(.media .media__caption) {
+    margin-top: 0;
+  }
+
   :deep([class*="text-"]) + .media {
     margin-top: var(--bigger);
   }
