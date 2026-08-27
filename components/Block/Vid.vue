@@ -3,13 +3,17 @@
     v-if="playbackId"
     :on-enter="handleEnter"
     :on-leave="handleLeave"
-    :class="['vid-container', { 'is-paused': !isPlaying }]"
+    :class="[
+      'vid-container',
+      { 'is-paused': !isPlaying, 'has-native-controls': settings.controls },
+    ]"
     :style="{
       '--aspect-ratio': formattedAspectRatio,
     }"
     @click="manualToggle"
   >
     <button
+      v-if="!settings.controls"
       type="button"
       class="vid-button"
       :aria-label="!isPlaying ? 'Play video' : 'Pause video'"
@@ -196,6 +200,10 @@ const pause = () => {
 };
 
 const manualToggle = () => {
+  // Native Mux controls own playback — don't hijack clicks (they bubble up
+  // from the Mux chrome and would double-toggle)
+  if (props.settings.controls) return;
+
   userPaused.value = true;
   toggle();
 };
@@ -219,6 +227,10 @@ onBeforeUnmount(() => {
   border-radius: var(--border-radius);
   overflow: hidden;
   cursor: pointer;
+
+  &.has-native-controls {
+    cursor: default;
+  }
 
   &.is-paused {
     .vid-button {
