@@ -319,22 +319,23 @@ mux-player {
   // light-themed pages
   --media-primary-color: var(--gray-50);
   --media-accent-color: var(--gray-50);
-}
-
-// Mux's default theme puts no backdrop behind the control bar, so the light
-// chrome vanishes over light footage — back it with a gray-950 scrim
-.mux-player::part(control-bar) {
-  background: linear-gradient(
-    to top,
-    rgba(15, 14, 14, 0.7),
-    rgba(15, 14, 14, 0.35) 70%,
-    transparent
-  );
-}
-
-.mux-player::part(control-bar top) {
-  background: linear-gradient(to top, rgba(15, 14, 14, 0.35), transparent);
   aspect-ratio: var(--aspect-ratio);
+}
+
+// Blue chips behind the Mux buttons so the light chrome reads on light
+// footage. ::part, not --media-control-background — the theme pins that
+// var to transparent inside its shadow DOM
+.mux-player::part(bottom button) {
+  background: var(--indigo-700);
+  border-radius: var(--border-radius);
+}
+
+.mux-player::part(bottom button):hover {
+  background: var(--indigo-900);
+}
+
+.mux-player::part(center play button) {
+  background: var(--indigo-700);
 }
 
 .mux-player--controls-hidden {
