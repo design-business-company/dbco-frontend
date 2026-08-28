@@ -3,13 +3,17 @@
     v-if="playbackId"
     :on-enter="handleEnter"
     :on-leave="handleLeave"
-    :class="['vid-container', { 'is-paused': !isPlaying }]"
+    :class="[
+      'vid-container',
+      { 'is-paused': !isPlaying, 'has-native-controls': settings.controls },
+    ]"
     :style="{
       '--aspect-ratio': formattedAspectRatio,
     }"
     @click="manualToggle"
   >
     <button
+      v-if="!settings.controls"
       type="button"
       class="vid-button"
       :aria-label="!isPlaying ? 'Play video' : 'Pause video'"
@@ -196,6 +200,10 @@ const pause = () => {
 };
 
 const manualToggle = () => {
+  // Native Mux controls own playback — don't hijack clicks (they bubble up
+  // from the Mux chrome and would double-toggle)
+  if (props.settings.controls) return;
+
   userPaused.value = true;
   toggle();
 };
@@ -219,6 +227,10 @@ onBeforeUnmount(() => {
   border-radius: var(--border-radius);
   overflow: hidden;
   cursor: pointer;
+
+  &.has-native-controls {
+    cursor: default;
+  }
 
   &.is-paused {
     .vid-button {
@@ -302,7 +314,23 @@ mux-player {
   --loading-indicator: none;
   --media-object-fit: cover;
   --dialog: none;
+  // Replace Mux's default hot-pink accent with the brand palette. Fixed
+  // grays, not theme tokens — the chrome must not flip dark on
+  // light-themed pages
+  --media-primary-color: var(--gray-50);
+  --media-accent-color: var(--gray-50);
   aspect-ratio: var(--aspect-ratio);
+}
+
+// Chip behind a Mux button on hover only. ::part, not
+// --media-control-background — the theme pins that var to transparent
+// inside its shadow DOM
+.mux-player::part(bottom button) {
+  border-radius: var(--border-radius);
+}
+
+.mux-player::part(bottom button):hover {
+  background: var(--gray-900);
 }
 
 .mux-player--controls-hidden {
