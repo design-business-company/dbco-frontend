@@ -322,20 +322,15 @@ mux-player {
   aspect-ratio: var(--aspect-ratio);
 }
 
-// Blue chips behind the Mux buttons so the light chrome reads on light
-// footage. ::part, not --media-control-background — the theme pins that
-// var to transparent inside its shadow DOM
+// Chip behind a Mux button on hover only. ::part, not
+// --media-control-background — the theme pins that var to transparent
+// inside its shadow DOM
 .mux-player::part(bottom button) {
-  background: var(--indigo-700);
   border-radius: var(--border-radius);
 }
 
 .mux-player::part(bottom button):hover {
-  background: var(--indigo-900);
-}
-
-.mux-player::part(center play button) {
-  background: var(--indigo-700);
+  background: var(--gray-900);
 }
 
 .mux-player--controls-hidden {
