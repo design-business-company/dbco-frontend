@@ -15,18 +15,19 @@
     <!--
       Poster underlay for chrome-less (autoplay-style) videos. The player's
       own poster is disabled so nothing inside the shadow DOM swaps at the
-      instant playback starts; instead the whole player fades in over this
-      still once it's actually playing. If the video ever goes transparent
-      again (source reload, pause off-screen) the still shows through
-      instead of the page. Being plain HTML it also paints before the
-      custom element upgrades, which the shadow-DOM poster never did.
+      instant playback starts; instead the player (with a transparent
+      background, so only real video pixels composite) dissolves in over
+      this still once its first frame has actually been presented. The
+      still is removed once the dissolve completes. Being plain HTML it
+      also paints before the custom element upgrades, which the shadow-DOM
+      poster never did.
 
       Videos with native controls keep Mux's own poster: the player can't
       be faded as a whole there without hiding the play button, and the
       inner <video> isn't exposed as a ::part in this mux-player version.
     -->
     <img
-      v-if="!settings.controls"
+      v-if="!settings.controls && !underlayDone"
       class="vid-underlay"
       :src="underlaySrc"
       :srcset="underlaySrcset"
@@ -125,6 +126,7 @@ const isPlaying = ref(false);
 const isLoading = ref(true);
 const isInView = ref(false);
 const hasPlayed = ref(false);
+const underlayDone = ref(false);
 const placeholder = ref(null);
 
 // Underlay still: the Sanity poster when one is set, otherwise Mux's frame-0
@@ -173,14 +175,36 @@ onMounted(async () => {
 
   vid.value?.addEventListener("loadedmetadata", handleVideoLoaded);
   vid.value?.addEventListener("playing", handleVideoPlaying);
+  vid.value?.addEventListener("transitionend", handleTransitionEnd);
   vid.value?.addEventListener("error", handleVideoError);
 });
 
-// `playing` is the first moment a frame is guaranteed to be painted (it's
-// also when the player would have hidden its own poster), so it's the
-// earliest safe point to reveal the video over the underlay.
+// `playing` alone isn't enough to reveal the video: browsers (Safari in
+// particular) can fire it before the first frame is composited, which
+// showed as a beat of black between the still and the footage. Wait for the
+// next presented frame via requestVideoFrameCallback where available.
 const handleVideoPlaying = () => {
-  hasPlayed.value = true;
+  if (hasPlayed.value) return;
+
+  const inner =
+    vid.value?.media?.nativeEl ??
+    vid.value?.media?.shadowRoot?.querySelector("video");
+
+  if (inner?.requestVideoFrameCallback) {
+    inner.requestVideoFrameCallback(() => {
+      hasPlayed.value = true;
+    });
+  } else {
+    hasPlayed.value = true;
+  }
+};
+
+// Drop the underlay once the dissolve has finished — it's done its job and
+// there's no point keeping a decoded still per video on a page with dozens.
+const handleTransitionEnd = (e) => {
+  if (e.target === vid.value && e.propertyName === "opacity" && hasPlayed.value) {
+    underlayDone.value = true;
+  }
 };
 
 const handleVideoLoaded = () => {
@@ -255,6 +279,7 @@ const toggle = () => {
 onBeforeUnmount(() => {
   vid.value?.removeEventListener("loadedmetadata", handleVideoLoaded);
   vid.value?.removeEventListener("playing", handleVideoPlaying);
+  vid.value?.removeEventListener("transitionend", handleTransitionEnd);
   vid.value?.removeEventListener("error", handleVideoError);
 });
 </script>
@@ -389,10 +414,14 @@ mux-player {
   background: var(--gray-900);
 }
 
-// Hidden until the first `playing` event, then dissolves in over the
+// Hidden until the first presented frame, then dissolves in over the
 // underlay. Long enough to read as a dissolve rather than a flicker, short
-// enough not to feel like lag.
+// enough not to feel like lag. media-chrome paints its container black by
+// default — that black faded in *with* the player and blotted out the still
+// before the footage showed, so make it transparent: only video pixels
+// composite over the underlay.
 .mux-player--fades {
+  --media-background-color: transparent;
   opacity: 0;
   transition: opacity 300ms var(--transition-function);
 
