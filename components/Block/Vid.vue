@@ -12,6 +12,31 @@
     }"
     @click="manualToggle"
   >
+    <!--
+      Poster underlay for chrome-less (autoplay-style) videos. The player's
+      own poster is disabled so nothing inside the shadow DOM swaps at the
+      instant playback starts; instead the player (with a transparent
+      background, so only real video pixels composite) dissolves in over
+      this still once its first frame has actually been presented. The
+      still is removed once the dissolve completes. Being plain HTML it
+      also paints before the custom element upgrades, which the shadow-DOM
+      poster never did.
+
+      Videos with native controls keep Mux's own poster: the player can't
+      be faded as a whole there without hiding the play button, and the
+      inner <video> isn't exposed as a ::part in this mux-player version.
+    -->
+    <img
+      v-if="!settings.controls && !underlayDone"
+      class="vid-underlay"
+      :src="underlaySrc"
+      :srcset="underlaySrcset"
+      :sizes="sizes"
+      :style="placeholder ? { backgroundImage: `url('${placeholder}')` } : null"
+      alt=""
+      aria-hidden="true"
+      decoding="async"
+    />
     <button
       v-if="!settings.controls"
       type="button"
@@ -30,18 +55,20 @@
       :playback-id="playbackId"
       :controls="false"
       :muted="settings.mute"
-      :placeholder="placeholder"
+      :placeholder="settings.controls ? placeholder : null"
       :aria-label="alt"
       :playsinline="settings.playsinline"
       :env-key="envKey"
       :loop="settings.loop"
       ref="vid"
       class="vid mux-player"
-      :poster="poster ?? placeholder"
+      :poster="settings.controls ? underlaySrc : ''"
       min-resolution="720p"
       preload="metadata"
       :class="{
         'mux-player--controls-hidden': !settings.controls,
+        'mux-player--fades': !settings.controls,
+        'is-ready': hasPlayed,
       }"
     />
   </Observer>
@@ -74,6 +101,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  sizes: {
+    type: String,
+    default: "100vw",
+  },
   settings: {
     type: Object,
     default: {
@@ -94,26 +125,29 @@ const vid = ref(null);
 const isPlaying = ref(false);
 const isLoading = ref(true);
 const isInView = ref(false);
+const hasPlayed = ref(false);
+const underlayDone = ref(false);
 const placeholder = ref(null);
 
-const viewport = useViewport();
+// Underlay still: the Sanity poster when one is set, otherwise Mux's frame-0
+// thumbnail (which matches the first video frame exactly). Sized with
+// srcset/sizes rather than a viewport-derived width so the URL is the same
+// on the server and the client — a breakpoint-based width swapped the image
+// after hydration whenever the UA-guessed breakpoint didn't match the window.
+const UNDERLAY_WIDTHS = [360, 640, 800, 1080, 1280, 1920];
 
-const posterWidth = computed(() => {
-  if (viewport.isGreaterOrEquals("desktop")) return 1280;
-  if (viewport.isGreaterOrEquals("laptop")) return 1080;
-  if (viewport.isGreaterOrEquals("tablet")) return 800;
-  return 360;
-});
+const underlayUrl = (width) => {
+  if (props.poster) {
+    return $urlFor(props.poster).width(width).quality(80).url();
+  }
+  return `https://image.mux.com/${props.playbackId}/thumbnail.webp?time=0&width=${width}`;
+};
 
-const poster = computed(() => {
-  if (!props.poster) return null;
+const underlaySrc = computed(() => underlayUrl(1280));
 
-  return $urlFor(props.poster)
-    .width(posterWidth.value)
-    .auto("format")
-    .quality(80)
-    .url();
-});
+const underlaySrcset = computed(() =>
+  UNDERLAY_WIDTHS.map((width) => `${underlayUrl(width)} ${width}w`).join(", ")
+);
 
 if (props.playbackId) {
   createBlurUp(props.playbackId, {})
@@ -140,8 +174,38 @@ onMounted(async () => {
   await nextTick();
 
   vid.value?.addEventListener("loadedmetadata", handleVideoLoaded);
+  vid.value?.addEventListener("playing", handleVideoPlaying);
+  vid.value?.addEventListener("transitionend", handleTransitionEnd);
   vid.value?.addEventListener("error", handleVideoError);
 });
+
+// `playing` alone isn't enough to reveal the video: browsers (Safari in
+// particular) can fire it before the first frame is composited, which
+// showed as a beat of black between the still and the footage. Wait for the
+// next presented frame via requestVideoFrameCallback where available.
+const handleVideoPlaying = () => {
+  if (hasPlayed.value) return;
+
+  const inner =
+    vid.value?.media?.nativeEl ??
+    vid.value?.media?.shadowRoot?.querySelector("video");
+
+  if (inner?.requestVideoFrameCallback) {
+    inner.requestVideoFrameCallback(() => {
+      hasPlayed.value = true;
+    });
+  } else {
+    hasPlayed.value = true;
+  }
+};
+
+// Drop the underlay once the dissolve has finished — it's done its job and
+// there's no point keeping a decoded still per video on a page with dozens.
+const handleTransitionEnd = (e) => {
+  if (e.target === vid.value && e.propertyName === "opacity" && hasPlayed.value) {
+    underlayDone.value = true;
+  }
+};
 
 const handleVideoLoaded = () => {
   isLoading.value = false;
@@ -214,6 +278,8 @@ const toggle = () => {
 
 onBeforeUnmount(() => {
   vid.value?.removeEventListener("loadedmetadata", handleVideoLoaded);
+  vid.value?.removeEventListener("playing", handleVideoPlaying);
+  vid.value?.removeEventListener("transitionend", handleTransitionEnd);
   vid.value?.removeEventListener("error", handleVideoError);
 });
 </script>
@@ -266,6 +332,21 @@ onBeforeUnmount(() => {
   display: block;
   width: 100%;
   height: auto;
+
+  // Sits under the player. object-fit/position mirror the player's
+  // --media-object-fit so the still and the first frame line up. The blur-up
+  // data URL paints as a background until the still itself decodes.
+  &-underlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+  }
 
   &-button {
     appearance: none;
@@ -331,6 +412,22 @@ mux-player {
 
 .mux-player::part(bottom button):hover {
   background: var(--gray-900);
+}
+
+// Hidden until the first presented frame, then dissolves in over the
+// underlay. Long enough to read as a dissolve rather than a flicker, short
+// enough not to feel like lag. media-chrome paints its container black by
+// default — that black faded in *with* the player and blotted out the still
+// before the footage showed, so make it transparent: only video pixels
+// composite over the underlay.
+.mux-player--fades {
+  --media-background-color: transparent;
+  opacity: 0;
+  transition: opacity 300ms var(--transition-function);
+
+  &.is-ready {
+    opacity: 1;
+  }
 }
 
 .mux-player--controls-hidden {
