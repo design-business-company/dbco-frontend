@@ -28,10 +28,11 @@ Project inquiries: business@dbco.online. Careers and portfolio submissions: jobs
 
 ## Tools and experiments
 
-- Construct: DBCo's internal design system connecting identity, UI, copy, and code through shared variables; also released publicly as a dark Visual Studio Code theme
-- [Pal(ette)](https://pal.dbco.online): Color tool that generates perceptually uniform color scales while ensuring accessible contrast
+- Construct: DBCo's agentic design system, and the starting point for the studio's prototypes and production sites. A tokenized Nuxt component library (atoms, molecules, organisms, templates) kept in versioned correspondence with a canonical Figma library, built to be driven by coding agents: plain-markdown playbooks handle Figma-to-code sync with a drift ledger, scaffolding components from Figma specs, browser verification, and an unattended workflow that picks up GitHub issues and opens pull requests. The Construct name also ships as a dark Visual Studio Code theme
+- [Pal(ette)](https://pal.dbco.online): Color tool that generates perceptually uniform color scales in OKLCH while ensuring accessible contrast. Also available to the community as a free [Figma plugin](https://www.figma.com/community/plugin/1658216439042618907), which edits palettes inside Figma, applies them as color variables (with light/dark modes), and grades contrast against AA, AAA, and APCA
 - [Kala](https://kala.watch): Interactive tool that visualizes the passing of time ([source](https://github.com/egstad/kala))
 - Peg: Variable font inspired by embroidered typefaces made by Jordan's grandmother; axes shift from sharp to smooth edges. Free on request
+- [Instrument Sans](https://fonts.google.com/specimen/Instrument+Sans) and [Instrument Serif](https://fonts.google.com/specimen/Instrument+Serif): Open-source typefaces Jordan Egstad led the design of, with Rodrigo Fuenzalida, for the Instrument brand. Free on Google Fonts, and now widely used across the web
 - [DetectScroll.js](https://github.com/egstad-construct/detect-scroll): Open-source JavaScript library for precise scroll direction and position detection, used across thousands of sites
 - Are.na Batch Uploader: Open-source tool for programmatically adding large datasets to Are.na channels
 
