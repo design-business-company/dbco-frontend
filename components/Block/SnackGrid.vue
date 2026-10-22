@@ -18,6 +18,7 @@
         <SanityContent
           v-if="item.shortDescription"
           :blocks="item.shortDescription.text"
+          :serializers="richTextSimpleSerializers"
         />
       </div>
     </div>
@@ -25,6 +26,7 @@
 </template>
 
 <script setup>
+import { richTextSimpleSerializers } from "~/utils/richTextSimpleSerializers";
 const props = defineProps({
   items: {
     type: Array,

@@ -30,6 +30,7 @@
                 <SanityContent
                   v-if="shortDescription"
                   :blocks="shortDescription.text"
+                  :serializers="richTextSimpleSerializers"
                 />
               </span>
             </Observer>
@@ -59,6 +60,7 @@
               <SanityContent
                 v-if="description?.text"
                 :blocks="description.text"
+                :serializers="richTextSimpleSerializers"
               />
             </Text>
             <Text
@@ -67,7 +69,11 @@
               class="spotlight__credits"
               ref="cred"
             >
-              <SanityContent v-if="credits?.text" :blocks="credits.text" />
+              <SanityContent
+                v-if="credits?.text"
+                :blocks="credits.text"
+                :serializers="richTextSimpleSerializers"
+              />
             </Text>
           </Observer>
         </Column>
@@ -93,6 +99,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { gsap } from "gsap";
 import observe from "~/composables/Observer";
+import { richTextSimpleSerializers } from "~/utils/richTextSimpleSerializers";
 
 const name = ref(null);
 const role = ref(null);
