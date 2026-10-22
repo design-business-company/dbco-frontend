@@ -192,18 +192,33 @@ onKeyStroke("ArrowLeft", (e) => {
       --maxHeight: calc(100vw - calc(var(--grid-margin) * 3));
 
       width: auto;
-      height: clamp(350px, 40vmax, var(--maxHeight));
-      aspect-ratio: var(--slide-aspect-ratio);
       flex: unset;
 
       @include laptop {
         --maxHeight: calc(40vw - calc(var(--grid-margin) * 3));
-        min-height: 500px;
       }
 
-      @include desktop {
-        // max-height: 800px;
-        min-height: 600px;
+      // The fixed height lives on the media itself, not the slide, so the
+      // slide can grow to fit a caption beneath it. Captions take the media's
+      // width (width: 0 + min-width keeps them out of the intrinsic sizing).
+      :deep(.vid-container),
+      :deep(.pic) {
+        width: auto;
+        height: clamp(350px, 40vmax, var(--maxHeight));
+        aspect-ratio: var(--slide-aspect-ratio);
+
+        @include laptop {
+          min-height: 500px;
+        }
+
+        @include desktop {
+          min-height: 600px;
+        }
+      }
+
+      :deep(.media__caption) {
+        width: 0;
+        min-width: 100%;
       }
     }
   }
