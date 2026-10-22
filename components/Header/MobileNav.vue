@@ -28,14 +28,6 @@
         </li>
         <li>
           <HeaderMobileNavLink
-            to="/hiring/"
-            :current-path="routerLinkActive"
-            @link-click="handleLinkClick"
-            >Hiring</HeaderMobileNavLink
-          >
-        </li>
-        <li>
-          <HeaderMobileNavLink
             to="/contact/"
             :current-path="routerLinkActive"
             @link-click="handleLinkClick"
