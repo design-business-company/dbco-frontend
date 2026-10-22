@@ -47,7 +47,7 @@ const props = defineProps({
 // others bundle it in value
 const resolvedHref = computed(() => props.href || props.value?.href || "#");
 const resolvedBlank = computed(() =>
-  props.href ? props.blank : props.value?.blank
+  props.href ? props.blank : (props.value?.blank ?? true)
 );
 const isMailto = computed(() => resolvedHref.value.startsWith("mailto:"));
 

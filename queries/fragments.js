@@ -47,3 +47,18 @@ export const buttonGroup = groq`
     }
   }
 `;
+
+// Projection for the `richTextSimple` object type — resolves internalLink
+// annotations to a slug so CopyLinkInternal has somewhere to point.
+export const richTextSimpleFields = groq`
+  ...,
+  text[]{
+    ...,
+    markDefs[]{
+      ...,
+      _type == "internalLink" => {
+        "slug": coalesce(reference->slug.current, "/"),
+      }
+    }
+  }
+`;

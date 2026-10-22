@@ -3,6 +3,7 @@ import {
   videoFields,
   themeSwitcherFields,
   buttonGroup,
+  richTextSimpleFields,
 } from "./fragments";
 
 export const themeSwitcherQuery = groq`
@@ -16,9 +17,9 @@ export const spotlightQuery = groq`
     "type": work->type,
     "title": work->title,
     "slug": work->slug.current,
-    "shortDescription": work->shortDescription,
-    "description": work->description,
-    "credits": work->credits,
+    "shortDescription": work->shortDescription { ${richTextSimpleFields} },
+    "description": work->description { ${richTextSimpleFields} },
+    "credits": work->credits { ${richTextSimpleFields} },
     "tags": work->tags[]-> {
       _key,
       title,
@@ -48,7 +49,7 @@ _type == "snackGrid" => {
     type,
     title,
     "slug": slug.current,
-    shortDescription,
+    shortDescription { ${richTextSimpleFields} },
     media[] {
       _type == "picture" => {
         ${pictureFields}
