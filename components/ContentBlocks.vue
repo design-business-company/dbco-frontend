@@ -12,7 +12,7 @@
     ></BlockThemeSwitcher>
 
     <BlockSpotlight
-      v-if="block._type === 'spotlight'"
+      v-if="block._type === 'spotlight' && block.media"
       v-bind="block"
     ></BlockSpotlight>
 

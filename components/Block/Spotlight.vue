@@ -82,7 +82,7 @@
       </Grid>
 
       <div class="spotlight__media">
-        <BlockSpotlightMedia :items="media" v-if="media.length < 5" />
+        <BlockSpotlightMedia :items="media" v-if="media?.length < 5" />
         <BlockSpotlightMediaCarousel
           :title="title"
           :settings="settings"
