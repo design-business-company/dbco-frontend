@@ -66,10 +66,10 @@ Theme reads/writes should generally go through the `useTheme()` composable (`set
 - **Lenis** (`nuxt3-lenis`) — smooth scroll, wired up globally in `app.vue`/`error.vue` (`<Lenis>` wrapping `<NuxtLayout>`, `useLenis()`).
 - **nuxt-viewport** — breakpoint system, custom breakpoints defined in `nuxt.config.ts` (`mobile/phablet/tablet/laptop/desktop/ultrawide`).
 - **Mux** (`@mux/mux-player`, `@mux/blurup`) — video hosting/playback; `vue.compilerOptions.isCustomElement` in `nuxt.config.ts` whitelists the `mux-player` custom element so Vue doesn't warn on it. `Block/Vid.vue` defers creating `<mux-player>` until mounted on client-side navigations (`showPlayer`) — SSR/hydration renders it in the initial HTML as before; keep that split or hydration mismatches / media-chrome warnings return.
-- **Three.js** — dependency is now unused (`pages/three.vue` was deleted July 2026); safe to remove from package.json when convenient.
+- **Three.js** — still imported by `components/Tools/circle.vue` and `circleTwo.vue` (`<ToolsCircleTwo>` is rendered from `ContentBlocks.vue`), so not removable even though `pages/three.vue` was deleted July 2026.
 - **Embla** (`embla-carousel-vue`, `embla-carousel-auto-scroll`) — backs `Block/Carousel.vue` and `Block/SpotlightMediaCarousel.vue`. Both carousels focus-guard their global arrow-key handlers (`isFocused`) — keep that guard when touching key handling, or one keypress drives every instance on the page.
 - **Plausible** (`@nuxtjs/plausible`) — analytics, `localhost` ignored per config. Event taxonomy (goals + custom props are allowlisted in the Plausible dashboard — coordinate before renaming): `Carousel interact` {project} (once per page load, real interaction only — embla `pointerUp`/arrow keys via `composables/useCarouselTracking.ts`; AutoScroll must never fire it), `Project view` {project} (2s cumulative visible) and `Project dwell` {project, milestone: 10s|30s} (cumulative-attention milestones in `Block/Spotlight.vue` — clock pauses off-screen/tab-hidden), `Contact: copy email` {email, page} (`Block/CopyLinkExternal.vue`).
-- **d3** — installed but not obviously wired into a component; check before assuming it's dead weight.
+- **d3** — used by `components/About/Chart.vue`.
 
 ## SEO
 

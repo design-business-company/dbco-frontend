@@ -8,6 +8,7 @@
         :settings="normalizedMedia.settings"
         :poster="normalizedMedia.poster?.asset?._ref"
         :aspect-ratio="normalizedMedia.aspectRatio"
+        :sizes="sizes"
       />
       <BlockCaption
         v-if="normalizedMedia.caption"
