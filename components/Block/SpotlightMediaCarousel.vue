@@ -216,11 +216,18 @@ onKeyStroke("ArrowLeft", (e) => {
         }
       }
 
-      :deep(.media__caption) {
-        width: 0;
-        min-width: 100%;
-      }
     }
+  }
+
+  // Captions sit a step below caption-2 (micro's metrics, without its
+  // uppercase treatment) and cap at 60ch for legibility. width: 0 +
+  // min-width keeps a long caption from widening a portrait slide.
+  :deep(.media__caption) {
+    width: 0;
+    min-width: min(100%, 60ch);
+    font-size: 11px;
+    line-height: 14px;
+    @include fluidScale(11px, 14px, $ultrawide);
   }
 }
 </style>
