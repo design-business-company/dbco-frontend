@@ -358,21 +358,22 @@ onBeforeUnmount(() => {
     bottom: 0;
     left: 0;
     // Fixed px throughout (no spacing tokens, which turn into vw on
-    // ultrawide): a 44px tap target around a 24px tile with a 10px icon.
+    // ultrawide): a 44px tap target with an 18px tile and 10px icon tucked
+    // 8px in from the video's bottom-left corner.
     width: 44px;
     height: 44px;
-    padding: 0;
+    padding: 8px;
     display: grid;
-    place-items: center;
+    place-items: end start;
     cursor: pointer;
     will-change: opacity;
     transition: opacity var(--transition-fast);
 
     .content {
-      width: 24px;
-      height: 24px;
+      width: 18px;
+      height: 18px;
       background-color: var(--background-primary);
-      border-radius: 4px;
+      border-radius: 3px;
       transition: background-color var(--transition-fast);
       display: flex;
       align-items: center;
