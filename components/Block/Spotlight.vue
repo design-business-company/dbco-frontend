@@ -303,9 +303,18 @@ onUnmounted(() => {
     flex-direction: column;
     row-gap: var(--tiny);
 
+    // breathing room before the description while the row is 3/3/3/3
+    @include laptop {
+      padding-right: var(--smaller);
+    }
+
+    @include desktop {
+      padding-right: 0;
+    }
+
     [class^="text-"] {
       max-width: 30ch;
-      text-wrap: balance;
+      text-wrap: pretty;
     }
 
     p {
