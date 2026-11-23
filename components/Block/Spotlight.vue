@@ -17,6 +17,7 @@
         <Column
           startMobile="1"
           spanMobile="12"
+          spanTablet="6"
           spanLaptop="3"
           spanDesktop="5"
           class="spotlight__heading"
@@ -46,11 +47,15 @@
           </Observer>
         </Column>
 
-        <!-- laptop (1024–1349): title 3 cols, description 3 + 3, credits 3.
+        <!-- tablet (600–1023): title + tags in the left 6 cols; description
+               and credits stacked as one column in the right 6.
+             laptop (1024–1349): title 3 cols, description 3 + 3, credits 3.
              desktop and up: title 5, one empty, then 2 + 2 + 2. -->
         <Column
           spanMobile="12"
           startMobile="1"
+          spanTablet="6"
+          startTablet="7"
           spanLaptop="9"
           startLaptop="4"
           spanDesktop="6"
@@ -356,15 +361,13 @@ onUnmounted(() => {
     flex-direction: column;
     row-gap: var(--smallest);
 
-    @include tablet {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    // The 2-column measure is too narrow to read at this width, so the two
-    // title, both description columns and credits each get 3 columns.
-    // Mirrors the 9 page-grid columns this block spans, so they line up.
+    // Below laptop the paragraphs and credits stay stacked in one column.
+    // From laptop they sit side by side: title, both description columns and
+    // credits each get 3 page-grid columns (a 2-column measure is too narrow
+    // to read at this width). The 9 tracks mirror the page grid this block
+    // spans, so they line up.
     @include laptop {
+      display: grid;
       grid-template-columns: repeat(9, 1fr);
       column-gap: var(--grid-gap);
     }
@@ -380,15 +383,11 @@ onUnmounted(() => {
     flex-direction: column;
     row-gap: var(--tiny);
 
-    @include tablet {
+    @include laptop {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-column: auto / span 2;
-      column-gap: var(--grid-gap);
-    }
-
-    @include laptop {
       grid-column: auto / span 6;
+      column-gap: var(--grid-gap);
     }
 
     @include desktop {
