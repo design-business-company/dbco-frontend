@@ -156,8 +156,6 @@ const autoScrollInstance = AutoScroll({
   stopOnMouseEnter: true,
 });
 
-const autoScrollControl = useAutoScrollControl(() => autoScrollInstance);
-
 const [emblaRef, emblaApi] = emblaCarouselVue(
   {
     loop: true,
@@ -168,6 +166,11 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
     inViewThreshold: 0.01,
   },
   [autoScrollInstance]
+);
+
+const autoScrollControl = useAutoScrollControl(
+  () => autoScrollInstance,
+  emblaApi
 );
 
 const componentHasFadedIntoView = ref(false);

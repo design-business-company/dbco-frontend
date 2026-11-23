@@ -8,7 +8,7 @@
     >
       <span class="carousel-pause__inner" aria-hidden="true">
         <Icon :name="playing ? 'Pause' : 'Play'" />
-        <span class="carousel-pause__label text-micro"
+        <span class="carousel-pause__label"
           >{{ verb }} carousel</span
         >
       </span>
@@ -114,9 +114,14 @@ onBeforeUnmount(() => clearTimeout(typeTimer));
     gap: 6px;
   }
 
+  // Micro text metrics, set here rather than via .text-micro so the label
+  // stays 11px on ultrawide instead of scaling with the viewport.
   &__label {
-    display: inline;
-    max-width: none;
+    font-size: 11px;
+    line-height: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    word-spacing: 0.01em;
     white-space: nowrap;
   }
 

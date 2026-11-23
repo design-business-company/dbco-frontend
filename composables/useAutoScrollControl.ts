@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, watch, type Ref } from "vue";
 import { useDeviceStore } from "~/stores/device";
 
 /**
@@ -12,8 +12,16 @@ import { useDeviceStore } from "~/stores/device";
  *   explicitly via the pause/play button.
  * - An explicit pause survives the carousel leaving/re-entering the viewport.
  * - `playing` tracks user-facing intent, not transient hover/focus stops.
+ * - Pass `emblaApi` so the plugin's own resumes can be vetoed: with
+ *   `stopOnInteraction: false` it restarts itself after a drag settles and
+ *   on mouseleave, with no knowledge of a user pause. While `playing` is
+ *   false those restarts are cancelled, so a paused carousel that is dragged
+ *   and thrown glides to a stop and stays paused.
  */
-export function useAutoScrollControl(getInstance: () => any) {
+export function useAutoScrollControl(
+  getInstance: () => any,
+  emblaApi?: Ref<any>
+) {
   const deviceStore = useDeviceStore();
 
   const playing = ref(false);
@@ -26,8 +34,10 @@ export function useAutoScrollControl(getInstance: () => any) {
     if (userStopped.value) return;
     if (deviceStore.userMotionReduced && !userStarted.value) return;
 
-    if (!instance.isPlaying()) instance.play();
+    // Set before instance.play(): the veto below reads it synchronously
+    // from the plugin's autoScroll:play event.
     playing.value = true;
+    if (!instance.isPlaying()) instance.play();
   };
 
   const stop = () => {
@@ -49,6 +59,28 @@ export function useAutoScrollControl(getInstance: () => any) {
       play();
     }
   };
+
+  // The plugin emits autoScroll:play before it marks itself active, so the
+  // stop has to wait a microtask (it still lands before the plugin's
+  // start timer fires).
+  const vetoUnwantedPlay = () => {
+    if (playing.value) return;
+    queueMicrotask(() => {
+      if (!playing.value) getInstance()?.stop();
+    });
+  };
+
+  if (emblaApi) {
+    watch(
+      emblaApi,
+      (api, _prev, onCleanup) => {
+        if (!api) return;
+        api.on("autoScroll:play", vetoUnwantedPlay);
+        onCleanup(() => api.off("autoScroll:play", vetoUnwantedPlay));
+      },
+      { immediate: true }
+    );
+  }
 
   return { playing, play, stop, toggle };
 }

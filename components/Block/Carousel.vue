@@ -94,8 +94,6 @@ const emblaPlugins = computed(() => {
   return [];
 });
 
-const autoScrollControl = useAutoScrollControl(() => emblaPlugins.value[0]);
-
 const [emblaRef, emblaApi] = emblaCarouselVue(
   {
     loop: true,
@@ -115,6 +113,11 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
     dragThreshold: 50,
   },
   emblaPlugins.value
+);
+
+const autoScrollControl = useAutoScrollControl(
+  () => emblaPlugins.value[0],
+  emblaApi
 );
 
 const route = useRoute();
