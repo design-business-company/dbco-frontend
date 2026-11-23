@@ -17,8 +17,37 @@
 const switchers = new Set();
 let themeApi = null;
 
-const resolveTheme = () => {
+/*
+ * The theme fade repaints the whole viewport on every frame for its full
+ * duration (--transition-time, 800ms), which is the largest single cost when
+ * scrolling the homepage quickly. Past this speed the next theme arrives
+ * before the fade could finish anyway, so the change is made with a short
+ * fade instead (html.is-theme-fast, see assets/styles/reset.scss).
+ */
+const FAST_SCROLL_VELOCITY = 1500; // px per second
+let fastTimer = null;
+
+const setFastFade = (trigger) => {
+  const velocity = Math.abs(trigger?.getVelocity?.() ?? 0);
+  const root = document.documentElement;
+
+  clearTimeout(fastTimer);
+
+  if (velocity < FAST_SCROLL_VELOCITY) {
+    root.classList.remove("is-theme-fast");
+    return;
+  }
+
+  root.classList.add("is-theme-fast");
+  // long enough for the short fade to finish, then hand back the normal
+  // timing so hovers etc. aren't left on the fast one
+  fastTimer = setTimeout(() => root.classList.remove("is-theme-fast"), 250);
+};
+
+const resolveTheme = (trigger) => {
   if (!themeApi) return;
+
+  setFastFade(trigger);
 
   let winner = null;
   switchers.forEach((entry) => {

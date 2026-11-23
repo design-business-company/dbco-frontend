@@ -178,6 +178,13 @@ html {
   }
 }
 
+// Set briefly by Block/ThemeSwitcher.vue when the theme changes during a fast
+// scroll: every colour transition that uses --transition runs short, so the
+// page isn't repainting a long fade it would never finish.
+html.is-theme-fast {
+  --transition-time: 120ms;
+}
+
 a {
   color: inherit;
 }
