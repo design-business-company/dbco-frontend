@@ -318,9 +318,10 @@ onUnmounted(() => {
       max-width: 30ch;
       text-wrap: pretty;
 
-      // Phones: the title takes the full column instead of the 30ch cap,
-      // and steps up one size (body-1's mobile metrics).
-      @media (max-width: #{$tablet - 1px}) {
+      // Below laptop the heading has the full row to itself, so the title
+      // runs the full width instead of stopping at 30ch (one line whenever
+      // it fits), and steps up one size (body-1's mobile metrics).
+      @media (max-width: #{$laptop - 1px}) {
         max-width: none;
         font-size: 19px;
         line-height: 24px;
