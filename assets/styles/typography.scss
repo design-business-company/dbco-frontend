@@ -1,39 +1,48 @@
 @use "~/assets/styles/mixins";
 
 /*
- * Optical weight compensation.
+ * Optical compensation for fluid type.
  *
- * Above $ultrawide the type scales with the viewport, and the same weight
- * reads slightly bolder the larger it is set. To keep the text colour even,
- * caption and body sizes shed a little weight as they grow:
+ * Above $ultrawide the type scales with the viewport. Set larger, the same
+ * weight reads slightly bolder and positive tracking stops being needed, so
+ * both are eased off in step with the growth:
  *
- *   wght = base − drop,  drop = $max-drop × (viewport ÷ $ultrawide − 1)
+ *   --fluid-progress = viewport ÷ $ultrawide − 1, held between 0 and 1
  *
- * capped at $max-drop, which is reached when type is twice its base size
- * (twice the $ultrawide width). The base is --wght (500 unless a parent sets another),
- * so heavier text is compensated by the same amount.
+ * i.e. 0 up to $ultrawide and 1 once type is twice its base size.
  *
- * tan(atan2(a, b)) is how CSS divides two lengths into a plain number.
- * Browsers that can't compute it ignore the rule and keep the inherited weight.
+ *   weight   = --wght − $fluid-weight-max-drop × progress
+ *   tracking = base tracking × (1 − progress)
+ *
+ * --wght is 500 unless a parent sets another, so heavier text loses the same
+ * amount. Only positive tracking is eased; negative tracking is left alone.
+ *
+ * tan(atan2(a, b)) is how CSS divides two lengths into a plain number. Where
+ * that isn't supported, progress stays 0 and nothing changes.
  */
 $fluid-weight-max-drop: 40;
 
 :root {
-  --wght-fluid-drop: 0;
+  --fluid-progress: 0;
 
-  @include ultrawide {
-    --wght-fluid-drop: clamp(
-      0,
-      #{$fluid-weight-max-drop} * (tan(atan2(100vw, #{$ultrawide})) - 1),
-      #{$fluid-weight-max-drop}
-    );
+  @supports (line-height: tan(atan2(1px, 1px))) {
+    @include ultrawide {
+      --fluid-progress: clamp(0, tan(atan2(100vw, #{$ultrawide})) - 1, 1);
+    }
   }
 }
 
 @mixin fluidWeight {
   @include ultrawide {
     font-variation-settings: "wght"
-      calc(var(--wght, 500) - var(--wght-fluid-drop));
+      calc(var(--wght, 500) - #{$fluid-weight-max-drop} * var(--fluid-progress));
+  }
+}
+
+// $tracking: the positive letter-spacing the style has at $ultrawide.
+@mixin fluidTracking($tracking) {
+  @include ultrawide {
+    letter-spacing: calc(#{$tracking} * (1 - var(--fluid-progress)));
   }
 }
 
@@ -46,6 +55,7 @@ $fluid-weight-max-drop: 40;
   word-spacing: 0.01em;
   max-width: 50ch;
   @include fluidScale(11px, 14px, $ultrawide);
+  @include fluidTracking(0.04em);
 }
 
 .text-tag {
@@ -55,6 +65,7 @@ $fluid-weight-max-drop: 40;
   line-height: 100%;
   text-transform: uppercase;
   @include fluidScale(8px, 8px, $ultrawide);
+  @include fluidTracking(0.06em);
 }
 
 .text-caption-2 {
@@ -67,6 +78,7 @@ $fluid-weight-max-drop: 40;
   // @include fluidScale(13px, 16px, $ultrawide);
   @include fluidScale(13px, 16px, $ultrawide);
   @include fluidWeight;
+  @include fluidTracking(0.0125em);
 }
 
 .text-caption-1 {
@@ -84,6 +96,7 @@ $fluid-weight-max-drop: 40;
 
   @include fluidScale(16px, 20px, $ultrawide);
   @include fluidWeight;
+  @include fluidTracking(0.01em);
 }
 
 .text-body-2,
