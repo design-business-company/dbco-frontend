@@ -1,6 +1,11 @@
 <template>
   <Grid class="clients grid--full">
     <Column>
+      <!-- Outside the Observer so its enter/exit fade doesn't dim the control -->
+      <CarouselPauseButton
+        :playing="autoScrollControl.playing.value"
+        @toggle="autoScrollControl.toggle"
+      />
       <Observer :onEnter="onEnter" :onLeave="onExit">
         <div
           class="clients__container"
@@ -9,7 +14,6 @@
           role="region"
           aria-roledescription="carousel"
           aria-label="Client logos — use left and right arrow keys to scroll"
-          data-carousel
           @focus="handleFocus"
           @blur="handleBlur"
         >
@@ -28,10 +32,6 @@
               </figure>
             </div>
           </div>
-          <CarouselPauseButton
-            :playing="autoScrollControl.playing.value"
-            @toggle="autoScrollControl.toggle"
-          />
         </div>
       </Observer>
     </Column>
@@ -40,7 +40,6 @@
 
 <style lang="scss" scoped>
 .clients {
-  cursor: grab;
   margin-top: var(--bigger);
   margin-bottom: var(--bigger);
 
@@ -56,17 +55,18 @@
     }
   }
 
-  &:active {
-    cursor: grabbing;
-  }
-
   &__container {
+    cursor: grab;
     width: 100%;
     overflow: hidden;
     padding-inline: var(--grid-margin);
     outline: none;
     user-select: none;
     position: relative;
+
+    &:active {
+      cursor: grabbing;
+    }
 
     &:focus-visible {
       outline: solid;
@@ -154,9 +154,10 @@ const autoScrollInstance = AutoScroll({
   playOnInit: false,
   stopOnInteraction: false,
   stopOnMouseEnter: true,
+  // See SpotlightMediaCarousel.vue (embla-carousel #1263). The
+  // keyboard-focus pause is handled in handleFocus/handleBlur.
+  stopOnFocusIn: false,
 });
-
-const autoScrollControl = useAutoScrollControl(() => autoScrollInstance);
 
 const [emblaRef, emblaApi] = emblaCarouselVue(
   {
@@ -170,6 +171,11 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
   [autoScrollInstance]
 );
 
+const autoScrollControl = useAutoScrollControl(
+  () => autoScrollInstance,
+  emblaApi
+);
+
 const componentHasFadedIntoView = ref(false);
 
 const onEnter = (node) => {
@@ -179,7 +185,7 @@ const onEnter = (node) => {
   if (deviceStore.userMotionReduced) {
     gsap.set(node, { opacity: 1 });
     componentHasFadedIntoView.value = true;
-    autoScrollControl.play(); // no-op unless the user opted in via the button
+    autoScrollControl.setInView(true); // no-op unless the user opted in via the button
     return;
   }
 
@@ -193,9 +199,7 @@ const onEnter = (node) => {
     }
   );
 
-  if (emblaApi.value) {
-    autoScrollControl.play(); // Start autoscrolling
-  }
+  autoScrollControl.setInView(true); // Start autoscrolling
 
   const els = emblaRef.value?.querySelectorAll(".clients__slide");
   if (!els?.length) return;
@@ -225,17 +229,21 @@ const onExit = (node) => {
     });
   }
 
-  autoScrollControl.stop(); // Stop autoscrolling
+  autoScrollControl.setInView(false); // Stop autoscrolling
 };
 
 const isFocused = ref(false); // Track if this carousel is focused
 
-const handleFocus = () => {
+// Auto-scroll is held for keyboard focus only (WCAG 2.2.2); a mouse press
+// also focuses the container and must not hold it.
+const handleFocus = (event) => {
   isFocused.value = true;
+  if (event.target.matches(":focus-visible")) autoScrollControl.hold();
 };
 
 const handleBlur = () => {
   isFocused.value = false;
+  autoScrollControl.release();
 };
 
 onKeyStroke("ArrowRight", (e) => {

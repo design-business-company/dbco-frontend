@@ -357,16 +357,23 @@ onBeforeUnmount(() => {
     z-index: 9;
     bottom: 0;
     left: 0;
-    padding: var(--tinier);
+    // Fixed px throughout (no spacing tokens, which turn into vw on
+    // ultrawide): a 44px tap target with an 18px tile and 10px icon tucked
+    // 8px in from the video's bottom-left corner.
+    width: 44px;
+    height: 44px;
+    padding: 8px;
+    display: grid;
+    place-items: end start;
     cursor: pointer;
     will-change: opacity;
     transition: opacity var(--transition-fast);
 
     .content {
-      width: 32px;
-      height: 32px;
+      width: 18px;
+      height: 18px;
       background-color: var(--background-primary);
-      border-radius: var(--border-radius);
+      border-radius: 3px;
       transition: background-color var(--transition-fast);
       display: flex;
       align-items: center;
@@ -377,9 +384,24 @@ onBeforeUnmount(() => {
       background-color: var(--background-secondary);
     }
 
+    // Two-tone ring (theme foreground, separated from the tile by a band
+    // of theme background) so it reads over any video frame in any theme.
+    // Keep this after the pointer/hover opacity rules above: it wins on
+    // source order.
+    &:focus-visible {
+      opacity: 1;
+      outline: none;
+
+      .content {
+        box-shadow: 0 0 0 2px var(--background-primary);
+        outline: 2px solid var(--foreground-primary);
+        outline-offset: 2px;
+      }
+    }
+
     svg {
       display: block;
-      width: var(--smallest);
+      width: 10px;
       height: auto;
       fill: var(--foreground-primary);
     }

@@ -1,5 +1,10 @@
 <template>
   <Observer :onEnter="handleEnter" :onLeave="handleExit">
+    <CarouselPauseButton
+      v-if="items?.length && settings?.autoplay"
+      :playing="autoScrollControl.playing.value"
+      @toggle="autoScrollControl.toggle"
+    />
     <div
       v-if="items?.length"
       class="spotlight-media-carousel"
@@ -14,7 +19,6 @@
       role="region"
       aria-roledescription="carousel"
       :aria-label="`${title} media carousel — use left and right arrow keys to scroll`"
-      data-carousel
       @focus="handleFocus"
       @blur="handleBlur"
     >
@@ -32,11 +36,6 @@
           :sizes="calculateSlideSizes(item.aspectRatio)"
         />
       </div>
-      <CarouselPauseButton
-        v-if="settings?.autoplay"
-        :playing="autoScrollControl.playing.value"
-        @toggle="autoScrollControl.toggle"
-      />
     </div>
   </Observer>
 </template>
@@ -64,14 +63,17 @@ const props = defineProps({
 
 const isFocused = ref(false); // Track if this carousel is focused
 
-const handleFocus = () => {
+// Auto-scroll is held for keyboard focus only (WCAG 2.2.2, mirroring the
+// mouse-hover pause). A mouse press also focuses the root, but that must
+// not hold it: the carousel should carry on after a click or drag.
+const handleFocus = (event) => {
   isFocused.value = true;
-  autoScrollControl.stop();
+  if (event.target.matches(":focus-visible")) autoScrollControl.hold();
 };
 
 const handleBlur = () => {
   isFocused.value = false;
-  autoScrollControl.play();
+  autoScrollControl.release();
 };
 
 const emblaPlugins = computed(() => {
@@ -102,8 +104,6 @@ const emblaPlugins = computed(() => {
   return [];
 });
 
-const autoScrollControl = useAutoScrollControl(() => emblaPlugins.value[0]);
-
 const [emblaRef, emblaApi] = emblaCarouselVue(
   {
     loop: true,
@@ -119,11 +119,16 @@ const [emblaRef, emblaApi] = emblaCarouselVue(
   emblaPlugins.value
 );
 
+const autoScrollControl = useAutoScrollControl(
+  () => emblaPlugins.value[0],
+  emblaApi
+);
+
 const handleEnter = () => {
-  autoScrollControl.play();
+  autoScrollControl.setInView(true);
 };
 const handleExit = () => {
-  autoScrollControl.stop();
+  autoScrollControl.setInView(false);
 };
 
 const { trackInteract } = useCarouselTracking(emblaApi, () => props.title);
