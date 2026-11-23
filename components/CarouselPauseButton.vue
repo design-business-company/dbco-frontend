@@ -1,19 +1,14 @@
 <template>
-  <button
-    type="button"
-    class="carousel-pause"
-    :aria-label="
-      playing ? 'Pause automatic scrolling' : 'Start automatic scrolling'
-    "
-    @click.stop="emit('toggle')"
-  >
-    <span class="content">
-      <transition name="fade" mode="out-in">
-        <Icon v-if="playing" name="Pause" />
-        <Icon v-else name="Play" />
-      </transition>
-    </span>
-  </button>
+  <div class="carousel-pause-row">
+    <button type="button" class="carousel-pause" @click.stop="emit('toggle')">
+      <span class="carousel-pause__inner">
+        <Icon :name="playing ? 'Pause' : 'Play'" aria-hidden="true" />
+        <span class="carousel-pause__label text-micro">
+          {{ playing ? "Pause carousel" : "Play carousel" }}
+        </span>
+      </span>
+    </button>
+  </div>
 </template>
 
 <script setup>
@@ -28,71 +23,62 @@ const emit = defineEmits(["toggle"]);
 </script>
 
 <style lang="scss" scoped>
-// Pause affordance for auto-scrolling carousels (WCAG 2.2.2). Mirrors
-// Vid.vue's .vid-button so pause controls look the same site-wide:
-// bottom-left 32px tile, hidden on fine pointers until the carousel is
-// hovered or the button is focused, always visible on touch.
+// Pause affordance for auto-scrolling carousels (WCAG 2.2.2). Sits in its
+// own row above the carousel as a labelled text button, always visible, so
+// it can't be mistaken for the play/pause tile on videos inside the slides
+// (Vid.vue's .vid-button). The visible label is the accessible name.
+// The row sits on the page margin, in line with the content above it (the
+// slides themselves scroll, so there is no fixed slide edge to align to).
+.carousel-pause-row {
+  display: flex;
+  padding-inline: var(--grid-margin);
+}
+
 .carousel-pause {
   appearance: none;
   background: 0;
   border: 0;
-  position: absolute;
-  z-index: 9;
-  bottom: 0;
-  left: 0;
-  padding: var(--tinier);
+  padding: 0;
+  // 44px tap target with no visible box
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--foreground-secondary);
   cursor: pointer;
-  will-change: opacity;
-  transition: opacity var(--transition-fast);
+  transition: color var(--transition-fast);
 
-  .content {
-    width: 32px;
-    height: 32px;
-    background-color: var(--background-primary);
-    border-radius: var(--border-radius);
-    transition: background-color var(--transition-fast);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &:hover .content {
-    background-color: var(--background-secondary);
+  &:hover {
+    color: var(--foreground-primary);
   }
 
   &:focus-visible {
-    opacity: 1;
+    outline: none;
+    color: var(--foreground-primary);
 
-    .content {
+    .carousel-pause__inner {
       outline: solid;
+      outline-offset: 4px;
     }
+  }
+
+  &__inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__label {
+    display: inline;
+    max-width: none;
+    white-space: nowrap;
   }
 
   svg {
     display: block;
-    width: var(--smallest);
-    height: auto;
-    fill: var(--foreground-primary);
+    flex: none;
+    width: 10px;
+    height: 10px;
+    fill: currentColor;
   }
-}
-
-@media (pointer: fine) {
-  .carousel-pause {
-    opacity: 0;
-  }
-
-  :global([data-carousel]:hover .carousel-pause) {
-    opacity: 1;
-  }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity var(--transition-fast-time) var(--transition-function);
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>

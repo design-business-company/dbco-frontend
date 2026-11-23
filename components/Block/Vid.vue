@@ -357,16 +357,22 @@ onBeforeUnmount(() => {
     z-index: 9;
     bottom: 0;
     left: 0;
-    padding: var(--tinier);
+    // Fixed px throughout (no spacing tokens, which turn into vw on
+    // ultrawide): a 44px tap target around a 24px tile with a 10px icon.
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    display: grid;
+    place-items: center;
     cursor: pointer;
     will-change: opacity;
     transition: opacity var(--transition-fast);
 
     .content {
-      width: 32px;
-      height: 32px;
+      width: 24px;
+      height: 24px;
       background-color: var(--background-primary);
-      border-radius: var(--border-radius);
+      border-radius: 4px;
       transition: background-color var(--transition-fast);
       display: flex;
       align-items: center;
@@ -377,9 +383,18 @@ onBeforeUnmount(() => {
       background-color: var(--background-secondary);
     }
 
+    &:focus-visible {
+      opacity: 1;
+      outline: none;
+
+      .content {
+        outline: solid;
+      }
+    }
+
     svg {
       display: block;
-      width: var(--smallest);
+      width: 10px;
       height: auto;
       fill: var(--foreground-primary);
     }

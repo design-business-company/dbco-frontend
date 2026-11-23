@@ -1,5 +1,10 @@
 <template>
   <Observer :onEnter="handleEnter" :onLeave="handleExit">
+    <CarouselPauseButton
+      v-if="items?.length && settings?.autoplay"
+      :playing="autoScrollControl.playing.value"
+      @toggle="autoScrollControl.toggle"
+    />
     <div
       v-if="items?.length"
       class="spotlight-media-carousel"
@@ -32,11 +37,6 @@
           :sizes="calculateSlideSizes(item.aspectRatio)"
         />
       </div>
-      <CarouselPauseButton
-        v-if="settings?.autoplay"
-        :playing="autoScrollControl.playing.value"
-        @toggle="autoScrollControl.toggle"
-      />
     </div>
   </Observer>
 </template>

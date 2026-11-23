@@ -2,6 +2,10 @@
   <Grid class="clients grid--full">
     <Column>
       <Observer :onEnter="onEnter" :onLeave="onExit">
+        <CarouselPauseButton
+          :playing="autoScrollControl.playing.value"
+          @toggle="autoScrollControl.toggle"
+        />
         <div
           class="clients__container"
           ref="emblaRef"
@@ -28,10 +32,6 @@
               </figure>
             </div>
           </div>
-          <CarouselPauseButton
-            :playing="autoScrollControl.playing.value"
-            @toggle="autoScrollControl.toggle"
-          />
         </div>
       </Observer>
     </Column>
