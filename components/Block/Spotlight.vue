@@ -17,7 +17,8 @@
         <Column
           startMobile="1"
           spanMobile="12"
-          spanLaptop="5"
+          spanLaptop="3"
+          spanDesktop="5"
           class="spotlight__heading"
         >
           <Text element="div" size="body-2" ref="name">
@@ -45,7 +46,16 @@
           </Observer>
         </Column>
 
-        <Column spanMobile="12" spanLaptop="6" startMobile="1" startLaptop="7">
+        <!-- laptop (1024–1349): title 3 cols, description 3 + 3, credits 3.
+             desktop and up: title 5, one empty, then 2 + 2 + 2. -->
+        <Column
+          spanMobile="12"
+          startMobile="1"
+          spanLaptop="9"
+          startLaptop="4"
+          spanDesktop="6"
+          startDesktop="7"
+        >
           <Observer
             :onEnter="onEnter"
             :onLeave="onLeave"
@@ -293,8 +303,18 @@ onUnmounted(() => {
     flex-direction: column;
     row-gap: var(--tiny);
 
+    // breathing room before the description while the row is 3/3/3/3
+    @include laptop {
+      padding-right: var(--smaller);
+    }
+
+    @include desktop {
+      padding-right: 0;
+    }
+
     [class^="text-"] {
       max-width: 30ch;
+      text-wrap: pretty;
     }
 
     p {
@@ -328,6 +348,19 @@ onUnmounted(() => {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
     }
+
+    // The 2-column measure is too narrow to read at this width, so the two
+    // title, both description columns and credits each get 3 columns.
+    // Mirrors the 9 page-grid columns this block spans, so they line up.
+    @include laptop {
+      grid-template-columns: repeat(9, 1fr);
+      column-gap: var(--grid-gap);
+    }
+
+    @include desktop {
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 0;
+    }
   }
 
   &__description {
@@ -342,6 +375,14 @@ onUnmounted(() => {
       column-gap: var(--grid-gap);
     }
 
+    @include laptop {
+      grid-column: auto / span 6;
+    }
+
+    @include desktop {
+      grid-column: auto / span 2;
+    }
+
     & > p:only-child {
       grid-column-end: -1;
     }
@@ -353,6 +394,19 @@ onUnmounted(() => {
 
   &__credits {
     color: var(--foreground-secondary);
+
+    @include laptop {
+      grid-column: auto / span 3;
+    }
+
+    @include desktop {
+      grid-column: auto;
+    }
+  }
+
+  &__description,
+  &__credits {
+    text-wrap: pretty;
   }
 
   &__description > p,
