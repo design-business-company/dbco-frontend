@@ -3,6 +3,7 @@
     v-for="block in content"
     :class="['block', `block--${block._type}`]"
     :key="block._key"
+    :ref="trackBlock"
   >
     <Grid v-if="block._type === 'media'">
       <Space />
@@ -51,6 +52,11 @@
 </template>
 
 <script setup>
+import useNearViewport from "~/composables/useNearViewport";
+
+// flags blocks in/near the viewport so only those run the theme's text fade
+const trackBlock = useNearViewport();
+
 const props = defineProps({
   content: {
     type: Array,
