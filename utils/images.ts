@@ -4,7 +4,7 @@ export const DEVICE_SIZES = {
   tablet: 600,
   laptop: 1024,
   desktop: 1350,
-  ultrawide: 1660,
+  ultrawide: 1920,
 }
 
 export const widthTimesAspectRatio = (aspectRatio: string | number, width: number): number => {

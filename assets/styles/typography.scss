@@ -10,7 +10,7 @@
  *   wght = base − drop,  drop = $max-drop × (viewport ÷ $ultrawide − 1)
  *
  * capped at $max-drop, which is reached when type is twice its base size
- * (viewport 3320px). The base is --wght (500 unless a parent sets another),
+ * (twice the $ultrawide width). The base is --wght (500 unless a parent sets another),
  * so heavier text is compensated by the same amount.
  *
  * tan(atan2(a, b)) is how CSS divides two lengths into a plain number.
