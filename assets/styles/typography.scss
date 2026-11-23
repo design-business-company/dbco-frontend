@@ -1,5 +1,42 @@
 @use "~/assets/styles/mixins";
 
+/*
+ * Optical weight compensation.
+ *
+ * Above $ultrawide the type scales with the viewport, and the same weight
+ * reads slightly bolder the larger it is set. To keep the text colour even,
+ * caption and body sizes shed a little weight as they grow:
+ *
+ *   wght = base − drop,  drop = $max-drop × (viewport ÷ $ultrawide − 1)
+ *
+ * capped at $max-drop, which is reached when type is twice its base size
+ * (viewport 3320px). The base is --wght (500 unless a parent sets another),
+ * so heavier text is compensated by the same amount.
+ *
+ * tan(atan2(a, b)) is how CSS divides two lengths into a plain number.
+ * Browsers that can't compute it ignore the rule and keep the inherited weight.
+ */
+$fluid-weight-max-drop: 40;
+
+:root {
+  --wght-fluid-drop: 0;
+
+  @include ultrawide {
+    --wght-fluid-drop: clamp(
+      0,
+      #{$fluid-weight-max-drop} * (tan(atan2(100vw, #{$ultrawide})) - 1),
+      #{$fluid-weight-max-drop}
+    );
+  }
+}
+
+@mixin fluidWeight {
+  @include ultrawide {
+    font-variation-settings: "wght"
+      calc(var(--wght, 500) - var(--wght-fluid-drop));
+  }
+}
+
 .text-micro {
   display: block;
   font-size: 11px;
@@ -29,6 +66,7 @@
 
   // @include fluidScale(13px, 16px, $ultrawide);
   @include fluidScale(13px, 16px, $ultrawide);
+  @include fluidWeight;
 }
 
 .text-caption-1 {
@@ -45,6 +83,7 @@
   }
 
   @include fluidScale(16px, 20px, $ultrawide);
+  @include fluidWeight;
 }
 
 .text-body-2,
@@ -62,6 +101,7 @@
   }
 
   @include fluidScale(19px, 24px, $ultrawide);
+  @include fluidWeight;
 }
 
 .text-body-1 {
@@ -83,6 +123,7 @@
   }
 
   @include fluidScale(28px, 32px, $ultrawide);
+  @include fluidWeight;
   @include ultrawide() {
     letter-spacing: calc(-0.03em);
   }
