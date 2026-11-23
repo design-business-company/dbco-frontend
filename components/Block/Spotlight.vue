@@ -17,7 +17,7 @@
         <Column
           startMobile="1"
           spanMobile="12"
-          spanLaptop="4"
+          spanLaptop="3"
           spanDesktop="5"
           class="spotlight__heading"
         >
@@ -46,13 +46,13 @@
           </Observer>
         </Column>
 
-        <!-- laptop (1024–1349): title 4 cols, description 3 + 3, credits 2.
+        <!-- laptop (1024–1349): title 3 cols, description 3 + 3, credits 3.
              desktop and up: title 5, one empty, then 2 + 2 + 2. -->
         <Column
           spanMobile="12"
           startMobile="1"
-          spanLaptop="8"
-          startLaptop="5"
+          spanLaptop="9"
+          startLaptop="4"
           spanDesktop="6"
           startDesktop="7"
         >
@@ -305,6 +305,7 @@ onUnmounted(() => {
 
     [class^="text-"] {
       max-width: 30ch;
+      text-wrap: balance;
     }
 
     p {
@@ -340,10 +341,10 @@ onUnmounted(() => {
     }
 
     // The 2-column measure is too narrow to read at this width, so the two
-    // description columns get 3 each and credits keeps the remaining 2.
-    // Mirrors the 8 page-grid columns this block spans, so they line up.
+    // title, both description columns and credits each get 3 columns.
+    // Mirrors the 9 page-grid columns this block spans, so they line up.
     @include laptop {
-      grid-template-columns: repeat(8, 1fr);
+      grid-template-columns: repeat(9, 1fr);
       column-gap: var(--grid-gap);
     }
 
@@ -386,12 +387,17 @@ onUnmounted(() => {
     color: var(--foreground-secondary);
 
     @include laptop {
-      grid-column: auto / span 2;
+      grid-column: auto / span 3;
     }
 
     @include desktop {
       grid-column: auto;
     }
+  }
+
+  &__description,
+  &__credits {
+    text-wrap: pretty;
   }
 
   &__description > p,
