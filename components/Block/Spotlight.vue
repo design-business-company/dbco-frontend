@@ -315,6 +315,15 @@ onUnmounted(() => {
     [class^="text-"] {
       max-width: 30ch;
       text-wrap: pretty;
+
+      // Phones: the title takes the full column instead of the 30ch cap,
+      // and steps up one size (body-1's mobile metrics).
+      @media (max-width: #{$tablet - 1px}) {
+        max-width: none;
+        font-size: 19px;
+        line-height: 24px;
+        letter-spacing: -0.007em;
+      }
     }
 
     p {
