@@ -308,8 +308,9 @@ onUnmounted(() => {
     flex-direction: column;
     row-gap: var(--tiny);
 
-    // breathing room before the description while the row is 3/3/3/3
-    @include laptop {
+    // breathing room before the description wherever the two sit side by
+    // side with no empty column between them (600–1349)
+    @include tablet {
       padding-right: var(--smaller);
     }
 
