@@ -312,7 +312,9 @@ onUnmounted(() => {
       padding-right: 0;
     }
 
-    [class^="text-"] {
+    // Direct child only: the title's text block. The tags further down also
+    // contain a .text-* element and must not pick these rules up.
+    > [class^="text-"] {
       max-width: 30ch;
       text-wrap: pretty;
 
