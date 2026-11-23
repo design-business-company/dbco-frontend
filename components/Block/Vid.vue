@@ -219,7 +219,25 @@ const handleVideoError = (e) => {
   console.error("Error loading video: ", e);
 };
 
+// While the page is scrolling, a video has to stay in view for a moment
+// before it loads and plays. Starting (and immediately stopping) every video
+// that is flown past is a large part of the frame drops on fast scrolls.
+// With the page at rest — first load, or a carousel sliding a tile in — it
+// starts straight away as before.
+const ENTER_DWELL_MS = 200;
+let enterTimer = null;
+
 const handleEnter = () => {
+  clearTimeout(enterTimer);
+
+  if (deviceStore.isScrolling) {
+    enterTimer = setTimeout(enter, ENTER_DWELL_MS);
+  } else {
+    enter();
+  }
+};
+
+const enter = () => {
   isInView.value = true;
 
   if (isLoading.value) {
@@ -236,6 +254,7 @@ const handleEnter = () => {
 };
 
 const handleLeave = () => {
+  clearTimeout(enterTimer);
   isInView.value = false;
 
   if (!vid.value) {
@@ -277,6 +296,7 @@ const toggle = () => {
 };
 
 onBeforeUnmount(() => {
+  clearTimeout(enterTimer);
   vid.value?.removeEventListener("loadedmetadata", handleVideoLoaded);
   vid.value?.removeEventListener("playing", handleVideoPlaying);
   vid.value?.removeEventListener("transitionend", handleTransitionEnd);
