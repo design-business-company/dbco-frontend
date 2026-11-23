@@ -14,11 +14,20 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
+// Fixed metrics on purpose: the chip, its padding and its type stay the same
+// size on ultrawide instead of scaling with the viewport, matching the
+// "Pause carousel" label (CarouselPauseButton.vue).
 .tag {
-  padding: var(--tiniest) var(--tinier);
-  border-radius: var(--border-radius);
+  padding: 4px 8px;
+  border-radius: 4px;
   background-color: var(--background-tertiary);
   color: var(--foreground-secondary);
   transition: color var(--transition), background-color var(--transition);
+}
+
+.tag__text {
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 0.04em;
 }
 </style>
