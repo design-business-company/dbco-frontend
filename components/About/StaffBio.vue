@@ -44,6 +44,9 @@ const props = defineProps({
   margin-bottom: var(--grid-gap);
 
   header {
+    // --wght is the base the fluid weight compensation subtracts from
+    // (assets/styles/typography.scss), so the name stays bold when it scales
+    --wght: 650;
     font-variation-settings: "wght" 650;
   }
 

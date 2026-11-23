@@ -160,6 +160,8 @@ html {
   min-width: 320px;
   font-family: "DBC Metaphor", sans-serif;
   font-variation-settings: "wght" 500;
+  // inherited by all text: avoids orphans / short last lines
+  text-wrap: pretty;
   // this causes issues on route
   // scroll-behavior: smooth;
 

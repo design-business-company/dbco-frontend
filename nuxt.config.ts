@@ -133,7 +133,7 @@ export default defineNuxtConfig({
       tablet: 600,
       laptop: 1024,
       desktop: 1350,
-      ultrawide: 1660,
+      ultrawide: 1920,
     },
     fallbackBreakpoint: "tablet",
     defaultBreakpoints: {

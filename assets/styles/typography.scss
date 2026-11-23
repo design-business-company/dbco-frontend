@@ -1,5 +1,51 @@
 @use "~/assets/styles/mixins";
 
+/*
+ * Optical compensation for fluid type.
+ *
+ * Above $ultrawide the type scales with the viewport. Set larger, the same
+ * weight reads slightly bolder and positive tracking stops being needed, so
+ * both are eased off in step with the growth:
+ *
+ *   --fluid-progress = viewport ÷ $ultrawide − 1, held between 0 and 1
+ *
+ * i.e. 0 up to $ultrawide and 1 once type is twice its base size.
+ *
+ *   weight   = --wght − $fluid-weight-max-drop × progress
+ *   tracking = base tracking × (1 − progress)
+ *
+ * --wght is 500 unless a parent sets another, so heavier text loses the same
+ * amount. Only positive tracking is eased; negative tracking is left alone.
+ *
+ * tan(atan2(a, b)) is how CSS divides two lengths into a plain number. Where
+ * that isn't supported, progress stays 0 and nothing changes.
+ */
+$fluid-weight-max-drop: 40;
+
+:root {
+  --fluid-progress: 0;
+
+  @supports (line-height: tan(atan2(1px, 1px))) {
+    @include ultrawide {
+      --fluid-progress: clamp(0, tan(atan2(100vw, #{$ultrawide})) - 1, 1);
+    }
+  }
+}
+
+@mixin fluidWeight {
+  @include ultrawide {
+    font-variation-settings: "wght"
+      calc(var(--wght, 500) - #{$fluid-weight-max-drop} * var(--fluid-progress));
+  }
+}
+
+// $tracking: the positive letter-spacing the style has at $ultrawide.
+@mixin fluidTracking($tracking) {
+  @include ultrawide {
+    letter-spacing: calc(#{$tracking} * (1 - var(--fluid-progress)));
+  }
+}
+
 .text-micro {
   display: block;
   font-size: 11px;
@@ -9,6 +55,7 @@
   word-spacing: 0.01em;
   max-width: 50ch;
   @include fluidScale(11px, 14px, $ultrawide);
+  @include fluidTracking(0.04em);
 }
 
 .text-tag {
@@ -18,6 +65,7 @@
   line-height: 100%;
   text-transform: uppercase;
   @include fluidScale(8px, 8px, $ultrawide);
+  @include fluidTracking(0.06em);
 }
 
 .text-caption-2 {
@@ -29,6 +77,8 @@
 
   // @include fluidScale(13px, 16px, $ultrawide);
   @include fluidScale(13px, 16px, $ultrawide);
+  @include fluidWeight;
+  @include fluidTracking(0.0125em);
 }
 
 .text-caption-1 {
@@ -45,6 +95,8 @@
   }
 
   @include fluidScale(16px, 20px, $ultrawide);
+  @include fluidWeight;
+  @include fluidTracking(0.01em);
 }
 
 .text-body-2,
@@ -62,6 +114,7 @@
   }
 
   @include fluidScale(19px, 24px, $ultrawide);
+  @include fluidWeight;
 }
 
 .text-body-1 {
@@ -83,6 +136,7 @@
   }
 
   @include fluidScale(28px, 32px, $ultrawide);
+  @include fluidWeight;
   @include ultrawide() {
     letter-spacing: calc(-0.03em);
   }

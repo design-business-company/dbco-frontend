@@ -334,7 +334,7 @@ onUnmounted(() => {
   &__tags {
     display: flex;
     align-items: center;
-    gap: var(--tinier);
+    gap: 8px; // fixed, like the tags themselves (Block/Tag.vue)
     flex-wrap: wrap;
     margin-bottom: var(--smaller);
   }
