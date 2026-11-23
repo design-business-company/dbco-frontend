@@ -20,6 +20,9 @@ import { useDeviceStore } from "~/stores/device";
  *   carousel that is dragged and thrown glides to a stop and stays paused.
  *   Use `playOnInit: false` and `stopOnInteraction: false` on the plugin so
  *   this stays the only thing deciding.
+ * - A restart that arrives mid-drag or mid-throw (the mouse leaving while
+ *   the carousel is still gliding) is deferred until the glide finishes,
+ *   instead of cutting it off.
  */
 export function useAutoScrollControl(
   getInstance: () => any,
@@ -81,13 +84,54 @@ export function useAutoScrollControl(
     sync();
   };
 
-  // The plugin emits autoScroll:play before it marks itself active, so the
-  // stop has to wait a microtask (it still lands before the plugin's
-  // start timer fires).
+  // True while the user is dragging or a thrown carousel is still gliding
+  // to its landing point. Only meaningful while the plugin is stopped (its
+  // own scroll body keeps target and location equal).
+  // The glide counts as finished a few px short of its target: by then it
+  // has slowed below auto-scroll speed, and waiting for a full stop adds a
+  // visible dead beat before the hand-off.
+  const GLIDE_DONE_PX = 3;
+
+  const midThrow = () => {
+    const engine = emblaApi.value?.internalEngine();
+    if (!engine) return false;
+    return (
+      engine.dragHandler.pointerDown() ||
+      Math.abs(engine.target.get() - engine.location.get()) > GLIDE_DONE_PX
+    );
+  };
+
+  // The plugin pauses on hover by itself and restarts on mouseleave, so a
+  // deferred restart must not fire under the pointer. Touch has no hover.
+  const hovered = () =>
+    window.matchMedia("(hover: hover)").matches &&
+    !!emblaApi.value?.rootNode().matches(":hover");
+
+  let deferred = false;
+  let deferTimer: ReturnType<typeof setTimeout> | undefined;
+
+  const resumeAfterThrow = () => {
+    clearTimeout(deferTimer);
+    deferTimer = setTimeout(() => {
+      if (midThrow()) return resumeAfterThrow();
+      deferred = false;
+      if (!hovered()) sync();
+    }, 100);
+  };
+
+  // Every start goes through here, the plugin's own and ours. The plugin
+  // emits autoScroll:play before it marks itself active, so the stop has to
+  // wait a microtask (it still lands before the plugin's start timer fires).
   const vetoUnwantedPlay = () => {
-    if (shouldRun()) return;
+    if (shouldRun() && !midThrow()) return;
+
+    if (shouldRun()) {
+      deferred = true;
+      resumeAfterThrow();
+    }
+
     queueMicrotask(() => {
-      if (!shouldRun()) getInstance()?.stop();
+      if (!shouldRun() || deferred) getInstance()?.stop();
     });
   };
 
@@ -101,6 +145,7 @@ export function useAutoScrollControl(
       // playOnInit: false) leaves it stopped.
       api.on("reInit", sync);
       onCleanup(() => {
+        clearTimeout(deferTimer);
         api.off("autoScroll:play", vetoUnwantedPlay);
         api.off("reInit", sync);
       });
