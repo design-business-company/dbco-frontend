@@ -169,20 +169,19 @@ html {
   color: var(--foreground-primary);
   // this code gets added after Scrim.vue animates
   // this is done to solve a race condition where the theme updates a few moments after client renders, causing a flicker
-  transition: background-color var(--transition), color var(--transition);
+  // Text colour is inherited by the whole document, so every frame of a
+  // smooth colour fade restyles and repaints text across the entire page —
+  // measured as the single largest cost when scrolling the homepage quickly.
+  // Stepping it (8 updates over the same duration) removes that cost; the
+  // background fade is cheap and stays continuous.
+  transition: background-color var(--transition),
+    color var(--transition-time) steps(8, end);
   will-change: background-color, color;
   // transition-delay: var(--transition-page-delay);
 
   ::selection {
     background-color: var(--background-tertiary);
   }
-}
-
-// Set briefly by Block/ThemeSwitcher.vue when the theme changes during a fast
-// scroll: every colour transition that uses --transition runs short, so the
-// page isn't repainting a long fade it would never finish.
-html.is-theme-fast {
-  --transition-time: 120ms;
 }
 
 a {
