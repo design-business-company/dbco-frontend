@@ -154,6 +154,9 @@ const autoScrollInstance = AutoScroll({
   playOnInit: false,
   stopOnInteraction: false,
   stopOnMouseEnter: true,
+  // See SpotlightMediaCarousel.vue (embla-carousel #1263). The
+  // keyboard-focus pause is handled in handleFocus/handleBlur.
+  stopOnFocusIn: false,
 });
 
 const [emblaRef, emblaApi] = emblaCarouselVue(
@@ -231,12 +234,16 @@ const onExit = (node) => {
 
 const isFocused = ref(false); // Track if this carousel is focused
 
-const handleFocus = () => {
+// Auto-scroll is held for keyboard focus only (WCAG 2.2.2); a mouse press
+// also focuses the container and must not hold it.
+const handleFocus = (event) => {
   isFocused.value = true;
+  if (event.target.matches(":focus-visible")) autoScrollControl.hold();
 };
 
 const handleBlur = () => {
   isFocused.value = false;
+  autoScrollControl.release();
 };
 
 onKeyStroke("ArrowRight", (e) => {

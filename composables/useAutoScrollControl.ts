@@ -56,7 +56,9 @@ export function useAutoScrollControl(
     if (!instance || !emblaApi.value) return;
 
     if (shouldRun()) {
-      if (!instance.isPlaying()) instance.play();
+      // Never start under the pointer: the plugin's hover pause is in
+      // force (and it would ignore a drag); its mouseleave restarts it.
+      if (!instance.isPlaying() && !hovered()) instance.play();
     } else if (instance.isPlaying()) {
       instance.stop();
     }
@@ -115,7 +117,7 @@ export function useAutoScrollControl(
     deferTimer = setTimeout(() => {
       if (midThrow()) return resumeAfterThrow();
       deferred = false;
-      if (!hovered()) sync();
+      sync();
     }, 100);
   };
 
