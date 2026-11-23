@@ -4,7 +4,7 @@
       type="button"
       class="carousel-pause"
       :aria-label="`${verbFor(playing)} carousel`"
-      @click.stop="emit('toggle')"
+      @click.stop="onClick"
     >
       <span class="carousel-pause__inner" aria-hidden="true">
         <Icon :name="playing ? 'Pause' : 'Play'" />
@@ -32,12 +32,15 @@ const deviceStore = useDeviceStore();
 
 const verbFor = (playing) => (playing ? "Pause" : "Play");
 
-// The verb is retyped when the state changes: backspace to the shared
-// prefix, then type the new word. The button's aria-label always carries
-// the settled label, so assistive tech never reads a half-typed word.
+// When the user clicks, the verb is retyped: backspace to the shared
+// prefix, then type the new word. Any other state change (reduced-motion
+// resolving on mount) swaps it silently. The button's aria-label always
+// carries the settled label, so assistive tech never reads a half-typed
+// word.
 const TYPE_STEP_MS = 45;
 const verb = ref(verbFor(props.playing));
 let typeTimer;
+let clicked = false;
 
 const typeStep = (target) => {
   const current = verb.value;
@@ -49,13 +52,21 @@ const typeStep = (target) => {
   typeTimer = setTimeout(() => typeStep(target), TYPE_STEP_MS);
 };
 
+const onClick = () => {
+  clicked = true;
+  emit("toggle");
+  // The prop updates on the next tick; drop the flag after that so a later
+  // non-click change can't inherit it.
+  nextTick(() => nextTick(() => (clicked = false)));
+};
+
 watch(
   () => props.playing,
   (playing) => {
     clearTimeout(typeTimer);
     const target = verbFor(playing);
 
-    if (deviceStore.userMotionReduced) {
+    if (!clicked || deviceStore.userMotionReduced) {
       verb.value = target;
       return;
     }

@@ -384,12 +384,18 @@ onBeforeUnmount(() => {
       background-color: var(--background-secondary);
     }
 
+    // Two-tone ring (theme foreground, separated from the tile by a band
+    // of theme background) so it reads over any video frame in any theme.
+    // Keep this after the pointer/hover opacity rules above: it wins on
+    // source order.
     &:focus-visible {
       opacity: 1;
       outline: none;
 
       .content {
-        outline: solid;
+        box-shadow: 0 0 0 2px var(--background-primary);
+        outline: 2px solid var(--foreground-primary);
+        outline-offset: 2px;
       }
     }
 

@@ -19,7 +19,6 @@
       role="region"
       aria-roledescription="carousel"
       aria-label="Media carousel — use left and right arrow keys to scroll"
-      data-carousel
       @focus="handleFocus"
       @blur="handleBlur"
     >
@@ -68,12 +67,16 @@ const props = defineProps({
 
 const isFocused = ref(false); // Track if this carousel is focused
 
-const handleFocus = () => {
+// Auto-scroll is held for keyboard focus only (WCAG 2.2.2); a mouse press
+// also focuses the root and must not hold it.
+const handleFocus = (event) => {
   isFocused.value = true;
+  if (event.target.matches(":focus-visible")) autoScrollControl.hold();
 };
 
 const handleBlur = () => {
   isFocused.value = false;
+  autoScrollControl.release();
 };
 
 const emblaPlugins = computed(() => {
@@ -85,8 +88,15 @@ const emblaPlugins = computed(() => {
         // Started from the in-view Observer via useAutoScrollControl so
         // reduced-motion users never get auto-scroll started for them.
         playOnInit: false,
-        stopOnInteraction: true,
+        // false so useAutoScrollControl decides what resumes after a hover
+        // or drag; with true the plugin stops for good and the pause
+        // button's label goes stale.
+        stopOnInteraction: false,
         stopOnMouseEnter: true,
+        // Must stay false alongside stopOnInteraction: false + dragFree +
+        // loop (embla-carousel #1263, see SpotlightMediaCarousel.vue). The
+        // keyboard-focus pause is handled in handleFocus/handleBlur.
+        stopOnFocusIn: false,
       }),
     ];
   }
@@ -131,11 +141,11 @@ const calculateSlideSizes = (aspectRatio) => {
 }
 
 const handleEnter = () => {
-  autoScrollControl.play();
+  autoScrollControl.setInView(true);
 };
 
 const handleExit = () => {
-  autoScrollControl.stop();
+  autoScrollControl.setInView(false);
 };
 
 onKeyStroke("ArrowRight", (e) => {
