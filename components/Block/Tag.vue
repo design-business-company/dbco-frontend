@@ -29,5 +29,8 @@ const props = defineProps({
   font-size: 11px;
   line-height: 14px;
   letter-spacing: 0.04em;
+  // Regular weight (the site default is 500), matching the "Pause carousel"
+  // label, which as a <button> renders at the font's regular 400.
+  font-variation-settings: "wght" 400;
 }
 </style>

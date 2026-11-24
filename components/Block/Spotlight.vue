@@ -17,11 +17,12 @@
         <Column
           startMobile="1"
           spanMobile="12"
+          spanTablet="6"
           spanLaptop="3"
           spanDesktop="5"
           class="spotlight__heading"
         >
-          <Text element="div" size="body-2" ref="name">
+          <Text element="div" size="body-2" class="spotlight__name" ref="name">
             <Observer :onEnter="onEnter" :onLeave="onLeave">
               <h2 class="spotlight__title">{{ title }}</h2>
               <span v-if="shortDescription" class="spotlight__separator">
@@ -46,11 +47,15 @@
           </Observer>
         </Column>
 
-        <!-- laptop (1024–1349): title 3 cols, description 3 + 3, credits 3.
+        <!-- tablet (600–1023): title + tags in the left 6 cols; description
+               and credits stacked as one column in the right 6.
+             laptop (1024–1349): title 3 cols, description 3 + 3, credits 3.
              desktop and up: title 5, one empty, then 2 + 2 + 2. -->
         <Column
           spanMobile="12"
           startMobile="1"
+          spanTablet="6"
+          startTablet="7"
           spanLaptop="9"
           startLaptop="4"
           spanDesktop="6"
@@ -303,8 +308,9 @@ onUnmounted(() => {
     flex-direction: column;
     row-gap: var(--tiny);
 
-    // breathing room before the description while the row is 3/3/3/3
-    @include laptop {
+    // breathing room before the description wherever the two sit side by
+    // side with no empty column between them (600–1349)
+    @include tablet {
       padding-right: var(--smaller);
     }
 
@@ -312,9 +318,24 @@ onUnmounted(() => {
       padding-right: 0;
     }
 
-    [class^="text-"] {
+    // The title's text block (title + short description). Targeted by its own
+    // class: the tags further down also contain a .text-* element and must
+    // not pick these rules up.
+    .spotlight__name {
       max-width: 30ch;
       text-wrap: pretty;
+
+      // Below laptop the 30ch cap is dropped, so the title fills its column
+      // (the full row under 600, the left 6 columns from 600), and it steps
+      // up one size: these are .text-body-1's mobile metrics in
+      // assets/styles/typography.scss. "not (min-width)" is the exact
+      // complement of the laptop mixin, so no fractional width falls between.
+      @media not all and (min-width: #{$laptop}) {
+        max-width: none;
+        font-size: 19px;
+        line-height: 24px;
+        letter-spacing: -0.007em;
+      }
     }
 
     p {
@@ -344,15 +365,13 @@ onUnmounted(() => {
     flex-direction: column;
     row-gap: var(--smallest);
 
-    @include tablet {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    // The 2-column measure is too narrow to read at this width, so the two
-    // title, both description columns and credits each get 3 columns.
-    // Mirrors the 9 page-grid columns this block spans, so they line up.
+    // Below laptop the paragraphs and credits stay stacked in one column.
+    // From laptop they sit side by side: title, both description columns and
+    // credits each get 3 page-grid columns (a 2-column measure is too narrow
+    // to read at this width). The 9 tracks mirror the page grid this block
+    // spans, so they line up.
     @include laptop {
+      display: grid;
       grid-template-columns: repeat(9, 1fr);
       column-gap: var(--grid-gap);
     }
@@ -368,15 +387,11 @@ onUnmounted(() => {
     flex-direction: column;
     row-gap: var(--tiny);
 
-    @include tablet {
+    @include laptop {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-column: auto / span 2;
-      column-gap: var(--grid-gap);
-    }
-
-    @include laptop {
       grid-column: auto / span 6;
+      column-gap: var(--grid-gap);
     }
 
     @include desktop {
@@ -390,6 +405,19 @@ onUnmounted(() => {
 
   &__details p {
     padding-right: var(--smallest);
+  }
+
+  // A spotlight without credits (or without a description) shouldn't leave
+  // an empty row and its gap where the text is stacked. The description
+  // keeps its place from laptop up, where it holds the credits' column.
+  &__credits:empty {
+    display: none;
+  }
+
+  &__description:empty {
+    @media not all and (min-width: #{$laptop}) {
+      display: none;
+    }
   }
 
   &__credits {
