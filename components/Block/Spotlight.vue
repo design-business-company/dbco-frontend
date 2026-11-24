@@ -22,7 +22,7 @@
           spanDesktop="5"
           class="spotlight__heading"
         >
-          <Text element="div" size="body-2" ref="name">
+          <Text element="div" size="body-2" class="spotlight__name" ref="name">
             <Observer :onEnter="onEnter" :onLeave="onLeave">
               <h2 class="spotlight__title">{{ title }}</h2>
               <span v-if="shortDescription" class="spotlight__separator">
@@ -318,16 +318,19 @@ onUnmounted(() => {
       padding-right: 0;
     }
 
-    // Direct child only: the title's text block. The tags further down also
-    // contain a .text-* element and must not pick these rules up.
-    > [class^="text-"] {
+    // The title's text block (title + short description). Targeted by its own
+    // class: the tags further down also contain a .text-* element and must
+    // not pick these rules up.
+    .spotlight__name {
       max-width: 30ch;
       text-wrap: pretty;
 
-      // Below laptop the heading has the full row to itself, so the title
-      // runs the full width instead of stopping at 30ch (one line whenever
-      // it fits), and steps up one size (body-1's mobile metrics).
-      @media (max-width: #{$laptop - 1px}) {
+      // Below laptop the 30ch cap is dropped, so the title fills its column
+      // (the full row under 600, the left 6 columns from 600), and it steps
+      // up one size: these are .text-body-1's mobile metrics in
+      // assets/styles/typography.scss. "not (min-width)" is the exact
+      // complement of the laptop mixin, so no fractional width falls between.
+      @media not all and (min-width: #{$laptop}) {
         max-width: none;
         font-size: 19px;
         line-height: 24px;
@@ -402,6 +405,19 @@ onUnmounted(() => {
 
   &__details p {
     padding-right: var(--smallest);
+  }
+
+  // A spotlight without credits (or without a description) shouldn't leave
+  // an empty row and its gap where the text is stacked. The description
+  // keeps its place from laptop up, where it holds the credits' column.
+  &__credits:empty {
+    display: none;
+  }
+
+  &__description:empty {
+    @media not all and (min-width: #{$laptop}) {
+      display: none;
+    }
   }
 
   &__credits {
